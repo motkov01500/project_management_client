@@ -1,0 +1,22 @@
+<form (submit)="onSubmit()">
+  <input
+    type="text"
+    pInputText
+    class="p-inputtext-lg"
+    name="key"
+    [(ngModel)]="newProject.key"
+    placeholder="Key"
+    required
+  />
+  <input
+    type="text"
+    pInputText
+    class="p-inputtext-lg"
+    placeholder="Title"
+    name="title"
+    [(ngModel)]="newProject.title"
+    required
+  />
+  <button pButton type="submit" label="Create" class="p-button-lg"></button>
+</form>
+<p-toast></p-toast>

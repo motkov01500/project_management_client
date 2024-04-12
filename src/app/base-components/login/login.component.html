@@ -1,0 +1,22 @@
+<form (submit)="login()">
+  <input
+    type="text"
+    pInputText
+    class="p-inputtext-lg"
+    name="username"
+    [(ngModel)]="username"
+    placeholder="Username"
+    required
+  />
+  <input
+    type="password"
+    pInputText
+    class="p-inputtext-lg"
+    placeholder="Password"
+    name="password"
+    [(ngModel)]="password"
+    required
+  />
+  <button pButton type="submit" label="Login" class="p-button-lg"></button>
+</form>
+<p-toast></p-toast>

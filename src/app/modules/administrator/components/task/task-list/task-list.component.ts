@@ -1,0 +1,82 @@
+import { Component, OnInit } from '@angular/core';
+import { TaskResponse } from '../../../../../models/task/task-response';
+import { TasksService } from '../../../../../services/tasks.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { TaskEdit } from '../../../../../models/task/task-edit';
+
+@Component({
+  selector: 'app-task-list',
+  templateUrl: './task-list.component.html',
+  styleUrl: './task-list.component.css',
+})
+export class TaskListComponent implements OnInit {
+  items: TaskResponse[] = [];
+  visibleSidebar: boolean = false;
+  taskDetails: TaskResponse | any;
+  statuses: string[] = ['TODO', 'IN_PROGRESS', 'DONE', 'OPEN', 'RE_OPEN'];
+  editedTask: TaskEdit = {
+    hoursSpent: 0,
+    status: '',
+    progress: 0,
+  };
+
+  constructor(
+    private service: TasksService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
+
+  ngOnInit(): void {
+    this.service.getAll().subscribe({
+      next: (tasks: TaskResponse[]) => {
+        this.items = tasks;
+      },
+    });
+  }
+
+  onSubmit() {
+    let itemIndex: number = this.items.findIndex(
+      (item) => item.id == this.taskDetails.id
+    );
+    this.service.edit(this.taskDetails?.id, this.editedTask).subscribe({
+      next: (task: TaskResponse) => {
+        this.items[itemIndex] = task;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Task edited',
+          detail: 'via admin',
+        });
+      },
+    });
+    this.visibleSidebar = false;
+  }
+
+  onEdit(taskId: number) {
+    this.visibleSidebar = true;
+    this.service.getById(taskId).subscribe({
+      next: (task: TaskResponse) => {
+        this.taskDetails = task;
+      },
+    });
+  }
+
+  onDelete(taskId: number) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to proceed?',
+      header: 'Confirmation',
+      accept: () => {
+        this.service.delete(taskId).subscribe({});
+        this.items = this.items.filter((item) => item.id != taskId);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Task Deleted',
+          detail: 'via admin',
+        });
+      },
+      reject: () => {
+        this.confirmationService.close();
+      },
+      key: 'positionDialog',
+    });
+  }
+}

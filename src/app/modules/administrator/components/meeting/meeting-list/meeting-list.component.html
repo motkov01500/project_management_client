@@ -1,0 +1,91 @@
+<div class="card">
+  <p-table
+    [value]="items"
+    [paginator]="true"
+    [rows]="10"
+    [reorderableColumns]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Status</th>
+        <th>Date</th>
+        <th>ProjectRelated</th>
+        <th>Delete</th>
+        <th>Edit</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.status }}</td>
+        <td>{{ item.date.toLocaleString() }}</td>
+        <td>{{ item.project.key }}</td>
+        <td>
+          <p-button
+            type="button"
+            label="Delete"
+            severity="danger"
+            (onClick)="onDelete(item.id)"
+          ></p-button>
+        </td>
+        <td>
+          <p-button
+            type="button"
+            label="Edit"
+            severity="warning"
+            (onClick)="onEdit(item.id)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <p-button
+        type="button"
+        icon="pi pi-plus"
+        cl
+        styleClass="p-button-text"
+      ></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+      <p-button
+        type="button"
+        icon="pi pi-cloud"
+        styleClass="p-button-text"
+      ></p-button>
+    </ng-template>
+  </p-table>
+  <p-confirmDialog
+    [style]="{ width: '50vw' }"
+    key="positionDialog"
+    [baseZIndex]="10000"
+  ></p-confirmDialog>
+  <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
+    <div class="container">
+      <h1>Edit Meeting</h1>
+      <form (submit)="onSubmit()">
+        <input
+          type="datetime-local"
+          pInputText
+          class="p-inputtext-lg"
+          name="Date"
+          value="{{ meetingDetails?.date }}"
+          [(ngModel)]="date"
+        />
+        <p-dropdown
+          [options]="statuses"
+          [(ngModel)]="selectedStatus"
+          [style]="{ width: '100%' }"
+          class="test"
+          name="optional"
+          placeholder="Select Status"
+        ></p-dropdown>
+        <button
+          pButton
+          type="submit"
+          label="Edit Meeting"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+</div>
+<p-toast></p-toast>

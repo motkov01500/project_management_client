@@ -1,0 +1,31 @@
+<form (submit)="onSubmit()">
+  <input
+    type="number"
+    pInputText
+    class="p-inputtext-lg"
+    name="initialEstimation"
+    [(ngModel)]="newTask.initialEstimation"
+    placeholder="initialEstimation"
+  />
+  <p-dropdown
+    [options]="statuses"
+    [(ngModel)]="newTask.status"
+    [style]="{ width: '100%' }"
+    class="test"
+    name="optional"
+    placeholder="Select Status"
+  ></p-dropdown>
+  <p-dropdown
+    [options]="projects"
+    [(ngModel)]="selectedProject"
+    [style]="{ width: '100%' }"
+    class="test"
+    name="optional"
+    placeholder="Select Project"
+    optionLabel="key"
+    [virtualScroll]="true"
+    [virtualScrollItemSize]="10"
+  ></p-dropdown>
+  <button pButton type="submit" label="Create" class="p-button-lg"></button>
+</form>
+<p-toast></p-toast>

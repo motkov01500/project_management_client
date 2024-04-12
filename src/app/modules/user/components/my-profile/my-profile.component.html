@@ -1,0 +1,62 @@
+<div class="container-width">
+  <p-card class="card">
+    <div class="image" *ngIf="hasImage; else elseBlock">
+      <p-fileUpload></p-fileUpload>
+    </div>
+    <ng-template #elseBlock
+      ><p-image
+        src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
+        alt="Image"
+        width="100%"
+        class="test"
+      ></p-image>
+    </ng-template>
+
+    <div class="user-info">
+      <div class="user-info-components">
+        <h2>Username:</h2>
+        <h2>{{ currentLoggedUser.username }}</h2>
+      </div>
+      <div class="user-info-components">
+        <h2>Role:</h2>
+        <h2>{{ currentLoggedUser.role.name }}</h2>
+      </div>
+      <div class="user-info-components">
+        <h2>Full name:</h2>
+        <h2>
+          {{
+            currentLoggedUser.fullName ? currentLoggedUser.fullName : "No name"
+          }}
+        </h2>
+      </div>
+      <div class="user-info-components">
+        <p-button
+          type="button"
+          label="Change Password"
+          (onClick)="onChangePassword(currentLoggedUser.id)"
+        ></p-button>
+      </div>
+    </div>
+  </p-card>
+  <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
+    <div class="container">
+      <h1>Edit User</h1>
+      <form (submit)="onSubmit()">
+        <input
+          type="password"
+          pInputText
+          class="p-inputtext-lg"
+          name="Password"
+          placeholder="Password"
+          [(ngModel)]="updatedUserPassword.password"
+        />
+        <button
+          pButton
+          type="submit"
+          label="Edit User"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+</div>

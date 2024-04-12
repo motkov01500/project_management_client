@@ -1,0 +1,105 @@
+<div class="card">
+  <p-table
+    [value]="items"
+    [paginator]="true"
+    [rows]="10"
+    [reorderableColumns]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Progress</th>
+        <th>InitialEstimation</th>
+        <th>Status</th>
+        <th>HoursSpent</th>
+        <th>Project Related</th>
+        <th>Delete</th>
+        <th>Edit</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.progress }}</td>
+        <td>{{ item.initialEstimation }}</td>
+        <td>{{ item.status }}</td>
+        <td>{{ item.hoursSpent }}</td>
+        <td>{{ item.project.key }}</td>
+        <td>
+          <p-button
+            type="button"
+            label="Delete"
+            severity="danger"
+            (onClick)="onDelete(item.id)"
+          ></p-button>
+        </td>
+        <td>
+          <p-button
+            type="button"
+            label="Edit"
+            severity="warning"
+            (onClick)="onEdit(item.id)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <p-button
+        type="button"
+        icon="pi pi-plus"
+        cl
+        styleClass="p-button-text"
+      ></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+      <p-button
+        type="button"
+        icon="pi pi-cloud"
+        styleClass="p-button-text"
+      ></p-button>
+    </ng-template>
+  </p-table>
+  <p-confirmDialog
+    [style]="{ width: '50vw' }"
+    key="positionDialog"
+    [baseZIndex]="10000"
+  ></p-confirmDialog>
+  <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
+    <div class="container">
+      <h1>Edit Task</h1>
+      <form (submit)="onSubmit()">
+        <input
+          type="number"
+          pInputText
+          class="p-inputtext-lg"
+          name="progress"
+          value="{{ taskDetails?.progress }}"
+          [(ngModel)]="editedTask.progress"
+          placeholder="progress"
+        />
+        <input
+          type="number"
+          pInputText
+          class="p-inputtext-lg"
+          name="hoursSpent"
+          value="{{ taskDetails?.hoursSpent }}"
+          [(ngModel)]="editedTask.hoursSpent"
+          placeholder="hoursSpent"
+        />
+        <p-dropdown
+          [options]="statuses"
+          [(ngModel)]="editedTask.status"
+          [style]="{ width: '100%' }"
+          class="test"
+          name="optional"
+          placeholder="Select Status"
+        ></p-dropdown>
+        <button
+          pButton
+          type="submit"
+          label="Edit Task"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+</div>
+<p-toast></p-toast>

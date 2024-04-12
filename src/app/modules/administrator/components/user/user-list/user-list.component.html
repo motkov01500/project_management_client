@@ -1,0 +1,112 @@
+<div class="card">
+  <p-table
+    [value]="items"
+    [paginator]="true"
+    [rows]="10"
+    [reorderableColumns]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>FullName</th>
+        <th>Role</th>
+        <th>Delete</th>
+        <th>Edit</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.username }}</td>
+        <td *ngIf="item.fullName; else elseBlock">{{ item.fullName }}</td>
+        <ng-template #elseBlock><td>No Name</td></ng-template>
+        <td>{{ item.role.name }}</td>
+        <td>
+          <p-button
+            type="button"
+            label="Delete"
+            severity="danger"
+            (onClick)="onDelete(item.id)"
+          ></p-button>
+        </td>
+        <td>
+          <p-button
+            type="button"
+            label="Edit"
+            severity="warning"
+            (onClick)="onEdit(item.id)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <p-button
+        type="button"
+        icon="pi pi-plus"
+        cl
+        styleClass="p-button-text"
+      ></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+      <p-button
+        type="button"
+        icon="pi pi-cloud"
+        styleClass="p-button-text"
+      ></p-button>
+    </ng-template>
+  </p-table>
+  <p-confirmDialog
+    [style]="{ width: '50vw' }"
+    key="positionDialog"
+    [baseZIndex]="10000"
+  ></p-confirmDialog>
+  <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
+    <div class="container">
+      <h1>Edit User</h1>
+      <form (submit)="onSubmit()">
+        <input
+          type="text"
+          pInputText
+          class="p-inputtext-lg"
+          name="username"
+          value="{{ userDetails?.username }}"
+          [(ngModel)]="username"
+        />
+        <!--Bug when is type password when choose user
+        and change after that safe password to first user
+        only to inputs not in database!!!!!!!-->
+        <input
+          type="password"
+          pInputText
+          class="p-inputtext-lg"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Password"
+        />
+        <input
+          type="text"
+          pInputText
+          class="p-inputtext-lg"
+          value="{{ userDetails?.fullName }}"
+          name="fullName"
+          placeholder="Full Name"
+          [(ngModel)]="fullName"
+        />
+        <p-dropdown
+          [options]="roles"
+          [(ngModel)]="selectedRole"
+          [style]="{ width: '100%' }"
+          class="test"
+          name="optional"
+          placeholder="Select role"
+        ></p-dropdown>
+        <button
+          pButton
+          type="submit"
+          label="Edit User"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+</div>
+<p-toast></p-toast>

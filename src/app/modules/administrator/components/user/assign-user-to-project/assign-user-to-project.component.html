@@ -1,0 +1,69 @@
+<div class="card">
+  <p-table
+    [value]="items"
+    [paginator]="true"
+    [rows]="10"
+    [reorderableColumns]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>FullName</th>
+        <th>Role</th>
+        <th>AssignToProject</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.username }}</td>
+        <td *ngIf="item.fullName; else elseBlock">{{ item.fullName }}</td>
+        <ng-template #elseBlock><td>No Name</td></ng-template>
+        <td>{{ item.role.name }}</td>
+        <td>
+          <p-button
+            type="button"
+            label="Assign"
+            (onClick)="onAssign(item.id)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <p-button
+        type="button"
+        icon="pi pi-plus"
+        cl
+        styleClass="p-button-text"
+      ></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+      <p-button
+        type="button"
+        icon="pi pi-cloud"
+        styleClass="p-button-text"
+      ></p-button>
+    </ng-template>
+  </p-table>
+  <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
+    <div class="container">
+      <h1>Edit User</h1>
+      <form (submit)="onSubmit()">
+        <p-dropdown
+          [options]="projects"
+          [(ngModel)]="selectedProject"
+          [style]="{ width: '100%' }"
+          class="test"
+          name="optional"
+          optionLabel="key"
+          placeholder="Select Project"
+        ></p-dropdown>
+        <button
+          pButton
+          type="submit"
+          label="Assign Project"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+</div>

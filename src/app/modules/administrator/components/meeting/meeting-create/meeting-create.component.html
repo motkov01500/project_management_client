@@ -1,0 +1,29 @@
+<form (submit)="onSubmit()">
+  <input
+    type="datetime-local"
+    pInputText
+    class="p-inputtext-lg"
+    name="Date"
+    [(ngModel)]="date"
+    placeholder="Date"
+  />
+  <p-dropdown
+    [options]="statuses"
+    [(ngModel)]="selectedStatus"
+    [style]="{ width: '100%' }"
+    class="test"
+    name="optional"
+    placeholder="Select Status"
+  ></p-dropdown>
+  <p-dropdown
+    [options]="projects"
+    [(ngModel)]="selectedProject"
+    [style]="{ width: '100%' }"
+    class="test"
+    name="optional"
+    placeholder="Select Project"
+    optionLabel="key"
+  ></p-dropdown>
+  <button pButton type="submit" label="Create" class="p-button-lg"></button>
+</form>
+<p-toast></p-toast>

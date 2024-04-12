@@ -1,0 +1,28 @@
+<form (submit)="onSubmit()">
+  <input
+    type="text"
+    pInputText
+    class="p-inputtext-lg"
+    name="username"
+    [(ngModel)]="userCredentials.username"
+    placeholder="Username"
+  />
+  <input
+    type="password"
+    pInputText
+    class="p-inputtext-lg"
+    placeholder="Password"
+    name="password"
+    [(ngModel)]="userCredentials.password"
+  />
+  <input
+    type="text"
+    pInputText
+    class="p-inputtext-lg"
+    placeholder="FullName"
+    name="fullName"
+    [(ngModel)]="userCredentials.fullName"
+  />
+  <button pButton type="submit" label="Create" class="p-button-lg"></button>
+</form>
+<p-toast></p-toast>
