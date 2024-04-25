@@ -4,10 +4,12 @@ import { MenuItem } from 'primeng/api';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+  styleUrl: './menu.component.css',
 })
 export class MenuComponent {
-  items:MenuItem[] = [];
+  items: MenuItem[] = [];
+
+  @Input() username: string = '';
 
   get itemsArray(): MenuItem[] {
     return this.items;

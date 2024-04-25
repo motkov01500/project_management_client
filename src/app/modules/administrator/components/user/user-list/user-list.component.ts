@@ -13,6 +13,7 @@ import {
 } from '../../../../../models';
 import { UsersService } from '../../../../../services/users.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-users',
@@ -32,11 +33,16 @@ export class UserListComponent implements OnInit {
   constructor(
     private service: UsersService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private webSocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
-    this.updateUsers();
+    this.service.getAllUsers().subscribe({
+      next: (data: any) => {
+        this.items = data;
+      },
+    });
   }
 
   onDelete(event: number) {
@@ -51,6 +57,7 @@ export class UserListComponent implements OnInit {
           summary: 'User deleted',
           detail: 'via admin',
         });
+        this.webSocketService.sendMessage(`The user is deleted`);
       },
       reject: () => {
         this.confirmationService.close();
@@ -88,14 +95,7 @@ export class UserListComponent implements OnInit {
         });
       },
     });
+    this.webSocketService.sendMessage(`User is Edited`);
     this.visibleSidebar = false;
-  }
-
-  updateUsers(): void {
-    this.service.getAllUsers().subscribe({
-      next: (data: any) => {
-        this.items = data;
-      },
-    });
   }
 }

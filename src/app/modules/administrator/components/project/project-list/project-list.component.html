@@ -16,7 +16,13 @@
     </ng-template>
     <ng-template pTemplate="body" let-item>
       <tr>
-        <td>{{ item.key }}</td>
+        <td
+          [style]="{
+            'text-align': 'center'
+          }"
+        >
+          {{ item.key }}
+        </td>
         <td>{{ item.title }}</td>
         <td>
           <p-button

@@ -4,6 +4,7 @@ import { ProjectsService } from '../../../../../services/projects.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MeetingResponse } from '../../../../../models/meeting/meeting-response';
 import { MeetingsService } from '../../../../../services/meetings.service';
+import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-project-list',
@@ -23,7 +24,8 @@ export class ProjectListComponent implements OnInit {
     private projectService: ProjectsService,
     private confirmationService: ConfirmationService,
     private meetingService: MeetingsService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private websocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +79,7 @@ export class ProjectListComponent implements OnInit {
           summary: 'Project Delete',
           detail: 'via admin',
         });
+        this.websocketService.sendMessage(`Project is deleted`);
       },
       reject: () => {
         this.confirmationService.close();

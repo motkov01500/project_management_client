@@ -3,6 +3,7 @@ import { MeetingResponse } from '../../../../../models/meeting/meeting-response'
 import { MeetingsService } from '../../../../../services/meetings.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MeetingEdit } from '../../../../../models/meeting/meeting-edit';
+import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-meeting-list',
@@ -16,10 +17,12 @@ export class MeetingListComponent implements OnInit {
   date: Date = new Date();
   statuses: string[] = ['UPCOMING', 'STARTED', 'END'];
   selectedStatus: string = '';
+
   constructor(
     private service: MeetingsService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private websocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +54,7 @@ export class MeetingListComponent implements OnInit {
           summary: 'Meeting Delete',
           detail: 'via admin',
         });
+        this.websocketService.sendMessage(`Meeting is deleted`);
       },
       reject: () => {
         this.confirmationService.close();

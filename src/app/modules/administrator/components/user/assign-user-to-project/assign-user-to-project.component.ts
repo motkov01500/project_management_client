@@ -3,6 +3,7 @@ import { ProjectResponse, UserResponse, UserRole } from '../../../../../models';
 import { UsersService } from '../../../../../services/users.service';
 import { ProjectsService } from '../../../../../services/projects.service';
 import { ProjectUserAssign } from '../../../../../models/project/project-user-assign';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-assign-user-to-project',
@@ -21,11 +22,13 @@ export class AssignUserToProjectComponent implements OnInit {
     username: '',
     fullName: '',
     role: this.role,
+    imageUrl: '',
   };
 
   constructor(
     private userService: UsersService,
-    private projectService: ProjectsService
+    private projectService: ProjectsService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -38,25 +41,29 @@ export class AssignUserToProjectComponent implements OnInit {
 
   onAssign(userId: number) {
     this.visibleSidebar = true;
+    this.assignUserToProject.userId = userId;
     this.projectService.getAllProjects().subscribe({
       next: (projects: ProjectResponse[]) => {
         this.projects = projects;
       },
     });
-    this.assignUserToProject.userId = this.items.filter(
-      (user) => (user.id = userId)
-    )[0].id;
   }
 
   onSubmit() {
     this.assignUserToProject.projectId = this.selectedProject.id;
+    this.visibleSidebar = false;
     this.projectService
       .assignUserToProject(this.assignUserToProject)
       .subscribe({
-        next: (message: string) => {
-          console.log(message);
+        next: (response: any) => {
+          this.items = this.items.filter(
+            (item) => item.id != this.assignUserToProject.userId
+          );
+          this.messageService.add({
+            severity: 'success',
+            summary: response.message,
+          });
         },
       });
-    this.items = this.items.filter((item) => item.id != this.userDetails.id);
   }
 }

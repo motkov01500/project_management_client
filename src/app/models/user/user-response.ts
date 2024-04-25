@@ -5,4 +5,5 @@ export interface UserResponse {
   fullName: string;
   username: string;
   role: UserRole;
+  imageUrl: any;
 }

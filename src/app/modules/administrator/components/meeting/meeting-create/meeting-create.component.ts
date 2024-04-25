@@ -4,6 +4,7 @@ import { MeetingsService } from '../../../../../services/meetings.service';
 import { ProjectResponse } from '../../../../../models';
 import { MeetingCreate } from '../../../../../models/meeting/meeting-create';
 import { MessageService } from 'primeng/api';
+import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-meeting-create',
@@ -24,7 +25,8 @@ export class MeetingCreateComponent implements OnInit {
   constructor(
     private projectService: ProjectsService,
     private meetingService: MeetingsService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private websocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +50,7 @@ export class MeetingCreateComponent implements OnInit {
           summary: 'Meeting created',
           detail: 'via admin',
         });
+        this.websocketService.sendMessage(`New meeting is created`);
       },
     });
   }

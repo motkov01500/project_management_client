@@ -4,6 +4,7 @@ import { ProjectResponse } from '../../../../../models';
 import { ProjectsService } from '../../../../../services/projects.service';
 import { TasksService } from '../../../../../services/tasks.service';
 import { MessageService } from 'primeng/api';
+import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-task-create',
@@ -23,7 +24,8 @@ export class TaskCreateComponent implements OnInit {
   constructor(
     private projectService: ProjectsService,
     private tasksService: TasksService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private websocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +45,7 @@ export class TaskCreateComponent implements OnInit {
           summary: 'Task created',
           detail: 'via admin',
         });
+        this.websocketService.sendMessage(`New task is created`);
       },
     });
   }

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../../../services/auth.service';
+import { UsersService } from '../../../../services/users.service';
+import { UserResponse } from '../../../../models';
 
 @Component({
   selector: 'app-main',
@@ -10,8 +12,13 @@ import { AuthService } from '../../../../services/auth.service';
 })
 export class MainComponent implements OnInit {
   items: MenuItem[] = [];
+  currentLoggedUsername: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UsersService
+  ) {}
 
   ngOnInit(): void {
     this.items = [
@@ -57,5 +64,10 @@ export class MainComponent implements OnInit {
         style: { color: 'red' },
       },
     ];
+    this.userService.getCurrentLoggedUser().subscribe({
+      next: (user: UserResponse) => {
+        this.currentLoggedUsername = user.username;
+      },
+    });
   }
 }

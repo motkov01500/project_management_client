@@ -4,6 +4,7 @@ import { HttpResponse } from '@angular/common/http';
 import { UserResponse } from '../../models/user/user-response';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { WebSocketService } from '../../services/web-socket.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent {
   constructor(
     private service: AuthService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private webSocketService: WebSocketService
   ) {}
 
   login(): void {
@@ -27,6 +29,7 @@ export class LoginComponent {
         const role = response.body?.role.name;
         localStorage.setItem('token', token ? token : '');
         localStorage.setItem('role', role ? role : '');
+        // this.webSocketService.connect().subscribe({});
         if (role === 'user') {
           this.router.navigate(['user']);
         }

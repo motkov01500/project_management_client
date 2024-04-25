@@ -67,6 +67,12 @@ export class UsersService {
     });
   }
 
+  uploadImage(imageLink: any): Observable<UserResponse> {
+    return this.http.patch<UserResponse>(`${apiUrl}v1/user/upload-image`, {
+      imageUrl: imageLink,
+    });
+  }
+
   updateUserPassword(
     userId: number,
     updatedUser: UserPasswordUpdate
@@ -77,12 +83,6 @@ export class UsersService {
         password: updatedUser.password,
       }
     );
-  }
-
-  uploadImage(uploadedImage: UserImageUpload): Observable<UserResponse> {
-    return this.http.patch<UserResponse>(`${apiUrl}v1/user/upload-image`, {
-      imageUrl: uploadedImage.imageUrl,
-    });
   }
 
   deleteUser(id: number): Observable<void> {

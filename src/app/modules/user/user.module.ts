@@ -15,6 +15,7 @@ import { ImageModule } from 'primeng/image';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FormsModule } from '@angular/forms';
 import { TaskComponent } from './components/task/task.component';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { TaskComponent } from './components/task/task.component';
     ImageModule,
     FileUploadModule,
     InputTextModule,
+    ToastModule,
   ],
 })
 export class UserModule {}

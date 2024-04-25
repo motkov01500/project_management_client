@@ -5,6 +5,7 @@ import { UsersService } from '../../../../../services/users.service';
 import { UserResponse } from '../../../../../models';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-user-create',
@@ -21,7 +22,8 @@ export class UserCreateComponent {
   constructor(
     private service: UsersService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private webSocketService: WebSocketService
   ) {}
 
   onSubmit() {
@@ -34,5 +36,6 @@ export class UserCreateComponent {
         });
       },
     });
+    this.webSocketService.sendMessage(`New user is created`);
   }
 }

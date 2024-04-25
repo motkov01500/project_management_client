@@ -1,17 +1,17 @@
 <div class="container-width">
-  <p-card class="card">
-    <div class="image" *ngIf="hasImage; else elseBlock">
-      <p-fileUpload></p-fileUpload>
+  <p-card class="card" [style]="">
+    <div class="image" *ngIf="!hasImage; else elseBlock">
+      <p-fileUpload
+        name="image"
+        [customUpload]="true"
+        (uploadHandler)="onSelect($event)"
+        (onUpload)="onSucessfulUploadImage()"
+      ></p-fileUpload>
+      <!-- <input type="file" value="upload" (change)="onSelect($event)" /> -->
     </div>
     <ng-template #elseBlock
-      ><p-image
-        src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
-        alt="Image"
-        width="100%"
-        class="test"
-      ></p-image>
+      ><img alt="Image" src="{{ currentLoggedUser.imageUrl }}" class="test" />
     </ng-template>
-
     <div class="user-info">
       <div class="user-info-components">
         <h2>Username:</h2>

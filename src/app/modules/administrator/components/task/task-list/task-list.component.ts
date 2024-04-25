@@ -3,6 +3,7 @@ import { TaskResponse } from '../../../../../models/task/task-response';
 import { TasksService } from '../../../../../services/tasks.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TaskEdit } from '../../../../../models/task/task-edit';
+import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-task-list',
@@ -23,7 +24,8 @@ export class TaskListComponent implements OnInit {
   constructor(
     private service: TasksService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private websocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +74,7 @@ export class TaskListComponent implements OnInit {
           summary: 'Task Deleted',
           detail: 'via admin',
         });
+        this.websocketService.sendMessage(`Task is deleted.`);
       },
       reject: () => {
         this.confirmationService.close();
