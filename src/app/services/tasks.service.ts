@@ -47,7 +47,7 @@ export class TasksService {
       `${apiUrl}v1/task/administrator/update/${taskId}`,
       {
         progress: editedTask.progress,
-        status: editedTask.status,
+        statusName: editedTask.status,
         hoursSpent: editedTask.hoursSpent,
       }
     );

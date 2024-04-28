@@ -20,7 +20,7 @@
       <tr>
         <td>{{ item.progress }}</td>
         <td>{{ item.initialEstimation }}</td>
-        <td>{{ item.status }}</td>
+        <td>{{ item.taskStatus.name }}</td>
         <td>{{ item.hoursSpent }}</td>
         <td>{{ item.project.key }}</td>
         <td>
@@ -91,6 +91,8 @@
           class="test"
           name="optional"
           placeholder="Select Status"
+          optionLabel="name"
+          optionValue="name"
         ></p-dropdown>
         <button
           pButton

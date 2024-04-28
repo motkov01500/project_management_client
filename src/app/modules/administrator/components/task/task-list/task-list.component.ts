@@ -4,6 +4,8 @@ import { TasksService } from '../../../../../services/tasks.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TaskEdit } from '../../../../../models/task/task-edit';
 import { WebSocketService } from '../../../../../services/web-socket.service';
+import { TaskStatus } from '../../../../../models';
+import { TaskStatusService } from '../../../../../services/task-status.service';
 
 @Component({
   selector: 'app-task-list',
@@ -14,7 +16,7 @@ export class TaskListComponent implements OnInit {
   items: TaskResponse[] = [];
   visibleSidebar: boolean = false;
   taskDetails: TaskResponse | any;
-  statuses: string[] = ['TODO', 'IN_PROGRESS', 'DONE', 'OPEN', 'RE_OPEN'];
+  statuses: TaskStatus[] = [];
   editedTask: TaskEdit = {
     hoursSpent: 0,
     status: '',
@@ -25,13 +27,19 @@ export class TaskListComponent implements OnInit {
     private service: TasksService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private websocketService: WebSocketService
+    private websocketService: WebSocketService,
+    private taskStatusService: TaskStatusService
   ) {}
 
   ngOnInit(): void {
     this.service.getAll().subscribe({
       next: (tasks: TaskResponse[]) => {
         this.items = tasks;
+      },
+    });
+    this.taskStatusService.findAll().subscribe({
+      next: (data: TaskStatus[]) => {
+        this.statuses = data;
       },
     });
   }
