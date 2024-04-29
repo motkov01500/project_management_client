@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProjectEdit, ProjectResponse } from '../../../../../models';
-import { ProjectsService } from '../../../../../services/projects.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ProjectEdit, ProjectResponse } from '../../../../../models';
 import { MeetingResponse } from '../../../../../models/meeting/meeting-response';
 import { MeetingsService } from '../../../../../services/meetings.service';
+import { ProjectsService } from '../../../../../services/projects.service';
 import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
@@ -63,6 +64,13 @@ export class ProjectListComponent implements OnInit {
           detail: 'via admin',
         });
       },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: error.error.message,
+          detail: 'via admin',
+        });
+      },
     });
     this.projectEditSideBar = false;
   }
@@ -72,7 +80,15 @@ export class ProjectListComponent implements OnInit {
       message: 'Are you sure you want to proceed?',
       header: 'Confirmation',
       accept: () => {
-        this.projectService.deleteProject(projectId).subscribe({});
+        this.projectService.deleteProject(projectId).subscribe({
+          error: (error: HttpErrorResponse) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: error.error.message,
+              detail: 'via admin',
+            });
+          },
+        });
         this.items = this.items.filter((item) => item.id != projectId);
         this.messageService.add({
           severity: 'success',

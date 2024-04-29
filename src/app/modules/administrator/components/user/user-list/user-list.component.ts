@@ -57,7 +57,15 @@ export class UserListComponent implements OnInit {
       message: 'Are you sure you want to proceed?',
       header: 'Confirmation',
       accept: () => {
-        this.service.deleteUser(event).subscribe({});
+        this.service.deleteUser(event).subscribe({
+          error: (error: HttpErrorResponse) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: error.error.message,
+              detail: 'via admin',
+            });
+          },
+        });
         this.items = this.items.filter((item) => item.id != event);
         this.messageService.add({
           severity: 'success',
@@ -98,6 +106,13 @@ export class UserListComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'User Edited',
+          detail: 'via admin',
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: error.error.message,
           detail: 'via admin',
         });
       },

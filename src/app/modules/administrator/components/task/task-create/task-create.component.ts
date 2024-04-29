@@ -5,6 +5,7 @@ import { ProjectsService } from '../../../../../services/projects.service';
 import { TasksService } from '../../../../../services/tasks.service';
 import { MessageService } from 'primeng/api';
 import { WebSocketService } from '../../../../../services/web-socket.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-task-create',
@@ -46,6 +47,13 @@ export class TaskCreateComponent implements OnInit {
           detail: 'via admin',
         });
         this.websocketService.sendMessage(`New task is created`);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: error.error.message,
+          detail: 'via admin',
+        });
       },
     });
   }

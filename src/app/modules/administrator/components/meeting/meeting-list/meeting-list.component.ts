@@ -4,6 +4,7 @@ import { MeetingsService } from '../../../../../services/meetings.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MeetingEdit } from '../../../../../models/meeting/meeting-edit';
 import { WebSocketService } from '../../../../../services/web-socket.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-meeting-list',
@@ -47,7 +48,15 @@ export class MeetingListComponent implements OnInit {
       message: 'Are you sure you want to proceed?',
       header: 'Confirmation',
       accept: () => {
-        this.service.delete(meetingId).subscribe({});
+        this.service.delete(meetingId).subscribe({
+          error: (error: HttpErrorResponse) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: error.error.message,
+              detail: 'via admin',
+            });
+          },
+        });
         this.items = this.items.filter((item) => item.id != meetingId);
         this.messageService.add({
           severity: 'success',
@@ -77,6 +86,13 @@ export class MeetingListComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Meeting Edit',
+          detail: 'via admin',
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: error.error.message,
           detail: 'via admin',
         });
       },

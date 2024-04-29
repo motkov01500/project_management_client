@@ -6,6 +6,7 @@ import { TaskEdit } from '../../../../../models/task/task-edit';
 import { WebSocketService } from '../../../../../services/web-socket.service';
 import { TaskStatus } from '../../../../../models';
 import { TaskStatusService } from '../../../../../services/task-status.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-task-list',
@@ -57,6 +58,13 @@ export class TaskListComponent implements OnInit {
           detail: 'via admin',
         });
       },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: error.error.message,
+          detail: 'via admin',
+        });
+      },
     });
     this.visibleSidebar = false;
   }
@@ -75,7 +83,15 @@ export class TaskListComponent implements OnInit {
       message: 'Are you sure you want to proceed?',
       header: 'Confirmation',
       accept: () => {
-        this.service.delete(taskId).subscribe({});
+        this.service.delete(taskId).subscribe({
+          error: (error: HttpErrorResponse) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: error.error.message,
+              detail: 'via admin',
+            });
+          },
+        });
         this.items = this.items.filter((item) => item.id != taskId);
         this.messageService.add({
           severity: 'success',

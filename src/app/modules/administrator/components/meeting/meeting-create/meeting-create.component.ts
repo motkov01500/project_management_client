@@ -5,6 +5,7 @@ import { ProjectResponse } from '../../../../../models';
 import { MeetingCreate } from '../../../../../models/meeting/meeting-create';
 import { MessageService } from 'primeng/api';
 import { WebSocketService } from '../../../../../services/web-socket.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-meeting-create',
@@ -51,6 +52,13 @@ export class MeetingCreateComponent implements OnInit {
           detail: 'via admin',
         });
         this.websocketService.sendMessage(`New meeting is created`);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: error.error.message,
+          detail: 'via admin',
+        });
       },
     });
   }

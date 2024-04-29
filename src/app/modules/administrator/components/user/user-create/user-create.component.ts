@@ -1,10 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { UserRequest } from '../../../../../models/user/user-request';
-import { HttpClient } from '@angular/common/http';
-import { UsersService } from '../../../../../services/users.service';
-import { UserResponse } from '../../../../../models';
-import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { UserRequest } from '../../../../../models/user/user-request';
+import { UsersService } from '../../../../../services/users.service';
 import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
@@ -21,7 +19,6 @@ export class UserCreateComponent {
 
   constructor(
     private service: UsersService,
-    private router: Router,
     private messageService: MessageService,
     private webSocketService: WebSocketService
   ) {}
@@ -32,6 +29,13 @@ export class UserCreateComponent {
         this.messageService.add({
           severity: 'success',
           summary: 'User created',
+          detail: 'via admin',
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: error.error.message,
           detail: 'via admin',
         });
       },

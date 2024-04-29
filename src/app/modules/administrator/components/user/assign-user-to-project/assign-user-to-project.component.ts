@@ -4,6 +4,7 @@ import { UsersService } from '../../../../../services/users.service';
 import { ProjectsService } from '../../../../../services/projects.service';
 import { ProjectUserAssign } from '../../../../../models/project/project-user-assign';
 import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-assign-user-to-project',
@@ -62,6 +63,13 @@ export class AssignUserToProjectComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: response.message,
+          });
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: error.error.message,
+            detail: 'via admin',
           });
         },
       });
