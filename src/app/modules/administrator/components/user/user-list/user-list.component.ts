@@ -6,6 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {
+  ProjectResponse,
   UserDetails,
   UserEdit,
   UserResponse,
@@ -14,6 +15,8 @@ import {
 import { UsersService } from '../../../../../services/users.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { WebSocketService } from '../../../../../services/web-socket.service';
+import { ProjectsService } from '../../../../../services/projects.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-users',
@@ -24,17 +27,21 @@ export class UserListComponent implements OnInit {
   items: UserResponse[] = [];
   visibleSidebar: boolean = false;
   userDetails: UserResponse | any;
+  projects: ProjectResponse[] = [];
+  selectedProject: number = 0;
   roles: string[] = ['user', 'administrator'];
   selectedRole: string = '';
   username: string = '';
   password: string = '';
   fullName: string = '';
+  visibleSidebarAssignToProject: boolean = false;
 
   constructor(
     private service: UsersService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private webSocketService: WebSocketService
+    private webSocketService: WebSocketService,
+    private projectService: ProjectsService
   ) {}
 
   ngOnInit(): void {
@@ -97,5 +104,42 @@ export class UserListComponent implements OnInit {
     });
     this.webSocketService.sendMessage(`User is Edited`);
     this.visibleSidebar = false;
+  }
+
+  onAssignProject(userId: number) {
+    this.service.getById(userId).subscribe({
+      next: (user: UserResponse) => {
+        this.userDetails = user;
+      },
+    });
+    this.projectService.getAllProjects().subscribe({
+      next: (projects: ProjectResponse[]) => {
+        this.projects = projects;
+      },
+    });
+    this.visibleSidebarAssignToProject = true;
+  }
+
+  onAssignUserToProject() {
+    this.projectService
+      .assignUserToProject({
+        userId: this.userDetails.id,
+        projectId: this.selectedProject,
+      })
+      .subscribe({
+        next: () => {
+          this.webSocketService.sendMessage(
+            'Admin assign new user to project.'
+          );
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: error.error.message,
+            detail: 'via admin',
+            life: 2000,
+          });
+        },
+      });
   }
 }

@@ -1,10 +1,9 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { apiUrl } from '../shared/constants';
 import { Observable } from 'rxjs';
-import { UserResponse } from '../models/user/user-response';
-import { jwtDecode } from 'jwt-decode';
 import { UserRegister } from '../models/user/user-register';
+import { UserResponse } from '../models/user/user-response';
+import { apiUrl } from '../shared/constants';
 
 @Injectable({
   providedIn: 'root',

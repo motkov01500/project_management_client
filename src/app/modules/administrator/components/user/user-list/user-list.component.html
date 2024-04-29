@@ -12,6 +12,7 @@
         <th>Role</th>
         <th>Delete</th>
         <th>Edit</th>
+        <th>Assign Project</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
@@ -34,6 +35,14 @@
             label="Edit"
             severity="warning"
             (onClick)="onEdit(item.id)"
+          ></p-button>
+        </td>
+        <td>
+          <p-button
+            type="button"
+            label="Assign To Project"
+            severity="warning"
+            (onClick)="onAssignProject(item.id)"
           ></p-button>
         </td>
       </tr>
@@ -98,6 +107,33 @@
           class="test"
           name="optional"
           placeholder="Select role"
+        ></p-dropdown>
+        <button
+          pButton
+          type="submit"
+          label="Edit User"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+  <p-sidebar
+    [(visible)]="visibleSidebarAssignToProject"
+    position="left"
+    [baseZIndex]="10000"
+  >
+    <div class="container">
+      <h1>Edit User</h1>
+      <form (submit)="onAssignUserToProject()">
+        <p-dropdown
+          [options]="projects"
+          [(ngModel)]="selectedProject"
+          [style]="{ width: '100%' }"
+          class="test"
+          name="optional"
+          placeholder="Select role"
+          optionLabel="key"
+          optionValue="id"
         ></p-dropdown>
         <button
           pButton

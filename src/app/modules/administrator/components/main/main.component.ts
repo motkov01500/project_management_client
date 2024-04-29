@@ -4,6 +4,7 @@ import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../../../services/auth.service';
 import { UsersService } from '../../../../services/users.service';
 import { UserResponse } from '../../../../models';
+import { WebSocketService } from '../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-main',
@@ -17,7 +18,8 @@ export class MainComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private userService: UsersService
+    private userService: UsersService,
+    private websocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
