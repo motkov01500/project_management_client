@@ -1,4 +1,37 @@
 <div class="card">
+  <div class="project-actions">
+    <div class="actions">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-backward"
+        title="Back to projects."
+        iconPos="left"
+        (onClick)="onBackToProjects()"
+      ></p-button> -->
+    </div>
+    <div class="page-name-project-title">
+      <div class="page-name">
+        <label style="font-weight: bold">Meetings</label>
+      </div>
+      <div class="project-name">
+        <label>Project:&nbsp;&nbsp;</label>
+        <p style="font-weight: bold">{{ projectTitle }}</p>
+      </div>
+    </div>
+    <div class="meeting-create">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-plus"
+        title="Back to projects."
+        iconPos="left"
+        (onClick)="onBackToProjects()"
+      ></p-button> -->
+    </div>
+  </div>
   <p-table
     [value]="currentUserMeetings"
     [paginator]="true"
@@ -7,41 +40,30 @@
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Status</th>
+        <th>Title</th>
         <th>Date</th>
-        <th>ProjectRelated</th>
-        <th>View Users</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
       <tr>
-        <td>{{ item.status }}</td>
-        <td>{{ item.date.toLocaleString() }}</td>
-        <td>{{ item.project.key }}</td>
+        <td>{{ item.title }}</td>
+        <td>{{ item.date | date : "fullDate" }}</td>
         <td>
           <p-button
             type="button"
-            label="View Users"
+            title="View Users"
+            icon="pi pi-users"
+            [rounded]="true"
+            severity="info"
+            [outlined]="true"
             (onClick)="onViewRelatedUsers(item.id)"
           ></p-button>
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="paginatorleft">
-      <p-button
-        type="button"
-        icon="pi pi-plus"
-        cl
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
-    <ng-template pTemplate="paginatorright">
-      <p-button
-        type="button"
-        icon="pi pi-cloud"
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
+    <ng-template pTemplate="paginatorleft"> </ng-template>
+    <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
   <p-sidebar
     [fullScreen]="true"

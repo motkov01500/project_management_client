@@ -1,53 +1,71 @@
 <div class="card">
-  <p-table
-    [value]="items"
-    [paginator]="true"
-    [rows]="10"
-    [reorderableColumns]="true"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Progress</th>
-        <th>InitialEstimation</th>
-        <th>Status</th>
-        <th>HoursSpent</th>
-        <th>Project Related</th>
-        <th>Update Progress</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-item>
-      <tr>
-        <td>{{ item.progress }}</td>
-        <td>{{ item.initialEstimation }}</td>
-        <td>{{ item.taskStatus.name }}</td>
-        <td>{{ item.hoursSpent }}</td>
-        <td>{{ item.project.key }}</td>
-        <td>
-          <p-button
-            type="button"
-            label="Edit"
-            severity="warning"
-            (onClick)="onUpdateProgress(item.id)"
-          ></p-button>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="paginatorleft">
-      <p-button
-        type="button"
-        icon="pi pi-plus"
-        cl
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
-    <ng-template pTemplate="paginatorright">
-      <p-button
-        type="button"
-        icon="pi pi-cloud"
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
-  </p-table>
+  <div class="project-actions">
+    <div class="actions">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-backward"
+        title="Back to projects."
+        iconPos="left"
+        (onClick)="onBackToProjects()"
+      ></p-button> -->
+    </div>
+    <div class="page-name-project-title">
+      <div class="page-name"><label>Tasks</label></div>
+      <div class="project-name">
+        <label>Project:&nbsp;&nbsp;</label>
+        <p style="font-weight: bold">{{ projectTitle }}</p>
+      </div>
+    </div>
+    <div class="task-create"></div>
+  </div>
+
+  <div class="my-table">
+    <p-table
+      [value]="items"
+      [paginator]="true"
+      [rows]="10"
+      [reorderableColumns]="true"
+      [autoLayout]="false"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Progress</th>
+          <th>Initial estimation</th>
+          <th>Status</th>
+          <th>Hours spent</th>
+          <th>Project related</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.progress }}%</td>
+          <td>{{ item.initialEstimation }}</td>
+          <td [style.color]="item.taskStatus === 'DONE' ? 'green' : 'blue'">
+            {{ item.taskStatus }}
+          </td>
+          <td>{{ item.hoursSpent }}</td>
+          <td>{{ item.project.title }}</td>
+          <td>
+            <p-button
+              [disabled]="item.progress == 100 ? true : false"
+              type="button"
+              title="Edit progress"
+              severity="warning"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-pencil"
+              (onClick)="onUpdateProgress(item.id)"
+            ></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft"></ng-template>
+      <ng-template pTemplate="paginatorright"></ng-template>
+    </p-table>
+  </div>
   <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
     <div class="container">
       <h1>Edit Progress</h1>
@@ -55,8 +73,10 @@
         <input
           type="number"
           pInputText
+          id="sidebar-input"
           class="p-inputtext-lg"
           name="progress"
+          value="{{ taskDetails.progress }}"
           [(ngModel)]="newProgress.progress"
           placeholder="Progress"
         />

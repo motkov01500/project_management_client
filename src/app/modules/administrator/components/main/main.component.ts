@@ -23,12 +23,12 @@ export class MainComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.websocketService.connect();
     this.items = [
       {
         label: 'Users',
         items: [
           { label: 'User List', routerLink: 'user/get-all' },
-          { label: 'Create User', routerLink: 'user/create' },
           { label: 'Assign to Project', routerLink: 'user/assign-user' },
         ],
       },
@@ -36,34 +36,11 @@ export class MainComponent implements OnInit {
         label: 'Projects',
         items: [
           { label: 'Project List', routerLink: 'project/get-all' },
-          { label: 'Create Project', routerLink: 'project/create' },
           {
             label: 'No Assignees',
             routerLink: 'project/project-without-assignees',
           },
         ],
-      },
-      {
-        label: 'Tasks',
-        items: [
-          { label: 'Task List', routerLink: 'task/get-all' },
-          { label: 'Create Task', routerLink: 'task/create' },
-        ],
-      },
-      {
-        label: 'Meetings',
-        items: [
-          { label: 'Meeting List', routerLink: 'meeting/get-all' },
-          { label: 'Create Meeting', routerLink: 'meeting/create' },
-        ],
-      },
-      {
-        label: 'Logout',
-        command: () => {
-          this.authService.logout();
-          this.router.navigate(['/']);
-        },
-        style: { color: 'red' },
       },
     ];
     this.userService.getCurrentLoggedUser().subscribe({

@@ -1,67 +1,104 @@
 <div class="card">
-  <p-table
-    [value]="items"
-    [paginator]="true"
-    [rows]="10"
-    [reorderableColumns]="true"
-  >
+  <div class="head-actions">
+    <div class="actions">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-backward"
+        title="Back to projects."
+        iconPos="left"
+        (onClick)="onHomeButton()"
+      ></p-button> -->
+    </div>
+    <div class="page-name-project-title">
+      <div class="page-name">
+        <label style="font-weight: bold; font-size: 1.5rem; display: block"
+          >Users</label
+        >
+      </div>
+    </div>
+    <div class="task-create">
+      <p-button
+        severity="success"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-plus"
+        title="Create user."
+        iconPos="left"
+        (onClick)="onCreateUser()"
+      ></p-button>
+    </div>
+  </div>
+  <p-table class="table" [value]="items" [paginator]="true" [rows]="10">
     <ng-template pTemplate="header">
       <tr>
+        <th>Picture</th>
         <th>Name</th>
-        <th>FullName</th>
+        <th>Full name</th>
         <th>Role</th>
-        <th>Delete</th>
-        <th>Edit</th>
-        <th>Assign Project</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-item>
+    <ng-template pTemplate="body" class="myTable" let-item>
       <tr>
+        <td>
+          <img
+            src="{{ item.imageUrl }}"
+            style="height: 50px; width: 50px; border-radius: 50%"
+          />
+        </td>
         <td>{{ item.username }}</td>
         <td *ngIf="item.fullName; else elseBlock">{{ item.fullName }}</td>
         <ng-template #elseBlock><td>No Name</td></ng-template>
         <td>{{ item.role.name }}</td>
         <td>
-          <p-button
-            type="button"
-            label="Delete"
-            severity="danger"
-            (onClick)="onDelete(item.id)"
-          ></p-button>
-        </td>
-        <td>
-          <p-button
-            type="button"
-            label="Edit"
-            severity="warning"
-            (onClick)="onEdit(item.id)"
-          ></p-button>
-        </td>
-        <td>
-          <p-button
-            type="button"
-            label="Assign To Project"
-            severity="warning"
-            (onClick)="onAssignProject(item.id)"
-          ></p-button>
+          <div class="user-actions">
+            <p-button
+              type="button"
+              title="Delete"
+              icon="pi pi-trash"
+              size="small"
+              severity="danger"
+              [rounded]="true"
+              [outlined]="true"
+              (onClick)="onDelete(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Edit"
+              [rounded]="true"
+              [outlined]="true"
+              size="small"
+              icon="pi pi-pencil"
+              severity="warning"
+              (onClick)="onEdit(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              [rounded]="true"
+              [outlined]="true"
+              title="Assign to project"
+              icon="pi pi pi-user-plus"
+              severity="warning"
+              (onClick)="onAssignProject(item.id)"
+            ></p-button>
+            <!-- <p-button
+              type="button"
+              title="Assign to meeting"
+              icon="pi pi-calendar-plus"
+              size="small"
+              severity="danger"
+              [rounded]="true"
+              [outlined]="true"
+              (onClick)="onAssignToMeeting(item.id)"
+            ></p-button> -->
+          </div>
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="paginatorleft">
-      <p-button
-        type="button"
-        icon="pi pi-plus"
-        cl
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
-    <ng-template pTemplate="paginatorright">
-      <p-button
-        type="button"
-        icon="pi pi-cloud"
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
+    <ng-template pTemplate="paginatorleft"> </ng-template>
+    <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
   <p-confirmDialog
     [style]="{ width: '50vw' }"
@@ -77,17 +114,16 @@
           pInputText
           class="p-inputtext-lg"
           name="username"
+          id="sidebar-input"
           value="{{ userDetails?.username }}"
           [(ngModel)]="username"
         />
-        <!--Bug when is type password when choose user
-        and change after that safe password to first user
-        only to inputs not in database!!!!!!!-->
         <input
           type="password"
           pInputText
           class="p-inputtext-lg"
           name="password"
+          id="sidebar-input"
           [(ngModel)]="password"
           placeholder="Password"
         />
@@ -95,6 +131,7 @@
           type="text"
           pInputText
           class="p-inputtext-lg"
+          id="sidebar-input"
           value="{{ userDetails?.fullName }}"
           name="fullName"
           placeholder="Full Name"
@@ -104,6 +141,7 @@
           [options]="roles"
           [(ngModel)]="selectedRole"
           [style]="{ width: '100%' }"
+          id="sidebar-input"
           class="test"
           name="optional"
           placeholder="Select role"
@@ -131,7 +169,37 @@
           [style]="{ width: '100%' }"
           class="test"
           name="optional"
-          placeholder="Select role"
+          id="sidebar-input"
+          placeholder="Select project"
+          optionLabel="key"
+          optionValue="id"
+        ></p-dropdown>
+        <button
+          pButton
+          type="submit"
+          label="Edit User"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+
+  <p-sidebar
+    [(visible)]="assignToMeetingSidebar"
+    position="left"
+    [baseZIndex]="10000"
+  >
+    <div class="container">
+      <h2>Assign to meeting</h2>
+      <form (submit)="onAssignUserToProject()">
+        <p-dropdown
+          [options]="meetings"
+          [(ngModel)]="selectedProject"
+          [style]="{ width: '100%' }"
+          class="test"
+          name="optional"
+          id="sidebar-input"
+          placeholder="Select project"
           optionLabel="key"
           optionValue="id"
         ></p-dropdown>

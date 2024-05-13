@@ -19,13 +19,19 @@ export class UsersService {
     );
   }
 
+  getUsersThatCanAddToTask(taskId: number): Observable<UserResponse[]> {
+    return this.http.get<UserResponse[]>(
+      `${apiUrl}v1/user/administrator/get-users-can-add-to-task/${taskId}`
+    );
+  }
+
   getUnassignedToProjectUsers(): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(
       `${apiUrl}v1/user/administrator/get-all-unassigned`
     );
   }
 
-  getRelatedToProject(projectKey: string): Observable<UserResponse[]> {
+  getRelatedToProject(projectKey: string | null): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(
       `${apiUrl}v1/user/get-all-related-to-project/${projectKey}`
     );
@@ -35,7 +41,7 @@ export class UsersService {
     return this.http.get<UserResponse>(`${apiUrl}v1/user/current-user`);
   }
 
-  getRelatedToMeeting(meetingId: number): Observable<UserResponse[]> {
+  getRelatedToMeeting(meetingId: number | null): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(
       `${apiUrl}v1/user/get-all-related-to-meeting/${meetingId}`
     );
@@ -59,17 +65,26 @@ export class UsersService {
   }
 
   editUser(userCredentials: UserEdit, id: number): Observable<UserResponse> {
-    return this.http.put<UserResponse>(`${apiUrl}v1/user/update/${id}`, {
-      username: userCredentials.username,
-      password: userCredentials.password,
-      fullName: userCredentials.fullName,
-      roleName: userCredentials.role,
-    });
+    return this.http.put<UserResponse>(
+      `${apiUrl}v1/user/administrator/update/${id}`,
+      {
+        username: userCredentials.username,
+        password: userCredentials.password,
+        fullName: userCredentials.fullName,
+        roleName: userCredentials.role,
+      }
+    );
   }
 
-  uploadImage(imageLink: any): Observable<UserResponse> {
+  uploadImage(
+    imageLink: any,
+    imageSize: number,
+    imageType: string
+  ): Observable<UserResponse> {
     return this.http.patch<UserResponse>(`${apiUrl}v1/user/upload-image`, {
       imageUrl: imageLink,
+      size: imageSize,
+      fileType: imageType,
     });
   }
 
@@ -80,7 +95,9 @@ export class UsersService {
     return this.http.patch<UserResponse>(
       `${apiUrl}v1/user/update-password/${userId}`,
       {
-        password: updatedUser.password,
+        oldPassword: updatedUser.oldPassword,
+        newPassword: updatedUser.newPassword,
+        confirmedNewPassword: updatedUser.confirmNewPassword,
       }
     );
   }

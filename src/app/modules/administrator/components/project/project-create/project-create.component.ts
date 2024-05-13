@@ -43,4 +43,7 @@ export class ProjectCreateComponent {
       },
     });
   }
+  onHomeButton() {
+    this.router.navigate(['administrator']);
+  }
 }

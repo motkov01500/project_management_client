@@ -18,6 +18,12 @@ export class ProjectsService {
     );
   }
 
+  getProjectByKey(projectKey: string | null): Observable<ProjectResponse> {
+    return this.http.get<ProjectResponse>(
+      `${apiUrl}v1/project/get-project-by-key/${projectKey}`
+    );
+  }
+
   getById(projectId: number): Observable<ProjectResponse> {
     return this.http.get<ProjectResponse>(
       `${apiUrl}v1/project/administrator/get-by-id/${projectId}`

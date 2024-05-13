@@ -17,6 +17,10 @@ const routes: Route[] = [
     path: '',
     component: MainComponent,
     children: [
+      { path: 'projects/tasks', component: TaskListComponent },
+      { path: 'projects/meetings', component: MeetingListComponent },
+      { path: 'projects/meetings/create', component: MeetingCreateComponent },
+      { path: 'projects/tasks/create', component: TaskCreateComponent },
       {
         path: 'user',
         children: [
@@ -34,20 +38,6 @@ const routes: Route[] = [
             path: 'project-without-assignees',
             component: ProjectsWithoutUsersComponent,
           },
-        ],
-      },
-      {
-        path: 'task',
-        children: [
-          { path: 'get-all', component: TaskListComponent },
-          { path: 'create', component: TaskCreateComponent },
-        ],
-      },
-      {
-        path: 'meeting',
-        children: [
-          { path: 'get-all', component: MeetingListComponent },
-          { path: 'create', component: MeetingCreateComponent },
         ],
       },
     ],

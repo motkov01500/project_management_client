@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProjectResponse, UserResponse } from '../../../../models';
 import { ProjectsService } from '../../../../services/projects.service';
 import { UsersService } from '../../../../services/users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project',
@@ -15,7 +16,8 @@ export class ProjectComponent implements OnInit {
 
   constructor(
     private projectService: ProjectsService,
-    private userService: UsersService
+    private userService: UsersService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -26,12 +28,17 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  onViewUsers(projectKey: string) {
-    this.projectUsersSidebar = true;
-    this.userService.getRelatedToProject(projectKey).subscribe({
-      next: (users: UserResponse[]) => {
-        this.projectRelatedUsers = users;
-      },
-    });
+  onViewUsers(projectKey: string, projectTitle: string) {
+    this.router.navigate(['user', 'projects', 'users']);
+    localStorage.setItem('current-project-key', projectKey);
+    localStorage.setItem('current-project-title', projectTitle);
+  }
+
+  addCurrentProjectToLocalStorage(projectKey: string, projectTitle: string) {
+    localStorage.setItem('current-project-key', projectKey);
+    localStorage.setItem('current-project-title', projectTitle);
+  }
+  onHomeButton() {
+    this.router.navigate(['user']);
   }
 }

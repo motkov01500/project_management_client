@@ -5,6 +5,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { MeetingEdit } from '../../../../../models/meeting/meeting-edit';
 import { WebSocketService } from '../../../../../services/web-socket.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-meeting-list',
@@ -18,16 +19,22 @@ export class MeetingListComponent implements OnInit {
   date: Date = new Date();
   statuses: string[] = ['UPCOMING', 'STARTED', 'END'];
   selectedStatus: string = '';
+  projectKey: string | null = localStorage.getItem('current-project-key');
+  projectTitle: string | null = localStorage.getItem('current-project-title');
+  title: string = '';
+  assignUserToMeetingSidebar: boolean = false;
+  meetingAsign: MeetingResponse | undefined;
 
   constructor(
     private service: MeetingsService,
     private confirmationService: ConfirmationService,
+    private router: Router,
     private messageService: MessageService,
     private websocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
-    this.service.getAll().subscribe({
+    this.service.getCurrentProjectMeetings(this.projectKey).subscribe({
       next: (meetings: MeetingResponse[]) => {
         this.items = meetings;
       },
@@ -51,7 +58,7 @@ export class MeetingListComponent implements OnInit {
         this.service.delete(meetingId).subscribe({
           error: (error: HttpErrorResponse) => {
             this.messageService.add({
-              severity: 'success',
+              severity: 'error',
               summary: error.error.message,
               detail: 'via admin',
             });
@@ -88,15 +95,39 @@ export class MeetingListComponent implements OnInit {
           summary: 'Meeting Edit',
           detail: 'via admin',
         });
+        this.websocketService.sendMessage(`Meeting is edited.`);
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
-          severity: 'success',
+          severity: 'error',
           summary: error.error.message,
           detail: 'via admin',
         });
       },
     });
     this.visibleSidebar = false;
+  }
+
+  addMeeting() {
+    throw new Error('Method not implemented.');
+  }
+
+  onBackToProjects() {
+    localStorage.removeItem('current-project-key');
+    localStorage.removeItem('current-project-title');
+    this.router.navigate(['administrator/project/get-all']);
+  }
+
+  onCreateMeeting() {
+    this.router.navigate(['administrator', 'projects', 'meetings', 'create']);
+  }
+
+  onAssignUserToMeeting(meetingId: number) {
+    this.service.getById(meetingId).subscribe({
+      next: (meeting: MeetingResponse) => {
+        this.meetingAsign = meeting;
+      },
+    });
+    this.assignUserToMeetingSidebar = true;
   }
 }

@@ -24,17 +24,9 @@ export class MainComponent implements OnInit {
   ) {}
 
   menuItems: MenuItem[] = [
-    { label: 'Projects', routerLink: 'projects' },
-    { label: 'Meetings', routerLink: 'meetings' },
-    { label: 'Task', routerLink: 'task' },
-    { label: 'My Profile', routerLink: 'my-profile' },
     {
-      label: 'Logout',
-      command: () => {
-        this.authService.logout();
-        this.router.navigate(['/']);
-        this.webSocketService.closeConnection();
-      },
+      label: 'Projects',
+      routerLink: 'projects',
     },
   ];
 
@@ -42,7 +34,6 @@ export class MainComponent implements OnInit {
     this.userService.getCurrentLoggedUser().subscribe({
       next: (currentLoggedUser: UserResponse) => {
         this.username = currentLoggedUser.username;
-        console.log(currentLoggedUser);
       },
     });
     this.webSocketService.connect().subscribe({
@@ -51,6 +42,7 @@ export class MainComponent implements OnInit {
           severity: 'info',
           summary: message.data,
           detail: 'via admin',
+          life: 2000,
         });
       },
     });

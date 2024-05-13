@@ -1,39 +1,70 @@
 <div class="container-width">
-  <p-card class="card" [style]="">
+  <p-card class="card">
     <div class="image" *ngIf="!hasImage; else elseBlock">
       <p-fileUpload
+        [style]="{ margin: '20px' }"
         name="image"
         [customUpload]="true"
         (uploadHandler)="onSelect($event)"
         (onUpload)="onSucessfulUploadImage()"
+        accept=".png,.jpg"
+        uploadLabel=" "
+        chooseLabel=" "
+        cancelLabel=" "
+        [mode]="'advanced'"
+        [maxFileSize]="2000000"
       ></p-fileUpload>
       <!-- <input type="file" value="upload" (change)="onSelect($event)" /> -->
     </div>
     <ng-template #elseBlock
-      ><img alt="Image" src="{{ currentLoggedUser.imageUrl }}" class="test" />
+      ><img
+        alt="Image"
+        src="{{ currentLoggedUser.imageUrl }}"
+        style="height: 200px; width: 200px"
+        class="test"
+      />
     </ng-template>
     <div class="user-info">
-      <div class="user-info-components">
-        <h2>Username:</h2>
-        <h2>{{ currentLoggedUser.username }}</h2>
-      </div>
-      <div class="user-info-components">
-        <h2>Role:</h2>
-        <h2>{{ currentLoggedUser.role.name }}</h2>
-      </div>
-      <div class="user-info-components">
-        <h2>Full name:</h2>
-        <h2>
-          {{
-            currentLoggedUser.fullName ? currentLoggedUser.fullName : "No name"
-          }}
-        </h2>
+      <div class="user-data">
+        <div class="username-role">
+          <div class="user-info-components">
+            <p>Username:</p>
+            <p>{{ currentLoggedUser.username }}</p>
+          </div>
+          <div class="user-info-components">
+            <p>Role:</p>
+            <p>{{ currentLoggedUser.role.name }}</p>
+          </div>
+          <div class="user-info-components">
+            <p>Full name:</p>
+            <p>
+              {{
+                currentLoggedUser.fullName
+                  ? currentLoggedUser.fullName
+                  : "No name"
+              }}
+            </p>
+          </div>
+        </div>
       </div>
       <div class="user-info-components">
         <p-button
           type="button"
-          label="Change Password"
+          title="Change Password"
+          icon="pi pi-key"
+          severity="info"
+          [rounded]="true"
+          [outlined]="true"
           (onClick)="onChangePassword(currentLoggedUser.id)"
+        ></p-button>
+        <p-button
+          type="button"
+          severity="info"
+          [rounded]="true"
+          [outlined]="true"
+          title="Change image"
+          icon="pi pi-image"
+          (onClick)="onOpenChangeImageSidebar()"
         ></p-button>
       </div>
     </div>
@@ -45,10 +76,29 @@
         <input
           type="password"
           pInputText
+          id="sidebar-input"
           class="p-inputtext-lg"
           name="Password"
           placeholder="Password"
-          [(ngModel)]="updatedUserPassword.password"
+          [(ngModel)]="updatedUserPassword.oldPassword"
+        />
+        <input
+          type="password"
+          pInputText
+          id="sidebar-input"
+          class="p-inputtext-lg"
+          name="Password"
+          placeholder="New password"
+          [(ngModel)]="updatedUserPassword.newPassword"
+        />
+        <input
+          type="password"
+          pInputText
+          class="p-inputtext-lg"
+          name="Password"
+          id="sidebar-input"
+          placeholder="Confirm new password"
+          [(ngModel)]="updatedUserPassword.confirmNewPassword"
         />
         <button
           pButton
@@ -57,6 +107,23 @@
           class="p-button-lg"
         ></button>
       </form>
+    </div>
+  </p-sidebar>
+  <p-sidebar [(visible)]="imageSideBar" position="right" [baseZIndex]="10000">
+    <div class="container">
+      <p-fileUpload
+        [style]="{ margin: '20px' }"
+        name="image"
+        [customUpload]="true"
+        (uploadHandler)="onSelect($event)"
+        (onUpload)="onSucessfulUploadImage()"
+        accept=".png,.jpg"
+        uploadLabel=" "
+        chooseLabel=" "
+        cancelLabel=" "
+        [mode]="'advanced'"
+        [maxFileSize]="2000000"
+      ></p-fileUpload>
     </div>
   </p-sidebar>
 </div>

@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="head-actions">
+    <div class="actions">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-backward"
+        title="Back to meetings."
+        iconPos="left"
+        (onClick)="onHomeButton()"
+      ></p-button> -->
+    </div>
+    <div class="page-name-project-title">
+      <div class="page-name">
+        <label style="font-weight: bold; font-size: 1.5rem; display: block"
+          >Users</label
+        >
+      </div>
+    </div>
+    <div class="task-create"></div>
+  </div>
+  <p-table class="table" [value]="items" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Picture</th>
+        <th>Name</th>
+        <th>Full name</th>
+        <th>Role</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" class="myTable" let-item>
+      <tr>
+        <td>
+          <img
+            src="{{ item.imageUrl }}"
+            style="height: 50px; width: 50px; border-radius: 50%"
+          />
+        </td>
+        <td>{{ item.username }}</td>
+        <td *ngIf="item.fullName; else elseBlock">{{ item.fullName }}</td>
+        <ng-template #elseBlock><td>No Name</td></ng-template>
+        <td>{{ item.role.name }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft"> </ng-template>
+    <ng-template pTemplate="paginatorright"> </ng-template>
+  </p-table>
+</div>

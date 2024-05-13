@@ -17,6 +17,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { WebSocketService } from '../../../../../services/web-socket.service';
 import { ProjectsService } from '../../../../../services/projects.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -35,10 +36,13 @@ export class UserListComponent implements OnInit {
   password: string = '';
   fullName: string = '';
   visibleSidebarAssignToProject: boolean = false;
+  assignToMeetingSidebar: boolean = false;
+  meetings: any[] | undefined;
 
   constructor(
     private service: UsersService,
     private confirmationService: ConfirmationService,
+    private router: Router,
     private messageService: MessageService,
     private webSocketService: WebSocketService,
     private projectService: ProjectsService
@@ -111,7 +115,7 @@ export class UserListComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
-          severity: 'success',
+          severity: 'error',
           summary: error.error.message,
           detail: 'via admin',
         });
@@ -146,6 +150,12 @@ export class UserListComponent implements OnInit {
           this.webSocketService.sendMessage(
             'Admin assign new user to project.'
           );
+          this.messageService.add({
+            severity: 'success',
+            summary: 'User is added to project',
+            detail: 'via admin',
+            life: 2000,
+          });
         },
         error: (error: HttpErrorResponse) => {
           this.messageService.add({
@@ -156,5 +166,17 @@ export class UserListComponent implements OnInit {
           });
         },
       });
+  }
+
+  onCreateUser() {
+    this.router.navigate(['administrator', 'user', 'create']);
+  }
+
+  onHomeButton() {
+    this.router.navigate(['administrator']);
+  }
+
+  onAssignToMeeting(arg0: any) {
+    this.assignToMeetingSidebar = true;
   }
 }

@@ -4,4 +4,3 @@ export * from './user/user-details';
 export * from './user/user-edit';
 export * from './project/project-response';
 export * from './project/project-edit';
-export * from './task-status';

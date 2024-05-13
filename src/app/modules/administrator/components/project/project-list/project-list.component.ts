@@ -6,6 +6,7 @@ import { MeetingResponse } from '../../../../../models/meeting/meeting-response'
 import { MeetingsService } from '../../../../../services/meetings.service';
 import { ProjectsService } from '../../../../../services/projects.service';
 import { WebSocketService } from '../../../../../services/web-socket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-list',
@@ -24,7 +25,7 @@ export class ProjectListComponent implements OnInit {
   constructor(
     private projectService: ProjectsService,
     private confirmationService: ConfirmationService,
-    private meetingService: MeetingsService,
+    private router: Router,
     private messageService: MessageService,
     private websocketService: WebSocketService
   ) {}
@@ -63,6 +64,7 @@ export class ProjectListComponent implements OnInit {
           summary: 'Project Edit',
           detail: 'via admin',
         });
+        this.websocketService.sendMessage(`The project is edited`);
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
@@ -83,7 +85,7 @@ export class ProjectListComponent implements OnInit {
         this.projectService.deleteProject(projectId).subscribe({
           error: (error: HttpErrorResponse) => {
             this.messageService.add({
-              severity: 'success',
+              severity: 'error',
               summary: error.error.message,
               detail: 'via admin',
             });
@@ -104,12 +106,22 @@ export class ProjectListComponent implements OnInit {
     });
   }
 
-  onViewMeetings(projectKey: string) {
-    this.projectMeetingSidebar = true;
-    this.meetingService.getUnfinishedMeetings(projectKey).subscribe({
-      next: (meeetings: MeetingResponse[]) => {
-        this.currentProjectUnfinishedMeetings = meeetings;
-      },
-    });
+  onViewMeetings(projectKey: string, projectTitle: string) {
+    localStorage.setItem('current-project-key', projectKey);
+    localStorage.setItem('current-project-title', projectTitle);
+    this.router.navigate(['administrator', 'projects', 'meetings']);
+  }
+
+  onViewTasks(projectKey: string, projectTitle: string) {
+    localStorage.setItem('current-project-key', projectKey);
+    localStorage.setItem('current-project-title', projectTitle);
+    this.router.navigate(['administrator', 'projects', 'tasks']);
+  }
+
+  onHomeButton() {
+    this.router.navigate(['administrator']);
+  }
+  onCreateProject() {
+    this.router.navigate(['administrator', 'project', 'create']);
   }
 }

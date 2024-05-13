@@ -1,3 +1,28 @@
 <p-menubar [model]="items">
-  <h2>Hello, {{ username }}</h2>
+  <div class="menu-left-elements">
+    <span class="p-menuitem-text" style="margin-right: 1rem"
+      >Hello, {{ username }}</span
+    >
+    <img
+      src="{{ userDetails?.imageUrl }}"
+      style="height: 40px; width: 40px; border-radius: 50%"
+      (click)="op.toggle($event)"
+    />
+    <p-overlayPanel #op>
+      <ng-template pTemplate>
+        <div class="image-menu">
+          <div class="image-element" (click)="op.hide()">
+            <p (click)="logout()">Logout</p>
+          </div>
+          <div
+            class="image-element"
+            *ngIf="userRole === 'user'"
+            (click)="op.hide()"
+          >
+            <p routerLink="my-profile">My profile</p>
+          </div>
+        </div>
+      </ng-template>
+    </p-overlayPanel>
+  </div>
 </p-menubar>

@@ -5,16 +5,30 @@
   flex-direction: column;
 }
 
+.user-data {
+  display: flex;
+  width: 100%;
+  height: 150px;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.user-data div {
+  width: 100%;
+}
+
+.username-role {
+  height: 100%;
+}
+
 .card {
-  width: 30%;
+  width: 35%;
   margin: 3rem;
+  height: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-img {
-  width: 100%;
+  justify-items: center;
 }
 
 .user-info {
@@ -26,7 +40,11 @@ img {
 .user-info-components {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+.user-info-components > p:first-child {
+  font-weight: bold;
 }
 
 form {
@@ -47,4 +65,11 @@ input {
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.image {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

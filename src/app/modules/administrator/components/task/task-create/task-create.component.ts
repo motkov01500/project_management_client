@@ -14,14 +14,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class TaskCreateComponent implements OnInit {
   newTask: TaskCreate = {
-    status: '',
     projectId: 0,
     initialEstimation: 0,
   };
   selectedProject: ProjectResponse = { key: '', title: '', id: 0 };
   projects: ProjectResponse[] = [];
-  statuses: string[] = ['TODO', 'IN_PROGRESS', 'DONE', 'OPEN', 'RE_OPEN'];
-
+  projectKey: string | null = localStorage.getItem('current-project-key');
+  currentProject: ProjectResponse | undefined;
   constructor(
     private projectService: ProjectsService,
     private tasksService: TasksService,
@@ -35,10 +34,16 @@ export class TaskCreateComponent implements OnInit {
         this.projects = projects;
       },
     });
+    this.projectService.getProjectByKey(this.projectKey).subscribe({
+      next: (project: ProjectResponse) => {
+        this.currentProject = project;
+        this.newTask.projectId = project.id;
+        console.log(this.currentProject);
+      },
+    });
   }
 
   onSubmit() {
-    this.newTask.projectId = this.selectedProject.id;
     this.tasksService.create(this.newTask).subscribe({
       next: () => {
         this.messageService.add({
@@ -46,11 +51,12 @@ export class TaskCreateComponent implements OnInit {
           summary: 'Task created',
           detail: 'via admin',
         });
+        console.log();
         this.websocketService.sendMessage(`New task is created`);
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
-          severity: 'success',
+          severity: 'error',
           summary: error.error.message,
           detail: 'via admin',
         });

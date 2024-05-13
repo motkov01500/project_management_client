@@ -8,6 +8,8 @@ import {
   FileUploadEvent,
   FileUploadHandlerEvent,
 } from 'primeng/fileupload';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-my-profile',
@@ -15,6 +17,8 @@ import {
   styleUrl: './my-profile.component.css',
 })
 export class MyProfileComponent implements OnInit {
+  imageSideBar: boolean = false;
+
   role: UserRole = {
     name: '',
   };
@@ -27,11 +31,16 @@ export class MyProfileComponent implements OnInit {
   };
   hasImage: boolean = false;
   updatedUserPassword: UserPasswordUpdate = {
-    password: '',
+    oldPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
   };
   visibleSidebar: boolean = false;
 
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.userService.getCurrentLoggedUser().subscribe({
@@ -51,7 +60,22 @@ export class MyProfileComponent implements OnInit {
   onSubmit() {
     this.userService
       .updateUserPassword(this.currentLoggedUser.id, this.updatedUserPassword)
-      .subscribe({});
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Successfully changed password.',
+            life: 1000,
+          });
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: error.error.message,
+            life: 1000,
+          });
+        },
+      });
   }
 
   onSelect(event: FileUploadHandlerEvent): void {
@@ -64,12 +88,17 @@ export class MyProfileComponent implements OnInit {
     // });
     base64(event.files[0]).then((data) => {
       if (data) {
-        this.userService.uploadImage(data).subscribe({});
+        this.userService
+          .uploadImage(data, event.files[0].size, event.files[0].type)
+          .subscribe({});
       }
     });
   }
 
   onSucessfulUploadImage() {
     this.hasImage = true;
+  }
+  onOpenChangeImageSidebar() {
+    this.imageSideBar = true;
   }
 }

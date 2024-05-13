@@ -16,6 +16,9 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { FormsModule } from '@angular/forms';
 import { TaskComponent } from './components/task/task.component';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { UserMeetingRelatedComponent } from './components/user-meeting-related/user-meeting-related.component';
+import { UserProjectRelatedComponent } from './components/user-project-related/user-project-related/user-project-related.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,8 @@ import { ToastModule } from 'primeng/toast';
     MeetingComponent,
     MyProfileComponent,
     TaskComponent,
+    UserMeetingRelatedComponent,
+    UserProjectRelatedComponent,
   ],
   imports: [
     CommonModule,
@@ -38,6 +43,7 @@ import { ToastModule } from 'primeng/toast';
     FileUploadModule,
     InputTextModule,
     ToastModule,
+    TooltipModule,
   ],
 })
 export class UserModule {}

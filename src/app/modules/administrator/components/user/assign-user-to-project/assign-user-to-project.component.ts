@@ -5,6 +5,7 @@ import { ProjectsService } from '../../../../../services/projects.service';
 import { ProjectUserAssign } from '../../../../../models/project/project-user-assign';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
+import { WebSocketService } from '../../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-assign-user-to-project',
@@ -29,7 +30,8 @@ export class AssignUserToProjectComponent implements OnInit {
   constructor(
     private userService: UsersService,
     private projectService: ProjectsService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private webSocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +66,7 @@ export class AssignUserToProjectComponent implements OnInit {
             severity: 'success',
             summary: response.message,
           });
+          this.webSocketService.sendMessage(`The user is added to project.`);
         },
         error: (error: HttpErrorResponse) => {
           this.messageService.add({

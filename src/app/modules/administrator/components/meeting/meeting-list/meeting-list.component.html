@@ -1,4 +1,35 @@
 <div class="card">
+  <div class="head-actions">
+    <div class="actions">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-backward"
+        title="Back to projects."
+        iconPos="left"
+        (onClick)="onBackToProjects()"
+      ></p-button> -->
+    </div>
+    <div class="page-name-project-title">
+      <div class="page-name"><label>Meetings</label></div>
+      <div class="project-name">
+        <label>Project:&nbsp;&nbsp;</label>
+        <p style="font-weight: bold">{{ projectTitle }}</p>
+      </div>
+    </div>
+    <div class="task-create">
+      <p-button
+        severity="success"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-plus"
+        title="Create Meeting."
+        iconPos="left"
+        (onClick)="onCreateMeeting()"
+      ></p-button>
+    </div>
+  </div>
   <p-table
     [value]="items"
     [paginator]="true"
@@ -7,51 +38,50 @@
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Status</th>
+        <th>Title</th>
         <th>Date</th>
-        <th>ProjectRelated</th>
-        <th>Delete</th>
-        <th>Edit</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
       <tr>
-        <td>{{ item.status }}</td>
-        <td>{{ item.date.toLocaleString() }}</td>
-        <td>{{ item.project.key }}</td>
+        <td>{{ item.title }}</td>
+        <td>{{ item.date | date : "fullDate" }}</td>
         <td>
-          <p-button
-            type="button"
-            label="Delete"
-            severity="danger"
-            (onClick)="onDelete(item.id)"
-          ></p-button>
-        </td>
-        <td>
-          <p-button
-            type="button"
-            label="Edit"
-            severity="warning"
-            (onClick)="onEdit(item.id)"
-          ></p-button>
+          <div class="meeting-actions">
+            <p-button
+              type="button"
+              title="Delete"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-trash"
+              severity="danger"
+              (onClick)="onDelete(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Edit"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-pencil"
+              severity="warning"
+              (onClick)="onEdit(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Assign user"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-user-plus"
+              severity="success"
+              (onClick)="onAssignUserToMeeting(item.id)"
+            ></p-button>
+          </div>
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="paginatorleft">
-      <p-button
-        type="button"
-        icon="pi pi-plus"
-        cl
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
-    <ng-template pTemplate="paginatorright">
-      <p-button
-        type="button"
-        icon="pi pi-cloud"
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
+    <ng-template pTemplate="paginatorleft"> </ng-template>
+    <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
   <p-confirmDialog
     [style]="{ width: '50vw' }"
@@ -65,19 +95,56 @@
         <input
           type="datetime-local"
           pInputText
+          id="sidebar-input"
           class="p-inputtext-lg"
           name="Date"
           value="{{ meetingDetails?.date }}"
           [(ngModel)]="date"
         />
-        <p-dropdown
-          [options]="statuses"
-          [(ngModel)]="selectedStatus"
-          [style]="{ width: '100%' }"
-          class="test"
-          name="optional"
-          placeholder="Select Status"
-        ></p-dropdown>
+        <input
+          type="text"
+          pInputText
+          id="sidebar-input"
+          class="p-inputtext-lg"
+          name="Title"
+          value="{{ meetingDetails?.title }}"
+          [(ngModel)]="title"
+        />
+        <button
+          pButton
+          type="submit"
+          label="Edit Meeting"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+  <p-sidebar
+    [(visible)]="assignUserToMeetingSidebar"
+    position="right"
+    [baseZIndex]="10000"
+  >
+    <div class="container">
+      <h2>Assign user to meeting</h2>
+      <form (submit)="onSubmit()">
+        <input
+          type="datetime-local"
+          pInputText
+          id="sidebar-input"
+          class="p-inputtext-lg"
+          name="Date"
+          value="{{ meetingAsign?.title }}"
+          [(ngModel)]="date"
+        />
+        <input
+          type="text"
+          pInputText
+          id="sidebar-input"
+          class="p-inputtext-lg"
+          name="Title"
+          value="{{ meetingDetails?.title }}"
+          [(ngModel)]="title"
+        />
         <button
           pButton
           type="submit"

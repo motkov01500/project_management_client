@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { UserRequest } from '../../../../../models/user/user-request';
 import { UsersService } from '../../../../../services/users.service';
 import { WebSocketService } from '../../../../../services/web-socket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-create',
@@ -19,6 +20,7 @@ export class UserCreateComponent {
 
   constructor(
     private service: UsersService,
+    private router: Router,
     private messageService: MessageService,
     private webSocketService: WebSocketService
   ) {}
@@ -34,12 +36,16 @@ export class UserCreateComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
-          severity: 'success',
+          severity: 'error',
           summary: error.error.message,
           detail: 'via admin',
         });
       },
     });
     this.webSocketService.sendMessage(`New user is created`);
+  }
+
+  onHomeButton() {
+    this.router.navigate(['administrator']);
   }
 }

@@ -1,15 +1,41 @@
 <div class="card">
-  <p-table
-    [value]="projects"
-    [paginator]="true"
-    [rows]="10"
-    [reorderableColumns]="true"
-  >
+  <div class="head-actions">
+    <div class="actions">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-backward"
+        title="Back to projects."
+        iconPos="left"
+        (onClick)="onHomeButton()"
+      ></p-button> -->
+    </div>
+    <div class="page-name-project-title">
+      <div class="page-name">
+        <label style="font-weight: bold; font-size: 1.5rem; display: block"
+          >Projects</label
+        >
+      </div>
+    </div>
+    <div class="task-create">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-plus"
+        title="Back to projects."
+        iconPos="left"
+        (onClick)="onBackToProjects()"
+      ></p-button> -->
+    </div>
+  </div>
+  <p-table [value]="projects" [paginator]="true" [rows]="10">
     <ng-template pTemplate="header">
       <tr>
         <th>Key</th>
         <th>Title</th>
-        <th>Users</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
@@ -17,29 +43,42 @@
         <td>{{ item.key }}</td>
         <td>{{ item.title }}</td>
         <td>
-          <p-button
-            type="button"
-            label="View Users"
-            (onClick)="onViewUsers(item.key)"
-          ></p-button>
+          <div class="project-actions">
+            <p-button
+              icon="pi pi-users"
+              title="View related users"
+              iconPos="left"
+              [rounded]="true"
+              severity="info"
+              [outlined]="true"
+              (onClick)="onViewUsers(item.key, item.title)"
+            ></p-button>
+            <p-button
+              icon="pi pi-check-square"
+              title="View related tasks"
+              iconPos="left"
+              [rounded]="true"
+              severity="info"
+              [outlined]="true"
+              [routerLink]="['tasks']"
+              (onClick)="addCurrentProjectToLocalStorage(item.key, item.title)"
+            ></p-button>
+            <p-button
+              icon="pi pi-phone"
+              title="View related meetings"
+              iconPos="left"
+              [rounded]="true"
+              severity="info"
+              [outlined]="true"
+              [routerLink]="['meetings']"
+              (onClick)="addCurrentProjectToLocalStorage(item.key, item.title)"
+            ></p-button>
+          </div>
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="paginatorleft">
-      <p-button
-        type="button"
-        icon="pi pi-plus"
-        cl
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
-    <ng-template pTemplate="paginatorright">
-      <p-button
-        type="button"
-        icon="pi pi-cloud"
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
+    <ng-template pTemplate="paginatorleft"></ng-template>
+    <ng-template pTemplate="paginatorright"></ng-template>
   </p-table>
   <p-sidebar
     [fullScreen]="true"
@@ -64,25 +103,12 @@
         <ng-template pTemplate="body" let-item>
           <tr>
             <td>{{ item.username }}</td>
-            <td>{{ item.fullName ? item.fullName : "noName" }}</td>
+            <td>{{ item.fullName ? item.fullName : "no name" }}</td>
             <td>{{ item.role.name }}</td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="paginatorleft">
-          <p-button
-            type="button"
-            icon="pi pi-plus"
-            cl
-            styleClass="p-button-text"
-          ></p-button>
-        </ng-template>
-        <ng-template pTemplate="paginatorright">
-          <p-button
-            type="button"
-            icon="pi pi-cloud"
-            styleClass="p-button-text"
-          ></p-button>
-        </ng-template>
+        <ng-template pTemplate="paginatorleft"></ng-template>
+        <ng-template pTemplate="paginatorright"></ng-template>
       </p-table>
     </div>
   </p-sidebar>

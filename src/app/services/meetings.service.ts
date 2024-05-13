@@ -5,6 +5,7 @@ import { MeetingResponse } from '../models/meeting/meeting-response';
 import { apiUrl } from '../shared/constants';
 import { MeetingEdit } from '../models/meeting/meeting-edit';
 import { MeetingCreate } from '../models/meeting/meeting-create';
+import { TaskResponse } from '../models/task/task-response';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,14 @@ export class MeetingsService {
   getAll(): Observable<MeetingResponse[]> {
     return this.http.get<MeetingResponse[]>(
       `${apiUrl}v1/meeting/administrator/get-all`
+    );
+  }
+
+  getCurrentProjectMeetings(
+    projectKey: string | null
+  ): Observable<MeetingResponse[]> {
+    return this.http.get<MeetingResponse[]>(
+      `${apiUrl}v1/meeting/get-all-related-to-project/${projectKey}`
     );
   }
 
@@ -30,9 +39,11 @@ export class MeetingsService {
     );
   }
 
-  getCurrentUserMeetings(): Observable<MeetingResponse[]> {
+  getCurrentUserMeetings(
+    projectKey: string | null
+  ): Observable<MeetingResponse[]> {
     return this.http.get<MeetingResponse[]>(
-      `${apiUrl}v1/meeting/get-all-related-meetings`
+      `${apiUrl}v1/meeting/get-current-user-meetings/${projectKey}`
     );
   }
 
@@ -40,19 +51,35 @@ export class MeetingsService {
     return this.http.post<MeetingResponse>(
       `${apiUrl}v1/meeting/administrator/create`,
       {
-        status: newMeeting.status,
+        title: newMeeting.title,
         date: newMeeting.date,
         projectId: newMeeting.projectId,
       }
     );
   }
 
-  editById(meetingId: number, editedMeeting: MeetingEdit) {
+  editById(
+    meetingId: number,
+    editedMeeting: MeetingEdit
+  ): Observable<MeetingResponse> {
     return this.http.put<MeetingResponse>(
       `${apiUrl}v1/meeting/administrator/update/${meetingId}`,
       {
         date: editedMeeting.date,
         status: editedMeeting.status,
+      }
+    );
+  }
+
+  assignUserToMeeting(
+    userId: number | null,
+    meetingId: number | null
+  ): Observable<MeetingResponse> {
+    return this.http.patch<MeetingResponse>(
+      `${apiUrl}v1/meeting/administrator/assign-user-to-meeting`,
+      {
+        userId: userId,
+        meetingId: meetingId,
       }
     );
   }

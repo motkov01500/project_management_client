@@ -4,28 +4,20 @@
     pInputText
     class="p-inputtext-lg"
     name="initialEstimation"
+    id="sidebar-input"
     [(ngModel)]="newTask.initialEstimation"
     placeholder="initialEstimation"
   />
-  <p-dropdown
-    [options]="statuses"
-    [(ngModel)]="newTask.status"
-    [style]="{ width: '100%' }"
-    class="test"
-    name="optional"
-    placeholder="Select Status"
-  ></p-dropdown>
-  <p-dropdown
-    [options]="projects"
-    [(ngModel)]="selectedProject"
-    [style]="{ width: '100%' }"
-    class="test"
-    name="optional"
-    placeholder="Select Project"
-    optionLabel="key"
-    [virtualScroll]="true"
-    [virtualScrollItemSize]="10"
-  ></p-dropdown>
+  <input
+    type="text"
+    pInputText
+    [disabled]="true"
+    class="p-inputtext-lg"
+    name="projectKey"
+    id="sidebar-input"
+    [(ngModel)]="projectKey"
+    placeholder="initialEstimation"
+  />
   <button pButton type="submit" label="Create" class="p-button-lg"></button>
 </form>
 <p-toast></p-toast>

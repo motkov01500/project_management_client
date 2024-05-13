@@ -20,14 +20,22 @@ export class TasksService {
   }
 
   getById(taskId: number): Observable<TaskResponse> {
-    return this.http.get<TaskResponse>(
-      `${apiUrl}v1/task/administrator/get-by-id/${taskId}`
+    return this.http.get<TaskResponse>(`${apiUrl}v1/task/get-by-id/${taskId}`);
+  }
+
+  getCurrentUserRelatedTasks(
+    projectKey: string | null
+  ): Observable<TaskResponse[]> {
+    return this.http.get<TaskResponse[]>(
+      `${apiUrl}v1/task/current-user-project-related/${projectKey}`
     );
   }
 
-  getCurrentUserRelatedTasks(): Observable<TaskResponse[]> {
+  getCurrentProjectTasks(
+    projectKey: string | null
+  ): Observable<TaskResponse[]> {
     return this.http.get<TaskResponse[]>(
-      `${apiUrl}v1/task/current-user-related`
+      `${apiUrl}v1/task/administrator/get-all-related-to-project/${projectKey}`
     );
   }
 
@@ -35,7 +43,6 @@ export class TasksService {
     return this.http.post<TaskResponse>(
       `${apiUrl}v1/task/administrator/create`,
       {
-        status: newTask.status,
         initialEstimation: newTask.initialEstimation,
         projectId: newTask.projectId,
       }
@@ -47,7 +54,6 @@ export class TasksService {
       `${apiUrl}v1/task/administrator/update/${taskId}`,
       {
         progress: editedTask.progress,
-        statusName: editedTask.status,
         hoursSpent: editedTask.hoursSpent,
       }
     );
@@ -61,6 +67,16 @@ export class TasksService {
       `${apiUrl}v1/task/update-progress/${taskId}`,
       {
         progress: newProgress.progress,
+      }
+    );
+  }
+
+  assignUserToTask(username: string, taskId: number): Observable<void> {
+    return this.http.patch<void>(
+      `${apiUrl}v1/task/administrator/assign-user-to-task`,
+      {
+        username: username,
+        taskId: taskId,
       }
     );
   }

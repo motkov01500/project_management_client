@@ -1,24 +1,51 @@
+<div class="head-actions">
+  <div class="actions">
+    <!-- <p-button
+      severity="info"
+      [rounded]="true"
+      [outlined]="true"
+      icon="pi pi-backward"
+      title="Back to home."
+      iconPos="left"
+      (onClick)="onHomeButton()"
+    ></p-button> -->
+  </div>
+  <div class="page-name-project-title">
+    <div class="page-name">
+      <label style="font-weight: bold; font-size: 1rem">Create meeting</label>
+      <div class="project-name">
+        <label>Project:&nbsp;&nbsp;</label>
+        <p style="font-weight: bold">{{ projectTitle }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="task-create"></div>
+</div>
 <form (submit)="onSubmit()">
   <input
     type="datetime-local"
     pInputText
     class="p-inputtext-lg"
     name="Date"
+    id="sidebar-input"
     [(ngModel)]="date"
     placeholder="Date"
   />
-  <p-dropdown
-    [options]="statuses"
-    [(ngModel)]="selectedStatus"
-    [style]="{ width: '100%' }"
-    class="test"
-    name="optional"
-    placeholder="Select Status"
-  ></p-dropdown>
+  <input
+    type="text"
+    pInputText
+    class="p-inputtext-lg"
+    id="sidebar-input"
+    name="Password"
+    [(ngModel)]="title"
+    placeholder="Meeting title"
+  />
   <p-dropdown
     [options]="projects"
     [(ngModel)]="selectedProject"
+    [disabled]="true"
     [style]="{ width: '100%' }"
+    id="sidebar-input"
     class="test"
     name="optional"
     placeholder="Select Project"

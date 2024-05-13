@@ -1,13 +1,21 @@
+:host {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+}
+
 form {
   padding: 20px;
   margin-top: 20px;
   display: flex;
   width: 30%;
-  justify-items: center;
+  height: 70vh;
   flex-direction: column;
+  justify-items: center;
   margin: auto;
 }
 
 input {
-  margin: 5%;
+  margin: 0% 0% 5% 0%;
 }

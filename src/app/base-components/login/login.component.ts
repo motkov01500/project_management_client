@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { UserResponse } from '../../models/user/user-response';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -37,10 +37,10 @@ export class LoginComponent {
           this.router.navigate(['administrator']);
         }
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
         this.messageService.add({
           severity: 'error',
-          summary: 'Wrong Credentials',
+          summary: error.error.message,
         });
       },
     });

@@ -1,9 +1,31 @@
+<div class="head-actions">
+  <div class="actions">
+    <!-- <p-button
+      severity="info"
+      [rounded]="true"
+      [outlined]="true"
+      icon="pi pi-backward"
+      title="Back to projects."
+      iconPos="left"
+      (onClick)="onHomeButton()"
+    ></p-button> -->
+  </div>
+  <div class="page-name-project-title">
+    <div class="page-name">
+      <label style="font-weight: bold; font-size: 1.5rem; display: block"
+        >Create user</label
+      >
+    </div>
+  </div>
+  <div class="task-create"></div>
+</div>
 <form (submit)="onSubmit()">
   <input
     type="text"
     pInputText
     class="p-inputtext-lg"
     name="username"
+    id="sidebar-input"
     [(ngModel)]="userCredentials.username"
     placeholder="Username"
   />
@@ -12,6 +34,7 @@
     pInputText
     class="p-inputtext-lg"
     placeholder="Password"
+    id="sidebar-input"
     name="password"
     [(ngModel)]="userCredentials.password"
   />
@@ -19,6 +42,7 @@
     type="text"
     pInputText
     class="p-inputtext-lg"
+    id="sidebar-input"
     placeholder="FullName"
     name="fullName"
     [(ngModel)]="userCredentials.fullName"

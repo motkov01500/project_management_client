@@ -1,3 +1,5 @@
 export interface UserPasswordUpdate {
-  password: string;
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
 }

@@ -1,4 +1,35 @@
 <div class="card">
+  <div class="head-actions">
+    <div class="actions">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-backward"
+        title="Back to projects."
+        iconPos="left"
+        (onClick)="onBackToProjects()"
+      ></p-button> -->
+    </div>
+    <div class="page-name-project-title">
+      <div class="page-name"><label>Tasks</label></div>
+      <div class="project-name">
+        <label>Project:&nbsp;&nbsp;</label>
+        <p style="font-weight: bold">{{ projectTitle }}</p>
+      </div>
+    </div>
+    <div class="task-create">
+      <p-button
+        severity="success"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-plus"
+        title="Create project."
+        iconPos="left"
+        (onClick)="onCreateTask()"
+      ></p-button>
+    </div>
+  </div>
   <p-table
     [value]="items"
     [paginator]="true"
@@ -8,54 +39,53 @@
     <ng-template pTemplate="header">
       <tr>
         <th>Progress</th>
-        <th>InitialEstimation</th>
+        <th>Initial estimation</th>
         <th>Status</th>
-        <th>HoursSpent</th>
-        <th>Project Related</th>
-        <th>Delete</th>
-        <th>Edit</th>
+        <th>Hours spent</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
       <tr>
-        <td>{{ item.progress }}</td>
+        <td>{{ item.progress }}%</td>
         <td>{{ item.initialEstimation }}</td>
-        <td>{{ item.taskStatus.name }}</td>
+        <td>{{ item.taskStatus }}</td>
         <td>{{ item.hoursSpent }}</td>
-        <td>{{ item.project.key }}</td>
         <td>
-          <p-button
-            type="button"
-            label="Delete"
-            severity="danger"
-            (onClick)="onDelete(item.id)"
-          ></p-button>
-        </td>
-        <td>
-          <p-button
-            type="button"
-            label="Edit"
-            severity="warning"
-            (onClick)="onEdit(item.id)"
-          ></p-button>
+          <div class="task-actions">
+            <p-button
+              type="button"
+              title="Delete"
+              icon="pi pi-trash"
+              [rounded]="true"
+              [outlined]="true"
+              severity="danger"
+              (onClick)="onDelete(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Edit"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-pencil"
+              severity="warning"
+              (onClick)="onEdit(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Assign user to task"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-user-plus"
+              severity="success"
+              (onClick)="onAssignToTask(item.id)"
+            ></p-button>
+          </div>
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="paginatorleft">
-      <p-button
-        type="button"
-        icon="pi pi-plus"
-        cl
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
-    <ng-template pTemplate="paginatorright">
-      <p-button
-        type="button"
-        icon="pi pi-cloud"
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
+    <ng-template pTemplate="paginatorleft"> </ng-template>
+    <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
   <p-confirmDialog
     [style]="{ width: '50vw' }"
@@ -70,7 +100,9 @@
           type="number"
           pInputText
           class="p-inputtext-lg"
+          [disabled]="taskDetails?.progress === 100 ? true : false"
           name="progress"
+          id="sidebar-input"
           value="{{ taskDetails?.progress }}"
           [(ngModel)]="editedTask.progress"
           placeholder="progress"
@@ -80,25 +112,55 @@
           pInputText
           class="p-inputtext-lg"
           name="hoursSpent"
+          id="sidebar-input"
           value="{{ taskDetails?.hoursSpent }}"
           [(ngModel)]="editedTask.hoursSpent"
           placeholder="hoursSpent"
         />
-        <p-dropdown
-          [options]="statuses"
-          [(ngModel)]="editedTask.status"
-          [style]="{ width: '100%' }"
-          class="test"
-          name="optional"
-          placeholder="Select Status"
-          optionLabel="name"
-          optionValue="name"
-        ></p-dropdown>
         <button
           pButton
           type="submit"
           label="Edit Task"
           class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+  </p-sidebar>
+  <p-sidebar
+    [(visible)]="assignToTaskSidebar"
+    position="right"
+    [baseZIndex]="10000"
+  >
+    <div class="container">
+      <h2>Assign to task</h2>
+      <form (submit)="onSubmitAssignToTask()">
+        <input
+          type="number"
+          pInputText
+          class="p-inputtext-lg"
+          name="taskId"
+          id="sidebar-input"
+          value="{{ taskDetails?.title }}"
+          [disabled]="true"
+          placeholder="Task title"
+        />
+        <p-dropdown
+          [options]="users"
+          [(ngModel)]="selectedUser"
+          [style]="{ width: '100%' }"
+          id="sidebar-input"
+          class="test"
+          optionLabel="username"
+          optionValue="username"
+          name="optional"
+          placeholder="Select user"
+        ></p-dropdown>
+        <button
+          pButton
+          type="submit"
+          label="Assign to task"
+          class="p-button-lg"
+          [disabled]="haveUsers"
         ></button>
       </form>
     </div>

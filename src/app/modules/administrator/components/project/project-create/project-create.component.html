@@ -1,9 +1,31 @@
+<div class="head-actions">
+  <div class="actions">
+    <!-- <p-button
+      severity="info"
+      [rounded]="true"
+      [outlined]="true"
+      icon="pi pi-backward"
+      title="Back to projects."
+      iconPos="left"
+      (onClick)="onHomeButton()"
+    ></p-button> -->
+  </div>
+  <div class="page-name-project-title">
+    <div class="page-name">
+      <label style="font-weight: bold; font-size: 1.5rem; display: block"
+        >Create project</label
+      >
+    </div>
+  </div>
+  <div class="task-create"></div>
+</div>
 <form (submit)="onSubmit()">
   <input
     type="text"
     pInputText
     class="p-inputtext-lg"
     name="key"
+    id="sidebar-input"
     [(ngModel)]="newProject.key"
     placeholder="Key"
     required
@@ -13,6 +35,7 @@
     pInputText
     class="p-inputtext-lg"
     placeholder="Title"
+    id="sidebar-input"
     name="title"
     [(ngModel)]="newProject.title"
     required

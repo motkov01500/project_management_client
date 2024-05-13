@@ -16,7 +16,14 @@ export class AuthService {
     password: string
   ): Observable<HttpResponse<UserResponse>> {
     let url = `${apiUrl}v1/auth/login?username=${username}&password=${password}`;
-    return this.http.post<UserResponse>(url, {}, { observe: 'response' });
+    return this.http.post<UserResponse>(
+      url,
+      {
+        username: username,
+        password: password,
+      },
+      { observe: 'response' }
+    );
   }
 
   register(newUser: UserRegister): Observable<UserResponse> {

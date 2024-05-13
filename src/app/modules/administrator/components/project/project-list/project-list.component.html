@@ -1,4 +1,35 @@
 <div class="card">
+  <div class="head-actions">
+    <div class="actions">
+      <!-- <p-button
+        severity="info"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-backward"
+        title="Back to home."
+        iconPos="left"
+        (onClick)="onHomeButton()"
+      ></p-button> -->
+    </div>
+    <div class="page-name-project-title">
+      <div class="page-name">
+        <label style="font-weight: bold; font-size: 1.5rem; display: block"
+          >Projects</label
+        >
+      </div>
+    </div>
+    <div class="task-create">
+      <p-button
+        severity="success"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-plus"
+        title="Create project."
+        iconPos="left"
+        (onClick)="onCreateProject()"
+      ></p-button>
+    </div>
+  </div>
   <p-table
     [value]="items"
     [paginator]="true"
@@ -9,9 +40,7 @@
       <tr>
         <th>Key</th>
         <th>Title</th>
-        <th>Delete</th>
-        <th>Edit</th>
-        <th>Unfinished Meetings</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
@@ -25,45 +54,49 @@
         </td>
         <td>{{ item.title }}</td>
         <td>
-          <p-button
-            type="button"
-            label="Delete"
-            severity="danger"
-            (onClick)="onDelete(item.id)"
-          ></p-button>
-        </td>
-        <td>
-          <p-button
-            type="button"
-            label="Edit"
-            severity="warning"
-            (onClick)="onEdit(item.id)"
-          ></p-button>
-        </td>
-        <td>
-          <p-button
-            type="button"
-            label="View Unfinished Meetings"
-            (onClick)="onViewMeetings(item.key)"
-          ></p-button>
+          <div class="project-actions">
+            <p-button
+              type="button"
+              title="Delete"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-trash"
+              severity="danger"
+              (onClick)="onDelete(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Edit"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-pencil"
+              severity="warning"
+              (onClick)="onEdit(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Access and manage your meetings for current project."
+              [rounded]="true"
+              severity="info"
+              [outlined]="true"
+              icon="pi pi-users"
+              (onClick)="onViewMeetings(item.key, item.title)"
+            ></p-button>
+            <p-button
+              type="button"
+              [rounded]="true"
+              severity="info"
+              [outlined]="true"
+              title="Access and manage your tasks for current project."
+              icon="pi pi-check-square"
+              (onClick)="onViewTasks(item.key, item.title)"
+            ></p-button>
+          </div>
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="paginatorleft">
-      <p-button
-        type="button"
-        icon="pi pi-plus"
-        cl
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
-    <ng-template pTemplate="paginatorright">
-      <p-button
-        type="button"
-        icon="pi pi-cloud"
-        styleClass="p-button-text"
-      ></p-button>
-    </ng-template>
+    <ng-template pTemplate="paginatorleft"> </ng-template>
+    <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
   <p-confirmDialog
     [style]="{ width: '50vw' }"
@@ -81,6 +114,7 @@
         <input
           type="text"
           pInputText
+          id="sidebar-input"
           class="p-inputtext-lg"
           name="key"
           value="{{ projectDetails?.key }}"
@@ -89,6 +123,7 @@
         <input
           type="text"
           pInputText
+          id="sidebar-input"
           class="p-inputtext-lg"
           value="{{ projectDetails?.title }}"
           name="title"
