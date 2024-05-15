@@ -10,14 +10,13 @@
         iconPos="left"
         (onClick)="onBackToProjects()"
       ></p-button> -->
-    </div>
-    <div class="page-name-project-title">
-      <div class="page-name"><label>Tasks</label></div>
+      <div class="page-name"><h1>Tasks</h1></div>
       <div class="project-name">
         <label>Project:&nbsp;&nbsp;</label>
         <p style="font-weight: bold">{{ projectTitle }}</p>
       </div>
     </div>
+    <div class="page-name-project-title"></div>
     <div class="task-create">
       <p-button
         severity="success"
@@ -35,6 +34,13 @@
     [paginator]="true"
     [rows]="10"
     [reorderableColumns]="true"
+    (onPage)="onChangePage($event)"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    [loading]="loading"
+    loadingIcon="pi pi-spin pi-spinner-dotted"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -48,9 +54,9 @@
     <ng-template pTemplate="body" let-item>
       <tr>
         <td>{{ item.progress }}%</td>
-        <td>{{ item.initialEstimation }}</td>
+        <td>{{ item.initialEstimation }}h</td>
         <td>{{ item.taskStatus }}</td>
-        <td>{{ item.hoursSpent }}</td>
+        <td>{{ item.hoursSpent }}h</td>
         <td>
           <div class="task-actions">
             <p-button
@@ -79,6 +85,16 @@
               icon="pi pi-user-plus"
               severity="success"
               (onClick)="onAssignToTask(item.id)"
+              [disabled]="!item.isUsersAvailable"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Users"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-user"
+              severity="info"
+              (onClick)="onViewUsers(item.id)"
             ></p-button>
           </div>
         </td>
@@ -160,7 +176,6 @@
           type="submit"
           label="Assign to task"
           class="p-button-lg"
-          [disabled]="haveUsers"
         ></button>
       </form>
     </div>

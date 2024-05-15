@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MeetingResponse } from '../../../../../models/meeting/meeting-response';
 import { MeetingsService } from '../../../../../services/meetings.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -6,6 +6,10 @@ import { MeetingEdit } from '../../../../../models/meeting/meeting-edit';
 import { WebSocketService } from '../../../../../services/web-socket.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { UsersService } from '../../../../../services/users.service';
+import { UserResponse } from '../../../../../models';
+import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
+import { SizeService } from '../../../../../services/size.service';
 
 @Component({
   selector: 'app-meeting-list',
@@ -24,21 +28,38 @@ export class MeetingListComponent implements OnInit {
   title: string = '';
   assignUserToMeetingSidebar: boolean = false;
   meetingAsign: MeetingResponse | undefined;
+  users: UserResponse[] = [];
+  selectedUser: MeetingResponse | undefined;
+  totalRecords: number = 0;
+  loading: boolean = false;
+  page: number = 1;
+  offset: number = 5;
 
   constructor(
     private service: MeetingsService,
+    private userService: UsersService,
+    private sizeService: SizeService,
     private confirmationService: ConfirmationService,
     private router: Router,
     private messageService: MessageService,
-    private websocketService: WebSocketService
+    private websocketService: WebSocketService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.service.getCurrentProjectMeetings(this.projectKey).subscribe({
-      next: (meetings: MeetingResponse[]) => {
-        this.items = meetings;
+    this.service
+      .getCurrentProjectMeetings(this.projectKey, this.page, this.offset)
+      .subscribe({
+        next: (meetings: MeetingResponse[]) => {
+          this.items = meetings;
+        },
+      });
+    this.sizeService.getCurrentProjectMeetingsSize(this.projectKey).subscribe({
+      next: (totalRecords: number) => {
+        this.totalRecords = totalRecords;
       },
     });
+    this.cdr.detectChanges();
   }
 
   onEdit(meetingId: number) {
@@ -128,6 +149,63 @@ export class MeetingListComponent implements OnInit {
         this.meetingAsign = meeting;
       },
     });
+    this.userService.getUsersThatCanAddToMeeting(meetingId).subscribe({
+      next: (users: UserResponse[]) => {
+        this.users = users;
+      },
+    });
     this.assignUserToMeetingSidebar = true;
+  }
+
+  onAssignUserToMeetingSubmit() {
+    this.service
+      .assignUserToMeeting(this.selectedUser?.id, this.meetingAsign?.id)
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'User is successfully added to meeting',
+            detail: 'via admin',
+          });
+          this.assignUserToMeetingSidebar = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: error.error.message,
+            detail: 'via admin',
+          });
+        },
+      });
+  }
+
+  onViewRelatedUsers(meetingId: number) {
+    localStorage.setItem('current-meeting-id', meetingId.toString());
+    this.router.navigate(['administrator', 'projects', 'meetings', 'users']);
+  }
+
+  onChangePage(event: TablePageEvent) {
+    this.page = event.first / event.rows + 1;
+  }
+
+  onLazyLoad($event: TableLazyLoadEvent) {
+    this.loading = true;
+    setTimeout(() => {
+      this.service
+        .getCurrentProjectMeetings(this.projectKey, this.page, this.offset)
+        .subscribe({
+          next: (meetings: MeetingResponse[]) => {
+            this.items = meetings;
+          },
+        });
+      this.sizeService
+        .getCurrentProjectMeetingsSize(this.projectKey)
+        .subscribe({
+          next: (totalRecords: number) => {
+            this.totalRecords = totalRecords;
+          },
+        });
+      this.loading = false;
+    }, 600);
   }
 }

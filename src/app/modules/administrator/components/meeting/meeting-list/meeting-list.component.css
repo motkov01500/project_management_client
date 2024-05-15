@@ -7,9 +7,9 @@
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   display: flex;
-  height: 50px;
+  height: 60px;
   flex-direction: row;
-  background-color: #f9fafb;
+  /* background-color: #f9fafb; */
   justify-content: space-between;
 }
 
@@ -17,6 +17,14 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.page-name {
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  margin: 0;
 }
 
 .page-name-project-title {
@@ -62,4 +70,13 @@ th {
 
 td {
   text-align: center;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0;
 }

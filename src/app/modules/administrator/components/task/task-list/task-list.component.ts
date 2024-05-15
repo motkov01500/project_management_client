@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TaskResponse } from '../../../../../models/task/task-response';
 import { TasksService } from '../../../../../services/tasks.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -8,6 +8,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UserResponse } from '../../../../../models';
 import { UsersService } from '../../../../../services/users.service';
+import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
+import { SizeService } from '../../../../../services/size.service';
 
 @Component({
   selector: 'app-task-list',
@@ -28,6 +30,10 @@ export class TaskListComponent implements OnInit {
   users: UserResponse[] = [];
   selectedUser: string = '';
   haveUsers: boolean = true;
+  totalRecords: number = 0;
+  loading: boolean = false;
+  page: number = 1;
+  offset: number = 5;
 
   constructor(
     private service: TasksService,
@@ -35,15 +41,25 @@ export class TaskListComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private router: Router,
     private messageService: MessageService,
-    private websocketService: WebSocketService
+    private websocketService: WebSocketService,
+    private sizeService: SizeService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.service.getCurrentProjectTasks(this.projectKey).subscribe({
-      next: (tasks: TaskResponse[]) => {
-        this.items = tasks;
+    this.service
+      .getCurrentProjectTasks(this.projectKey, this.page, this.offset)
+      .subscribe({
+        next: (tasks: TaskResponse[]) => {
+          this.items = tasks;
+        },
+      });
+    this.sizeService.getCurrentProjectTasksSize(this.projectKey).subscribe({
+      next: (totalRecords: number) => {
+        this.totalRecords = totalRecords;
       },
     });
+    this.cdr.detectChanges();
   }
 
   onSubmit() {
@@ -153,6 +169,7 @@ export class TaskListComponent implements OnInit {
             detail: 'via admin',
           });
           this.assignToTaskSidebar = false;
+          if (this.users.length == 0) this.haveUsers = !this.haveUsers;
         },
         error: (error: HttpErrorResponse) => {
           this.messageService.add({
@@ -170,5 +187,32 @@ export class TaskListComponent implements OnInit {
       },
       error: () => {},
     });
+  }
+  onViewUsers(taskId: string) {
+    localStorage.setItem('current-task-id', taskId.toString());
+    this.router.navigate(['administrator', 'projects', 'tasks', 'users']);
+  }
+
+  onChangePage(event: TablePageEvent) {
+    this.page = event.first / event.rows + 1;
+  }
+
+  onLazyLoad($event: TableLazyLoadEvent) {
+    this.loading = true;
+    setTimeout(() => {
+      this.service
+        .getCurrentProjectTasks(this.projectKey, this.page, this.offset)
+        .subscribe({
+          next: (tasks: TaskResponse[]) => {
+            this.items = tasks;
+          },
+        });
+      this.sizeService.getCurrentProjectTasksSize(this.projectKey).subscribe({
+        next: (totalRecords: number) => {
+          this.totalRecords = totalRecords;
+        },
+      });
+      this.loading = false;
+    }, 600);
   }
 }

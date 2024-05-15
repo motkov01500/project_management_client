@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   DoCheck,
   OnChanges,
@@ -18,6 +19,8 @@ import { WebSocketService } from '../../../../../services/web-socket.service';
 import { ProjectsService } from '../../../../../services/projects.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
+import { SizeService } from '../../../../../services/size.service';
 
 @Component({
   selector: 'app-users',
@@ -25,6 +28,10 @@ import { Router } from '@angular/router';
   styleUrl: './users.component.css',
 })
 export class UserListComponent implements OnInit {
+  totalRecords: number = 0;
+  loading: boolean = false;
+  page: number = 1;
+  offset: number = 5;
   items: UserResponse[] = [];
   visibleSidebar: boolean = false;
   userDetails: UserResponse | any;
@@ -43,17 +50,26 @@ export class UserListComponent implements OnInit {
     private service: UsersService,
     private confirmationService: ConfirmationService,
     private router: Router,
+    private sizeService: SizeService,
     private messageService: MessageService,
     private webSocketService: WebSocketService,
-    private projectService: ProjectsService
+    private projectService: ProjectsService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.service.getAllUsers().subscribe({
-      next: (data: any) => {
+    this.service.getAllUsers(this.page, this.offset).subscribe({
+      next: (data: UserResponse[]) => {
         this.items = data;
       },
     });
+    this.sizeService.getAllUsersSize().subscribe({
+      next: (totalRecords: number) => {
+        this.totalRecords = totalRecords;
+      },
+    });
+
+    this.cdr.detectChanges();
   }
 
   onDelete(event: number) {
@@ -131,7 +147,7 @@ export class UserListComponent implements OnInit {
         this.userDetails = user;
       },
     });
-    this.projectService.getAllProjects().subscribe({
+    this.projectService.getAllProjectsWithoutPaging().subscribe({
       next: (projects: ProjectResponse[]) => {
         this.projects = projects;
       },
@@ -139,34 +155,34 @@ export class UserListComponent implements OnInit {
     this.visibleSidebarAssignToProject = true;
   }
 
-  onAssignUserToProject() {
-    this.projectService
-      .assignUserToProject({
-        userId: this.userDetails.id,
-        projectId: this.selectedProject,
-      })
-      .subscribe({
-        next: () => {
-          this.webSocketService.sendMessage(
-            'Admin assign new user to project.'
-          );
-          this.messageService.add({
-            severity: 'success',
-            summary: 'User is added to project',
-            detail: 'via admin',
-            life: 2000,
-          });
-        },
-        error: (error: HttpErrorResponse) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: error.error.message,
-            detail: 'via admin',
-            life: 2000,
-          });
-        },
-      });
-  }
+  // onAssignUserToProject() {
+  //   this.projectService
+  //     .assignUserToProject({
+  //       userId: this.userDetails.id,
+  //       projectId: this.selectedProject,
+  //     })
+  //     .subscribe({
+  //       next: () => {
+  //         this.webSocketService.sendMessage(
+  //           'Admin assign new user to project.'
+  //         );
+  //         this.messageService.add({
+  //           severity: 'success',
+  //           summary: 'User is added to project',
+  //           detail: 'via admin',
+  //           life: 2000,
+  //         });
+  //       },
+  //       error: (error: HttpErrorResponse) => {
+  //         this.messageService.add({
+  //           severity: 'error',
+  //           summary: error.error.message,
+  //           detail: 'via admin',
+  //           life: 2000,
+  //         });
+  //       },
+  //     });
+  // }
 
   onCreateUser() {
     this.router.navigate(['administrator', 'user', 'create']);
@@ -178,5 +194,26 @@ export class UserListComponent implements OnInit {
 
   onAssignToMeeting(arg0: any) {
     this.assignToMeetingSidebar = true;
+  }
+
+  onChangePage(event: TablePageEvent) {
+    this.page = event.first / event.rows + 1;
+  }
+
+  onLazyLoad($event: TableLazyLoadEvent) {
+    this.loading = true;
+    setTimeout(() => {
+      this.service.getAllUsers(this.page, this.offset).subscribe({
+        next: (data: UserResponse[]) => {
+          this.items = data;
+        },
+      });
+      this.sizeService.getAllUsersSize().subscribe({
+        next: (totalRecords: number) => {
+          this.totalRecords = totalRecords;
+        },
+      });
+      this.loading = false;
+    }, 600);
   }
 }

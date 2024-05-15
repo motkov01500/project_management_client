@@ -1,0 +1,7 @@
+li {
+  transition: opacity 0.6s linear;
+  opacity: 1;
+}
+.grayed {
+  opacity: 0;
+}

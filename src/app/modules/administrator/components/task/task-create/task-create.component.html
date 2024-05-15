@@ -1,3 +1,34 @@
+<div class="head-actions">
+  <div class="actions">
+    <!-- <p-button
+      severity="info"
+      [rounded]="true"
+      [outlined]="true"
+      icon="pi pi-backward"
+      title="Back to projects."
+      iconPos="left"
+      (onClick)="onBackToProjects()"
+    ></p-button> -->
+    <div class="project-name">
+      <label>Project:&nbsp;&nbsp;</label>
+      <p style="font-weight: bold">{{ projectTitle }}</p>
+    </div>
+  </div>
+  <div class="page-name-project-title">
+    <div class="page-name"><h1>Create task</h1></div>
+  </div>
+  <div class="task-create">
+    <!-- <p-button
+      severity="success"
+      [rounded]="true"
+      [outlined]="true"
+      icon="pi pi-plus"
+      title="Create project."
+      iconPos="left"
+      (onClick)="onCreateTask()"
+    ></p-button> -->
+  </div>
+</div>
 <form (submit)="onSubmit()">
   <input
     type="number"

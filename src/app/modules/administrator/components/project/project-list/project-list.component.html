@@ -10,14 +10,11 @@
         iconPos="left"
         (onClick)="onHomeButton()"
       ></p-button> -->
-    </div>
-    <div class="page-name-project-title">
       <div class="page-name">
-        <label style="font-weight: bold; font-size: 1.5rem; display: block"
-          >Projects</label
-        >
+        <h1>Projects</h1>
       </div>
     </div>
+    <div class="page-name-project-title"></div>
     <div class="task-create">
       <p-button
         severity="success"
@@ -33,8 +30,15 @@
   <p-table
     [value]="items"
     [paginator]="true"
-    [rows]="10"
+    [rows]="offset"
+    styleClass="p-datatable-gridlines"
     [reorderableColumns]="true"
+    (onPage)="onChangePage($event)"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    [loading]="loading"
+    loadingIcon="pi pi-spin pi-spinner-dotted"
+    (onLazyLoad)="onLazyLoad($event)"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -75,11 +79,11 @@
             ></p-button>
             <p-button
               type="button"
-              title="Access and manage your meetings for current project."
+              title="Meetings"
               [rounded]="true"
               severity="info"
               [outlined]="true"
-              icon="pi pi-users"
+              icon="pi pi-phone"
               (onClick)="onViewMeetings(item.key, item.title)"
             ></p-button>
             <p-button
@@ -87,9 +91,28 @@
               [rounded]="true"
               severity="info"
               [outlined]="true"
-              title="Access and manage your tasks for current project."
+              title="Tasks"
               icon="pi pi-check-square"
               (onClick)="onViewTasks(item.key, item.title)"
+            ></p-button>
+            <p-button
+              type="button"
+              [rounded]="true"
+              severity="info"
+              [outlined]="true"
+              title="Users"
+              icon="pi pi-user"
+              (onClick)="onViewUsers(item.key, item.title)"
+            ></p-button>
+            <p-button
+              type="button"
+              [rounded]="true"
+              severity="success"
+              [outlined]="true"
+              title="Users"
+              icon="pi pi-user-plus"
+              [disabled]="!item.isUsersAvailable"
+              (onClick)="onAssignUserToProject(item.key, item.title)"
             ></p-button>
           </div>
         </td>
@@ -179,6 +202,43 @@
           ></p-button>
         </ng-template>
       </p-table>
+    </div>
+  </p-sidebar>
+  <p-sidebar
+    [(visible)]="visibleSidebarAssignToProject"
+    position="left"
+    [baseZIndex]="10000"
+  >
+    <div class="container">
+      <h1>Edit User</h1>
+      <form (submit)="onAssignUserToProjectSubmit()">
+        <input
+          type="text"
+          pInputText
+          id="sidebar-input"
+          class="p-inputtext-lg"
+          value="{{ currentProjectUserAssign?.title }}"
+          name="title"
+          disabled="true"
+          [(ngModel)]="title"
+        />
+        <p-dropdown
+          [options]="usersToAssign"
+          [(ngModel)]="selectedUserToAssign"
+          [style]="{ width: '100%' }"
+          class="test"
+          name="optional"
+          id="sidebar-input"
+          placeholder="Select user"
+          optionLabel="username"
+        ></p-dropdown>
+        <button
+          pButton
+          type="submit"
+          label="Edit User"
+          class="p-button-lg"
+        ></button>
+      </form>
     </div>
   </p-sidebar>
 </div>

@@ -5,4 +5,5 @@ export interface MeetingResponse {
   date: Date;
   title: string;
   project: ProjectResponse;
+  isUsersAvailable: boolean;
 }

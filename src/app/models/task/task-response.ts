@@ -5,6 +5,7 @@ export interface TaskResponse {
   title: string;
   progress?: number;
   initialEstimation?: number;
+  isUsersAvailable?: boolean;
   hoursSpent?: number;
   project?: ProjectResponse;
   taskStatus?: string;

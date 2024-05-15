@@ -12,9 +12,15 @@ import { ProjectUserAssign } from '../models/project/project-user-assign';
 export class ProjectsService {
   constructor(private http: HttpClient) {}
 
-  getAllProjects(): Observable<ProjectResponse[]> {
+  getAllProjects(page: number, offset: number): Observable<ProjectResponse[]> {
     return this.http.get<ProjectResponse[]>(
-      `${apiUrl}v1/project/administrator/get-all`
+      `${apiUrl}v1/project/administrator/get-all/${page}/${offset}`
+    );
+  }
+
+  getAllProjectsWithoutPaging(): Observable<ProjectResponse[]> {
+    return this.http.get<ProjectResponse[]>(
+      `${apiUrl}v1/project/administrator/get-all-without-paging`
     );
   }
 
@@ -36,9 +42,12 @@ export class ProjectsService {
     );
   }
 
-  getProjectsRelatedToCurrentUser(): Observable<ProjectResponse[]> {
+  getProjectsRelatedToCurrentUser(
+    page: number,
+    offset: number
+  ): Observable<ProjectResponse[]> {
     return this.http.get<ProjectResponse[]>(
-      `${apiUrl}v1/project/get-projects-current-user`
+      `${apiUrl}v1/project/get-projects-current-user/${page}/${offset}`
     );
   }
 
@@ -65,12 +74,25 @@ export class ProjectsService {
     );
   }
 
-  assignUserToProject(assign: ProjectUserAssign): Observable<string> {
+  removeUserFromProject(
+    userId: number,
+    projectKey: string | null
+  ): Observable<string> {
+    return this.http.patch<string>(
+      `${apiUrl}v1/project/administrator/remove-user-from-project`,
+      {
+        userId: userId,
+        projectKey: projectKey,
+      }
+    );
+  }
+
+  assignUserToProject(userId: any, projectId: any): Observable<string> {
     return this.http.patch<string>(
       `${apiUrl}v1/project/administrator/assign-user-to-project`,
       {
-        userId: assign.userId,
-        projectId: assign.projectId,
+        userId: userId,
+        projectId: projectId,
       }
     );
   }

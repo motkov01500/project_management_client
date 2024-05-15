@@ -14,11 +14,7 @@
           <div class="image-element" (click)="op.hide()">
             <p (click)="logout()">Logout</p>
           </div>
-          <div
-            class="image-element"
-            *ngIf="userRole === 'user'"
-            (click)="op.hide()"
-          >
+          <div class="image-element" (click)="op.hide()">
             <p routerLink="my-profile">My profile</p>
           </div>
         </div>

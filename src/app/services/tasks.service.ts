@@ -19,23 +19,27 @@ export class TasksService {
     );
   }
 
-  getById(taskId: number): Observable<TaskResponse> {
+  getById(taskId: any): Observable<TaskResponse> {
     return this.http.get<TaskResponse>(`${apiUrl}v1/task/get-by-id/${taskId}`);
   }
 
   getCurrentUserRelatedTasks(
-    projectKey: string | null
+    projectKey: string | null,
+    page: number,
+    offset: number
   ): Observable<TaskResponse[]> {
     return this.http.get<TaskResponse[]>(
-      `${apiUrl}v1/task/current-user-project-related/${projectKey}`
+      `${apiUrl}v1/task/current-user-project-related/${projectKey}/${page}/${offset}`
     );
   }
 
   getCurrentProjectTasks(
-    projectKey: string | null
+    projectKey: string | null,
+    page: number,
+    offset: number
   ): Observable<TaskResponse[]> {
     return this.http.get<TaskResponse[]>(
-      `${apiUrl}v1/task/administrator/get-all-related-to-project/${projectKey}`
+      `${apiUrl}v1/task/administrator/get-all-related-to-project/${projectKey}/${page}/${offset}`
     );
   }
 
@@ -76,6 +80,16 @@ export class TasksService {
       `${apiUrl}v1/task/administrator/assign-user-to-task`,
       {
         username: username,
+        taskId: taskId,
+      }
+    );
+  }
+
+  removeUserFromTask(userId: any, taskId: any): Observable<string> {
+    return this.http.patch<string>(
+      `${apiUrl}v1/task/administrator/remove-user-from-task`,
+      {
+        userId: userId,
         taskId: taskId,
       }
     );

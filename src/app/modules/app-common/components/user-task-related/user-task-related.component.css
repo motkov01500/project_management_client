@@ -1,21 +1,3 @@
-form {
-  padding: 20px;
-  margin-top: 20px;
-  display: flex;
-  width: 30%;
-  justify-items: center;
-  flex-direction: column;
-  margin: auto;
-}
-
-input {
-  margin: 5%;
-}
-
-.test {
-  margin: 20px;
-}
-
 .page-name-project-title {
   display: flex;
   flex-direction: column;
@@ -26,21 +8,31 @@ input {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   display: flex;
-  height: 50px;
+  height: 60px;
   flex-direction: row;
   /* background-color: #f9fafb; */
   justify-content: space-between;
 }
 
 .page-name {
-  height: 100%;
+  height: 40%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: start;
+  margin: 0;
 }
+
 .project-name {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0;
 }

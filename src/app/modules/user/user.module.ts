@@ -9,7 +9,7 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
-import { MyProfileComponent } from './components/my-profile/my-profile.component';
+import { MyProfileComponent } from '../app-common/components/my-profile/my-profile.component';
 import { CardModule } from 'primeng/card';
 import { ImageModule } from 'primeng/image';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -17,8 +17,8 @@ import { FormsModule } from '@angular/forms';
 import { TaskComponent } from './components/task/task.component';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import { UserMeetingRelatedComponent } from './components/user-meeting-related/user-meeting-related.component';
-import { UserProjectRelatedComponent } from './components/user-project-related/user-project-related/user-project-related.component';
+import { UserMeetingRelatedComponent } from '../app-common/components/user-meeting-related/user-meeting-related.component';
+import { UserProjectRelatedComponent } from '../app-common/components/user-project-related/user-project-related.component';
 
 @NgModule({
   declarations: [

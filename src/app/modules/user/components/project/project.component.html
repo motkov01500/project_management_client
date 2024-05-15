@@ -10,14 +10,11 @@
         iconPos="left"
         (onClick)="onHomeButton()"
       ></p-button> -->
-    </div>
-    <div class="page-name-project-title">
       <div class="page-name">
-        <label style="font-weight: bold; font-size: 1.5rem; display: block"
-          >Projects</label
-        >
+        <h1>Projects</h1>
       </div>
     </div>
+    <div class="page-name-project-title"></div>
     <div class="task-create">
       <!-- <p-button
         severity="info"
@@ -30,7 +27,20 @@
       ></p-button> -->
     </div>
   </div>
-  <p-table [value]="projects" [paginator]="true" [rows]="10">
+  <p-table
+    [value]="projects"
+    [paginator]="true"
+    columnResizeMode="fit"
+    [rows]="5"
+    (onPage)="onChangePage($event)"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    [loading]="loading"
+    loadingIcon="pi pi-spin pi-spinner-dotted"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-gridlines"
+    [style]="{ 'text-align': 'center' }"
+  >
     <ng-template pTemplate="header">
       <tr>
         <th>Key</th>

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProjectResponse, UserResponse } from '../../../../models';
 import { ProjectsService } from '../../../../services/projects.service';
 import { UsersService } from '../../../../services/users.service';
 import { Router } from '@angular/router';
+import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
+import { SizeService } from '../../../../services/size.service';
 
 @Component({
   selector: 'app-project',
@@ -13,19 +15,33 @@ export class ProjectComponent implements OnInit {
   projects: ProjectResponse[] = [];
   projectUsersSidebar: boolean = false;
   projectRelatedUsers: UserResponse[] = [];
+  totalRecords: number = 0;
+  currentPage: number = 1;
+  offset: number = 5;
+  loading: boolean = false;
 
   constructor(
     private projectService: ProjectsService,
+    private sizeService: SizeService,
     private userService: UsersService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.projectService.getProjectsRelatedToCurrentUser().subscribe({
-      next: (projects: ProjectResponse[]) => {
-        this.projects = projects;
+    this.projectService
+      .getProjectsRelatedToCurrentUser(this.currentPage, this.offset)
+      .subscribe({
+        next: (projects: ProjectResponse[]) => {
+          this.projects = projects;
+        },
+      });
+    this.sizeService.getProjectsRelatedToCurrentUserSize().subscribe({
+      next: (totalRecords: number) => {
+        this.totalRecords = totalRecords;
       },
     });
+    this.cdr.detectChanges();
   }
 
   onViewUsers(projectKey: string, projectTitle: string) {
@@ -40,5 +56,28 @@ export class ProjectComponent implements OnInit {
   }
   onHomeButton() {
     this.router.navigate(['user']);
+  }
+
+  onChangePage(event: TablePageEvent) {
+    this.currentPage = event.first / event.rows + 1;
+  }
+
+  onLazyLoad($event: TableLazyLoadEvent) {
+    this.loading = true;
+    setTimeout(() => {
+      this.projectService
+        .getProjectsRelatedToCurrentUser(this.currentPage, this.offset)
+        .subscribe({
+          next: (projects: ProjectResponse[]) => {
+            this.projects = projects;
+          },
+        });
+      this.sizeService.getProjectsRelatedToCurrentUserSize().subscribe({
+        next: (totalRecords: number) => {
+          this.totalRecords = totalRecords;
+        },
+      });
+      this.loading = false;
+    }, 600);
   }
 }

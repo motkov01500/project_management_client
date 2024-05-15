@@ -10,23 +10,37 @@
         iconPos="left"
         (onClick)="onHomeButton()"
       ></p-button> -->
-    </div>
-    <div class="page-name-project-title">
       <div class="page-name">
-        <label style="font-weight: bold; font-size: 1.5rem; display: block"
-          >Users</label
-        >
+        <h1>Users</h1>
+      </div>
+      <div class="project-name">
+        <label>Meeting:&nbsp;&nbsp;</label>
+        <p style="font-weight: bold">{{ currentMeeting?.title }}</p>
       </div>
     </div>
+    <div class="page-name-project-title"></div>
     <div class="task-create"></div>
   </div>
-  <p-table class="table" [value]="items" [paginator]="true" [rows]="10">
+  <p-table
+    class="table"
+    [value]="items"
+    [paginator]="true"
+    [rows]="5"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    [loading]="loading"
+    loadingIcon="pi pi-spin pi-spinner-dotted"
+    (onPage)="onChangePage($event)"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-gridlines"
+  >
     <ng-template pTemplate="header">
       <tr>
         <th>Picture</th>
         <th>Name</th>
         <th>Full name</th>
         <th>Role</th>
+        <th *ngIf="userRole == 'administrator'">Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" class="myTable" let-item>
@@ -41,9 +55,21 @@
         <td *ngIf="item.fullName; else elseBlock">{{ item.fullName }}</td>
         <ng-template #elseBlock><td>No Name</td></ng-template>
         <td>{{ item.role.name }}</td>
+        <td *ngIf="userRole == 'administrator'">
+          <p-button
+            type="button"
+            [rounded]="true"
+            severity="danger"
+            [outlined]="true"
+            title="Remove user from meeting."
+            icon="pi pi-trash"
+            (onClick)="onUnAssignUser(item.id)"
+          ></p-button>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="paginatorleft"> </ng-template>
     <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
 </div>
+<p-toast></p-toast>

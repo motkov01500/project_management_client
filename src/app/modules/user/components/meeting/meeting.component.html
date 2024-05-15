@@ -10,16 +10,15 @@
         iconPos="left"
         (onClick)="onBackToProjects()"
       ></p-button> -->
-    </div>
-    <div class="page-name-project-title">
       <div class="page-name">
-        <label style="font-weight: bold">Meetings</label>
+        <h1>Meetings</h1>
       </div>
       <div class="project-name">
         <label>Project:&nbsp;&nbsp;</label>
         <p style="font-weight: bold">{{ projectTitle }}</p>
       </div>
     </div>
+    <div class="page-name-project-title"></div>
     <div class="meeting-create">
       <!-- <p-button
         severity="info"
@@ -35,8 +34,15 @@
   <p-table
     [value]="currentUserMeetings"
     [paginator]="true"
-    [rows]="10"
+    [rows]="offset"
     [reorderableColumns]="true"
+    (onPage)="onChangePage($event)"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    [loading]="loading"
+    loadingIcon="pi pi-spin pi-spinner-dotted"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
       <tr>

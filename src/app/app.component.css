@@ -21,3 +21,8 @@
 ::ng-deep input::placeholder {
   font-size: 15px;
 }
+
+::ng-deep table th {
+  background-color: #2fc5ce;
+  color: #fff;
+}

@@ -3,10 +3,10 @@ import { Route, RouterModule } from '@angular/router';
 import { MainComponent } from './components/main/main.component';
 import { ProjectComponent } from './components/project/project.component';
 import { MeetingComponent } from './components/meeting/meeting.component';
-import { MyProfileComponent } from './components/my-profile/my-profile.component';
+import { MyProfileComponent } from '../app-common/components/my-profile/my-profile.component';
 import { TaskComponent } from './components/task/task.component';
-import { UserMeetingRelatedComponent } from './components/user-meeting-related/user-meeting-related.component';
-import { UserProjectRelatedComponent } from './components/user-project-related/user-project-related/user-project-related.component';
+import { UserMeetingRelatedComponent } from '../app-common/components/user-meeting-related/user-meeting-related.component';
+import { UserProjectRelatedComponent } from '../app-common/components/user-project-related/user-project-related.component';
 
 const routes: Route[] = [
   {

@@ -10,14 +10,13 @@
         iconPos="left"
         (onClick)="onBackToProjects()"
       ></p-button> -->
-    </div>
-    <div class="page-name-project-title">
-      <div class="page-name"><label>Meetings</label></div>
+      <div class="page-name"><h1>Meetings</h1></div>
       <div class="project-name">
         <label>Project:&nbsp;&nbsp;</label>
         <p style="font-weight: bold">{{ projectTitle }}</p>
       </div>
     </div>
+    <div class="page-name-project-title"></div>
     <div class="task-create">
       <p-button
         severity="success"
@@ -35,6 +34,13 @@
     [paginator]="true"
     [rows]="10"
     [reorderableColumns]="true"
+    (onPage)="onChangePage($event)"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    [loading]="loading"
+    loadingIcon="pi pi-spin pi-spinner-dotted"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -74,7 +80,17 @@
               [outlined]="true"
               icon="pi pi-user-plus"
               severity="success"
+              [disabled]="!item.isUsersAvailable"
               (onClick)="onAssignUserToMeeting(item.id)"
+            ></p-button>
+            <p-button
+              type="button"
+              title="Users"
+              [rounded]="true"
+              [outlined]="true"
+              icon="pi pi-user"
+              severity="info"
+              (onClick)="onViewRelatedUsers(item.id)"
             ></p-button>
           </div>
         </td>
@@ -126,29 +142,31 @@
   >
     <div class="container">
       <h2>Assign user to meeting</h2>
-      <form (submit)="onSubmit()">
-        <input
-          type="datetime-local"
-          pInputText
-          id="sidebar-input"
-          class="p-inputtext-lg"
-          name="Date"
-          value="{{ meetingAsign?.title }}"
-          [(ngModel)]="date"
-        />
+      <form (submit)="onAssignUserToMeetingSubmit()">
         <input
           type="text"
           pInputText
           id="sidebar-input"
           class="p-inputtext-lg"
-          name="Title"
-          value="{{ meetingDetails?.title }}"
-          [(ngModel)]="title"
+          name="Date"
+          disabled="true"
+          value="{{ meetingAsign?.title }}"
+          [(ngModel)]="date"
         />
+        <p-dropdown
+          [options]="users"
+          [(ngModel)]="selectedUser"
+          [style]="{ width: '100%' }"
+          id="sidebar-input"
+          class="test"
+          optionLabel="username"
+          name="optional"
+          placeholder="Select user"
+        ></p-dropdown>
         <button
           pButton
           type="submit"
-          label="Edit Meeting"
+          label="Assign User"
           class="p-button-lg"
         ></button>
       </form>

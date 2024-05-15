@@ -31,7 +31,7 @@ export class LoginComponent {
         localStorage.setItem('role', role ? role : '');
         // this.webSocketService.connect().subscribe({});
         if (role === 'user') {
-          this.router.navigate(['user']);
+          this.router.navigate(['user', 'projects']);
         }
         if (role === 'administrator') {
           this.router.navigate(['administrator']);

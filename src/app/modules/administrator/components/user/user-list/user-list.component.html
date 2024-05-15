@@ -10,14 +10,11 @@
         iconPos="left"
         (onClick)="onHomeButton()"
       ></p-button> -->
-    </div>
-    <div class="page-name-project-title">
       <div class="page-name">
-        <label style="font-weight: bold; font-size: 1.5rem; display: block"
-          >Users</label
-        >
+        <h1>Users</h1>
       </div>
     </div>
+    <div class="page-name-project-title"></div>
     <div class="task-create">
       <p-button
         severity="success"
@@ -30,7 +27,19 @@
       ></p-button>
     </div>
   </div>
-  <p-table class="table" [value]="items" [paginator]="true" [rows]="10">
+  <p-table
+    class="table"
+    [value]="items"
+    [paginator]="true"
+    [rows]="10"
+    (onPage)="onChangePage($event)"
+    [totalRecords]="totalRecords"
+    [lazy]="true"
+    [loading]="loading"
+    loadingIcon="pi pi-spin pi-spinner-dotted"
+    (onLazyLoad)="onLazyLoad($event)"
+    styleClass="p-datatable-gridlines"
+  >
     <ng-template pTemplate="header">
       <tr>
         <th>Picture</th>
@@ -74,7 +83,7 @@
               severity="warning"
               (onClick)="onEdit(item.id)"
             ></p-button>
-            <p-button
+            <!-- <p-button
               type="button"
               [rounded]="true"
               [outlined]="true"
@@ -82,7 +91,7 @@
               icon="pi pi pi-user-plus"
               severity="warning"
               (onClick)="onAssignProject(item.id)"
-            ></p-button>
+            ></p-button> -->
             <!-- <p-button
               type="button"
               title="Assign to meeting"
@@ -155,7 +164,7 @@
       </form>
     </div>
   </p-sidebar>
-  <p-sidebar
+  <!-- <p-sidebar
     [(visible)]="visibleSidebarAssignToProject"
     position="left"
     [baseZIndex]="10000"
@@ -211,6 +220,6 @@
         ></button>
       </form>
     </div>
-  </p-sidebar>
+  </p-sidebar> -->
 </div>
 <p-toast></p-toast>

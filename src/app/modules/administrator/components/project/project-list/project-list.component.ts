@@ -1,12 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ProjectEdit, ProjectResponse } from '../../../../../models';
+import {
+  ProjectEdit,
+  ProjectResponse,
+  UserResponse,
+} from '../../../../../models';
 import { MeetingResponse } from '../../../../../models/meeting/meeting-response';
 import { MeetingsService } from '../../../../../services/meetings.service';
 import { ProjectsService } from '../../../../../services/projects.service';
 import { WebSocketService } from '../../../../../services/web-socket.service';
 import { Router } from '@angular/router';
+import { UsersService } from '../../../../../services/users.service';
+import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
+import { SizeService } from '../../../../../services/size.service';
 
 @Component({
   selector: 'app-project-list',
@@ -14,6 +21,8 @@ import { Router } from '@angular/router';
   styleUrl: './project-list.component.css',
 })
 export class ProjectListComponent implements OnInit {
+  visibleSidebarAssignUserToProject: any;
+  visibleSidebarAssignToProject: any;
   items: ProjectResponse[] = [];
   projectEditSideBar: boolean = false;
   projectMeetingSidebar: boolean = false;
@@ -21,19 +30,34 @@ export class ProjectListComponent implements OnInit {
   currentProjectUnfinishedMeetings: MeetingResponse[] = [];
   title: string = '';
   key: string = '';
+  usersToAssign: UserResponse[] = [];
+  selectedUserToAssign: UserResponse | undefined;
+  currentProjectUserAssign: ProjectResponse | undefined;
+  offset: number = 5;
+  totalRecords: number = 0;
+  loading: boolean = false;
+  page: number = 1;
 
   constructor(
     private projectService: ProjectsService,
     private confirmationService: ConfirmationService,
+    private sizeService: SizeService,
+    private userService: UsersService,
     private router: Router,
     private messageService: MessageService,
-    private websocketService: WebSocketService
+    private websocketService: WebSocketService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.projectService.getAllProjects().subscribe({
+    this.projectService.getAllProjects(this.page, this.offset).subscribe({
       next: (data: ProjectResponse[]) => {
         this.items = [...data];
+      },
+    });
+    this.sizeService.getAllProjectsSize().subscribe({
+      next: (totalRecords: number) => {
+        this.totalRecords = totalRecords;
       },
     });
   }
@@ -121,7 +145,67 @@ export class ProjectListComponent implements OnInit {
   onHomeButton() {
     this.router.navigate(['administrator']);
   }
+
   onCreateProject() {
     this.router.navigate(['administrator', 'project', 'create']);
+  }
+
+  onViewUsers(projectKey: string, projectTitle: string) {
+    localStorage.setItem('current-project-key', projectKey);
+    localStorage.setItem('current-project-title', projectTitle);
+    this.router.navigate(['administrator', 'projects', 'users']);
+  }
+
+  onAssignUserToProject(projectKey: string, projectTitle: string) {
+    this.userService.getUsersThatCanAddToProject(projectKey).subscribe({
+      next: (users: UserResponse[]) => {
+        this.usersToAssign = users;
+      },
+    });
+    this.projectService.getProjectByKey(projectKey).subscribe({
+      next: (project: ProjectResponse) => {
+        this.currentProjectUserAssign = project;
+      },
+    });
+    this.visibleSidebarAssignToProject = true;
+  }
+
+  onAssignUserToProjectSubmit() {
+    this.projectService
+      .assignUserToProject(
+        this.selectedUserToAssign?.id,
+        this.currentProjectUserAssign?.id
+      )
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'User successfully added to project.',
+            detail: 'via admin',
+          });
+          this.visibleSidebarAssignToProject = false;
+        },
+      });
+  }
+
+  onChangePage(event: TablePageEvent) {
+    this.page = event.first / event.rows + 1;
+  }
+
+  onLazyLoad($event: TableLazyLoadEvent) {
+    this.loading = true;
+    setTimeout(() => {
+      this.projectService.getAllProjects(this.page, this.offset).subscribe({
+        next: (data: ProjectResponse[]) => {
+          this.items = [...data];
+        },
+      });
+      this.sizeService.getAllProjectsSize().subscribe({
+        next: (totalRecords: number) => {
+          this.totalRecords = totalRecords;
+        },
+      });
+      this.loading = false;
+    }, 600);
   }
 }

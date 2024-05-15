@@ -10,14 +10,13 @@
         iconPos="left"
         (onClick)="onBackToProjects()"
       ></p-button> -->
-    </div>
-    <div class="page-name-project-title">
-      <div class="page-name"><label>Tasks</label></div>
+      <div class="page-name"><h1>Tasks</h1></div>
       <div class="project-name">
         <label>Project:&nbsp;&nbsp;</label>
         <p style="font-weight: bold">{{ projectTitle }}</p>
       </div>
     </div>
+    <div class="page-name-project-title"></div>
     <div class="task-create"></div>
   </div>
 
@@ -28,6 +27,13 @@
       [rows]="10"
       [reorderableColumns]="true"
       [autoLayout]="false"
+      (onPage)="onChangePage($event)"
+      [totalRecords]="totalRecords"
+      [lazy]="true"
+      [loading]="loading"
+      (onLazyLoad)="onLazyLoad($event)"
+      loadingIcon="pi pi-spin pi-spinner-dotted"
+      styleClass="p-datatable-gridlines"
     >
       <ng-template pTemplate="header">
         <tr>
@@ -42,11 +48,11 @@
       <ng-template pTemplate="body" let-item>
         <tr>
           <td>{{ item.progress }}%</td>
-          <td>{{ item.initialEstimation }}</td>
+          <td>{{ item.initialEstimation }}h</td>
           <td [style.color]="item.taskStatus === 'DONE' ? 'green' : 'blue'">
             {{ item.taskStatus }}
           </td>
-          <td>{{ item.hoursSpent }}</td>
+          <td>{{ item.hoursSpent }}h</td>
           <td>{{ item.project.title }}</td>
           <td>
             <p-button

@@ -13,9 +13,9 @@ import { UserPasswordUpdate } from '../models/user/user-update-password';
 export class UsersService {
   constructor(private http: HttpClient) {}
 
-  getAllUsers(): Observable<UserResponse> {
-    return this.http.get<UserResponse>(
-      `${apiUrl}v1/user/administrator/get-all`
+  getAllUsers(page: number, offset: number): Observable<UserResponse[]> {
+    return this.http.get<UserResponse[]>(
+      `${apiUrl}v1/user/administrator/get-all/${page}/${offset}`
     );
   }
 
@@ -25,15 +25,41 @@ export class UsersService {
     );
   }
 
+  getUsersThatCanAddToProject(projectKey: any): Observable<UserResponse[]> {
+    return this.http.get<UserResponse[]>(
+      `${apiUrl}v1/user/administrator/find-not-assigned-to-project-users/${projectKey}`
+    );
+  }
+
+  getUsersThatCanAddToMeeting(meetingId: number): Observable<UserResponse[]> {
+    return this.http.get<UserResponse[]>(
+      `${apiUrl}v1/user/administrator/find-not-assigned-to-meeting-users/${meetingId}`
+    );
+  }
+
   getUnassignedToProjectUsers(): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(
       `${apiUrl}v1/user/administrator/get-all-unassigned`
     );
   }
 
-  getRelatedToProject(projectKey: string | null): Observable<UserResponse[]> {
+  getRelatedToTask(
+    taskId: any,
+    page: number,
+    offset: number
+  ): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(
-      `${apiUrl}v1/user/get-all-related-to-project/${projectKey}`
+      `${apiUrl}v1/user/get-all-related-to-task/${taskId}/${page}/${offset}`
+    );
+  }
+
+  getRelatedToProject(
+    projectKey: string | null,
+    page: number,
+    offset: number
+  ): Observable<UserResponse[]> {
+    return this.http.get<UserResponse[]>(
+      `${apiUrl}v1/user/get-all-related-to-project/${projectKey}/${page}/${offset}`
     );
   }
 
@@ -41,9 +67,13 @@ export class UsersService {
     return this.http.get<UserResponse>(`${apiUrl}v1/user/current-user`);
   }
 
-  getRelatedToMeeting(meetingId: number | null): Observable<UserResponse[]> {
+  getRelatedToMeeting(
+    meetingId: number | null,
+    page: number,
+    offset: number
+  ): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(
-      `${apiUrl}v1/user/get-all-related-to-meeting/${meetingId}`
+      `${apiUrl}v1/user/get-all-related-to-meeting/${meetingId}/${page}/${offset}`
     );
   }
 

@@ -17,9 +17,15 @@ export class TaskCreateComponent implements OnInit {
     projectId: 0,
     initialEstimation: 0,
   };
-  selectedProject: ProjectResponse = { key: '', title: '', id: 0 };
+  selectedProject: ProjectResponse = {
+    key: '',
+    title: '',
+    id: 0,
+    isUsersAvailable: true,
+  };
   projects: ProjectResponse[] = [];
   projectKey: string | null = localStorage.getItem('current-project-key');
+  projectTitle: string | null = localStorage.getItem('current-project-title');
   currentProject: ProjectResponse | undefined;
   constructor(
     private projectService: ProjectsService,
@@ -29,7 +35,7 @@ export class TaskCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.projectService.getAllProjects().subscribe({
+    this.projectService.getAllProjectsWithoutPaging().subscribe({
       next: (projects: ProjectResponse[]) => {
         this.projects = projects;
       },

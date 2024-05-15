@@ -27,20 +27,11 @@ export class MainComponent implements OnInit {
     this.items = [
       {
         label: 'Users',
-        items: [
-          { label: 'User List', routerLink: 'user/get-all' },
-          { label: 'Assign to Project', routerLink: 'user/assign-user' },
-        ],
+        routerLink: 'user/get-all',
       },
       {
         label: 'Projects',
-        items: [
-          { label: 'Project List', routerLink: 'project/get-all' },
-          {
-            label: 'No Assignees',
-            routerLink: 'project/project-without-assignees',
-          },
-        ],
+        routerLink: 'project/get-all',
       },
     ];
     this.userService.getCurrentLoggedUser().subscribe({

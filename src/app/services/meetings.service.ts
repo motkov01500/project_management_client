@@ -20,10 +20,12 @@ export class MeetingsService {
   }
 
   getCurrentProjectMeetings(
-    projectKey: string | null
+    projectKey: string | null,
+    page: number,
+    offset: number
   ): Observable<MeetingResponse[]> {
     return this.http.get<MeetingResponse[]>(
-      `${apiUrl}v1/meeting/get-all-related-to-project/${projectKey}`
+      `${apiUrl}v1/meeting/get-all-related-to-project/${projectKey}/${page}/${offset}`
     );
   }
 
@@ -40,10 +42,12 @@ export class MeetingsService {
   }
 
   getCurrentUserMeetings(
-    projectKey: string | null
+    projectKey: string | null,
+    page: number,
+    offset: number
   ): Observable<MeetingResponse[]> {
     return this.http.get<MeetingResponse[]>(
-      `${apiUrl}v1/meeting/get-current-user-meetings/${projectKey}`
+      `${apiUrl}v1/meeting/get-current-user-meetings/${projectKey}/${page}/${offset}`
     );
   }
 
@@ -72,11 +76,24 @@ export class MeetingsService {
   }
 
   assignUserToMeeting(
-    userId: number | null,
-    meetingId: number | null
+    userId: any,
+    meetingId: any
   ): Observable<MeetingResponse> {
     return this.http.patch<MeetingResponse>(
       `${apiUrl}v1/meeting/administrator/assign-user-to-meeting`,
+      {
+        userId: userId,
+        meetingId: meetingId,
+      }
+    );
+  }
+
+  removeUserFromMeeting(
+    userId: number | null,
+    meetingId: any
+  ): Observable<string> {
+    return this.http.patch<string>(
+      `${apiUrl}v1/meeting/administrator/remove-user-from-meeting`,
       {
         userId: userId,
         meetingId: meetingId,

@@ -14,7 +14,7 @@ import { MeetingResponse } from '../../../../../models/meeting/meeting-response'
   templateUrl: './meeting-create.component.html',
   styleUrl: './meeting-create.component.css',
 })
-export class MeetingCreateComponent implements OnInit, OnDestroy {
+export class MeetingCreateComponent implements OnInit {
   selectedStatus: string = '';
   date: Date = new Date();
   statuses: string[] = ['UPCOMING', 'STARTED', 'END'];
@@ -33,7 +33,7 @@ export class MeetingCreateComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.projectService.getAllProjects().subscribe({
+    this.projectService.getAllProjectsWithoutPaging().subscribe({
       next: (projects: ProjectResponse[]) => {
         this.projects = projects;
       },
@@ -44,12 +44,6 @@ export class MeetingCreateComponent implements OnInit, OnDestroy {
       },
     });
   }
-
-  ngOnDestroy(): void {
-    localStorage.removeItem('current-project-title');
-    localStorage.removeItem('current-project-key');
-  }
-
   onSubmit() {
     let newMeeting: MeetingCreate = {
       title: this.title,

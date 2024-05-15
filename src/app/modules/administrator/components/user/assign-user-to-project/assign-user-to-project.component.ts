@@ -14,7 +14,12 @@ import { WebSocketService } from '../../../../../services/web-socket.service';
 })
 export class AssignUserToProjectComponent implements OnInit {
   assignUserToProject: ProjectUserAssign = { projectId: 0, userId: 0 };
-  selectedProject: ProjectResponse = { key: '', title: '', id: 0 };
+  selectedProject: ProjectResponse = {
+    key: '',
+    title: '',
+    id: 0,
+    isUsersAvailable: true,
+  };
   projects: ProjectResponse[] = [];
   items: UserResponse[] = [];
   visibleSidebar: boolean = false;
@@ -45,7 +50,7 @@ export class AssignUserToProjectComponent implements OnInit {
   onAssign(userId: number) {
     this.visibleSidebar = true;
     this.assignUserToProject.userId = userId;
-    this.projectService.getAllProjects().subscribe({
+    this.projectService.getAllProjectsWithoutPaging().subscribe({
       next: (projects: ProjectResponse[]) => {
         this.projects = projects;
       },
@@ -56,7 +61,10 @@ export class AssignUserToProjectComponent implements OnInit {
     this.assignUserToProject.projectId = this.selectedProject.id;
     this.visibleSidebar = false;
     this.projectService
-      .assignUserToProject(this.assignUserToProject)
+      .assignUserToProject(
+        this.assignUserToProject.userId,
+        this.assignUserToProject.projectId
+      )
       .subscribe({
         next: (response: any) => {
           this.items = this.items.filter(
