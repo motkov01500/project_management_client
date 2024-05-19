@@ -1,15 +1,6 @@
 <div class="card">
   <div class="project-actions">
     <div class="actions">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-backward"
-        title="Back to projects."
-        iconPos="left"
-        (onClick)="onBackToProjects()"
-      ></p-button> -->
       <div class="page-name">
         <h1>Meetings</h1>
       </div>
@@ -19,29 +10,24 @@
       </div>
     </div>
     <div class="page-name-project-title"></div>
-    <div class="meeting-create">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-plus"
-        title="Back to projects."
-        iconPos="left"
-        (onClick)="onBackToProjects()"
-      ></p-button> -->
-    </div>
+    <div class="meeting-create"></div>
+  </div>
+  <div class="not-found-resource" *ngIf="totalRecords == 0">
+    <app-not-found-resource></app-not-found-resource>
   </div>
   <p-table
+    *ngIf="totalRecords > 0"
     [value]="currentUserMeetings"
     [paginator]="true"
-    [rows]="offset"
+    [(rows)]="offset"
+    [rowsPerPageOptions]="[5, 10, 15]"
     [reorderableColumns]="true"
     (onPage)="onChangePage($event)"
     [totalRecords]="totalRecords"
     [lazy]="true"
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
-    (onLazyLoad)="onLazyLoad($event)"
+    (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
@@ -65,6 +51,15 @@
             [outlined]="true"
             (onClick)="onViewRelatedUsers(item.id)"
           ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <app-not-found-resource
+            [totalRecords]="totalRecords"
+          ></app-not-found-resource>
         </td>
       </tr>
     </ng-template>
@@ -117,3 +112,4 @@
     </div>
   </p-sidebar>
 </div>
+<p-toast></p-toast>

@@ -1,10 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { UserRequest } from '../../../../../models/user/user-request';
-import { UsersService } from '../../../../../services/users.service';
-import { WebSocketService } from '../../../../../services/web-socket.service';
 import { Router } from '@angular/router';
+import { UserRequest } from 'app/models';
+import { UsersService, WebSocketService } from 'app/services';
 
 @Component({
   selector: 'app-user-create',
@@ -32,7 +31,9 @@ export class UserCreateComponent {
           severity: 'success',
           summary: 'User created',
           detail: 'via admin',
+          life: 2000,
         });
+        this.router.navigate(['administrator', 'user', 'get-all']);
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({

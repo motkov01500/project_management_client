@@ -1,15 +1,6 @@
 <div class="card">
   <div class="head-actions">
     <div class="actions">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-backward"
-        title="Back to meetings."
-        iconPos="left"
-        (onClick)="onHomeButton()"
-      ></p-button> -->
       <div class="page-name">
         <h1>Users</h1>
       </div>
@@ -19,19 +10,31 @@
       </div>
     </div>
     <div class="page-name-project-title"></div>
-    <div class="task-create"></div>
+    <div class="task-create">
+      <p-button
+        *ngIf="userRole == 'administrator'"
+        type="button"
+        title="Assign user"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-user-plus"
+        severity="success"
+        (onClick)="onAssignUserToMeeting()"
+      ></p-button>
+    </div>
   </div>
   <p-table
     class="table"
     [value]="items"
     [paginator]="true"
-    [rows]="5"
+    [(rows)]="offset"
+    [rowsPerPageOptions]="[5, 10, 15]"
     [totalRecords]="totalRecords"
     [lazy]="true"
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
     (onPage)="onChangePage($event)"
-    (onLazyLoad)="onLazyLoad($event)"
+    (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
@@ -68,8 +71,55 @@
         </td>
       </tr>
     </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <app-not-found-resource
+            [totalRecords]="totalRecords"
+          ></app-not-found-resource>
+        </td>
+      </tr>
+    </ng-template>
     <ng-template pTemplate="paginatorleft"> </ng-template>
     <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
+  <p-sidebar
+    [(visible)]="assignUserToMeetingSidebar"
+    position="right"
+    [baseZIndex]="10000"
+  >
+    <ng-template pTemplate="header"><h3>Assign user</h3></ng-template>
+    <ng-template pTemplate="content">
+      <form>
+        <input
+          type="text"
+          pInputText
+          id="sidebar-input"
+          name="Date"
+          disabled="true"
+          value="{{ currentMeeting?.title }}"
+        />
+        <p-multiSelect
+          name="users"
+          [options]="users"
+          placeholder="Assign users"
+          [filter]="false"
+          [(ngModel)]="selectedUsers"
+          optionLabel="username"
+          optionValue="id"
+        ></p-multiSelect>
+      </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        type="submit"
+        label="Assign User"
+        class="p-button-lg"
+        (click)="onAssignUserToMeetingSubmit()"
+        [style]="{ width: '100%' }"
+      ></button>
+    </ng-template>
+  </p-sidebar>
 </div>
 <p-toast></p-toast>

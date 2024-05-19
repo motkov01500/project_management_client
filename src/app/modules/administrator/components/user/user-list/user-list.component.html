@@ -1,15 +1,6 @@
 <div class="card">
   <div class="head-actions">
     <div class="actions">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-backward"
-        title="Back to projects."
-        iconPos="left"
-        (onClick)="onHomeButton()"
-      ></p-button> -->
       <div class="page-name">
         <h1>Users</h1>
       </div>
@@ -31,13 +22,14 @@
     class="table"
     [value]="items"
     [paginator]="true"
-    [rows]="10"
+    [(rows)]="offset"
+    [rowsPerPageOptions]="[5, 10, 15]"
     (onPage)="onChangePage($event)"
     [totalRecords]="totalRecords"
     [lazy]="true"
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
-    (onLazyLoad)="onLazyLoad($event)"
+    (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
@@ -83,26 +75,16 @@
               severity="warning"
               (onClick)="onEdit(item.id)"
             ></p-button>
-            <!-- <p-button
-              type="button"
-              [rounded]="true"
-              [outlined]="true"
-              title="Assign to project"
-              icon="pi pi pi-user-plus"
-              severity="warning"
-              (onClick)="onAssignProject(item.id)"
-            ></p-button> -->
-            <!-- <p-button
-              type="button"
-              title="Assign to meeting"
-              icon="pi pi-calendar-plus"
-              size="small"
-              severity="danger"
-              [rounded]="true"
-              [outlined]="true"
-              (onClick)="onAssignToMeeting(item.id)"
-            ></p-button> -->
           </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <app-not-found-resource
+            [totalRecords]="totalRecords"
+          ></app-not-found-resource>
         </td>
       </tr>
     </ng-template>
@@ -115,9 +97,10 @@
     [baseZIndex]="10000"
   ></p-confirmDialog>
   <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
-    <div class="container">
-      <h1>Edit User</h1>
-      <form (submit)="onSubmit()">
+    <ng-template pTemplate="header"><h3>Edit User</h3></ng-template>
+    <ng-template pTemplate="content">
+      <form>
+        <label for="username">Username</label>
         <input
           type="text"
           pInputText
@@ -127,6 +110,7 @@
           value="{{ userDetails?.username }}"
           [(ngModel)]="username"
         />
+        <label for="password">Password</label>
         <input
           type="password"
           pInputText
@@ -136,6 +120,7 @@
           [(ngModel)]="password"
           placeholder="Password"
         />
+        <label for="full-name">Full name</label>
         <input
           type="text"
           pInputText
@@ -146,6 +131,7 @@
           placeholder="Full Name"
           [(ngModel)]="fullName"
         />
+        <label for="role">Role</label>
         <p-dropdown
           [options]="roles"
           [(ngModel)]="selectedRole"
@@ -155,71 +141,18 @@
           name="optional"
           placeholder="Select role"
         ></p-dropdown>
-        <button
-          pButton
-          type="submit"
-          label="Edit User"
-          class="p-button-lg"
-        ></button>
       </form>
-    </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        type="submit"
+        label="Edit User"
+        class="p-button-lg"
+        (click)="onSubmit()"
+        [style]="{ width: '100%' }"
+      ></button>
+    </ng-template>
   </p-sidebar>
-  <!-- <p-sidebar
-    [(visible)]="visibleSidebarAssignToProject"
-    position="left"
-    [baseZIndex]="10000"
-  >
-    <div class="container">
-      <h1>Edit User</h1>
-      <form (submit)="onAssignUserToProject()">
-        <p-dropdown
-          [options]="projects"
-          [(ngModel)]="selectedProject"
-          [style]="{ width: '100%' }"
-          class="test"
-          name="optional"
-          id="sidebar-input"
-          placeholder="Select project"
-          optionLabel="key"
-          optionValue="id"
-        ></p-dropdown>
-        <button
-          pButton
-          type="submit"
-          label="Edit User"
-          class="p-button-lg"
-        ></button>
-      </form>
-    </div>
-  </p-sidebar>
-
-  <p-sidebar
-    [(visible)]="assignToMeetingSidebar"
-    position="left"
-    [baseZIndex]="10000"
-  >
-    <div class="container">
-      <h2>Assign to meeting</h2>
-      <form (submit)="onAssignUserToProject()">
-        <p-dropdown
-          [options]="meetings"
-          [(ngModel)]="selectedProject"
-          [style]="{ width: '100%' }"
-          class="test"
-          name="optional"
-          id="sidebar-input"
-          placeholder="Select project"
-          optionLabel="key"
-          optionValue="id"
-        ></p-dropdown>
-        <button
-          pButton
-          type="submit"
-          label="Edit User"
-          class="p-button-lg"
-        ></button>
-      </form>
-    </div>
-  </p-sidebar> -->
 </div>
 <p-toast></p-toast>

@@ -1,21 +1,6 @@
 <div class="container-width">
   <p-card class="card">
-    <div class="image" *ngIf="!hasImage; else elseBlock">
-      <p-fileUpload
-        [style]="{ margin: '20px' }"
-        name="image"
-        [customUpload]="true"
-        (uploadHandler)="onSelect($event)"
-        (onUpload)="onSucessfulUploadImage()"
-        accept=".png,.jpg"
-        uploadLabel=" "
-        chooseLabel=" "
-        cancelLabel=" "
-        [mode]="'advanced'"
-        [maxFileSize]="2000000"
-      ></p-fileUpload>
-      <!-- <input type="file" value="upload" (change)="onSelect($event)" /> -->
-    </div>
+    <div class="image" *ngIf="!hasImage; else elseBlock"></div>
     <ng-template #elseBlock
       ><img
         alt="Image"
@@ -57,22 +42,24 @@
           [outlined]="true"
           (onClick)="onChangePassword(currentLoggedUser.id)"
         ></p-button>
-        <p-button
-          type="button"
-          severity="info"
-          [rounded]="true"
-          [outlined]="true"
-          title="Change image"
-          icon="pi pi-image"
-          (onClick)="onOpenChangeImageSidebar()"
-        ></p-button>
+
+        <p-fileUpload
+          (onSelect)="onSelect($event)"
+          accept=".png, .jpeg, .jpg"
+          [maxFileSize]="2000000"
+          mode="basic"
+          [auto]="true"
+          [chooseIcon]="'pi pi-image'"
+          [ariaPlaceholder]="'test'"
+        >
+        </p-fileUpload>
       </div>
     </div>
   </p-card>
   <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
-    <div class="container">
-      <h1>Edit User</h1>
-      <form (submit)="onSubmit()">
+    <ng-template pTemplate="header"><h1>Edit User</h1></ng-template>
+    <ng-template pTemplate="content">
+      <form>
         <input
           type="password"
           pInputText
@@ -100,30 +87,19 @@
           placeholder="Confirm new password"
           [(ngModel)]="updatedUserPassword.confirmNewPassword"
         />
-        <button
-          pButton
-          type="submit"
-          label="Edit User"
-          class="p-button-lg"
-        ></button>
       </form>
-    </div>
-  </p-sidebar>
-  <p-sidebar [(visible)]="imageSideBar" position="right" [baseZIndex]="10000">
-    <div class="container">
-      <p-fileUpload
-        [style]="{ margin: '20px' }"
-        name="image"
-        [customUpload]="true"
-        (uploadHandler)="onSelect($event)"
-        (onUpload)="onSucessfulUploadImage()"
-        accept=".png,.jpg"
-        uploadLabel=" "
-        chooseLabel=" "
-        cancelLabel=" "
-        [mode]="'advanced'"
-        [maxFileSize]="2000000"
-      ></p-fileUpload>
-    </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        type="submit"
+        label="Edit User"
+        class="p-button-lg"
+        [style]="{ width: '100%' }"
+        (click)="onSubmit()"
+      ></button>
+    </ng-template>
   </p-sidebar>
 </div>
+
+<p-toast></p-toast>

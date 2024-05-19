@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MeetingResponse } from '../../../../models/meeting/meeting-response';
-import { MeetingsService } from '../../../../services/meetings.service';
-import { UserResponse } from '../../../../models';
-import { UsersService } from '../../../../services/users.service';
 import { Router } from '@angular/router';
-import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../services/size.service';
+import { TablePageEvent } from 'primeng/table';
+import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MeetingResponse, UserResponse } from 'app/models';
+import { MeetingsService, SizeService, UsersService } from 'app/services';
 
 @Component({
   selector: 'app-meeting',
@@ -13,7 +12,7 @@ import { SizeService } from '../../../../services/size.service';
   styleUrl: './meeting.component.css',
 })
 export class MeetingComponent implements OnInit {
-  totalRecords: number = 0;
+  totalRecords: number = 1;
   loading: boolean = false;
   currentUserMeetings: MeetingResponse[] = [];
   viewUserRelatedSidebar: boolean = false;
@@ -25,6 +24,7 @@ export class MeetingComponent implements OnInit {
 
   constructor(
     private meetingService: MeetingsService,
+    private messageService: MessageService,
     private sizeService: SizeService,
     private userService: UsersService,
     private router: Router,
@@ -32,13 +32,13 @@ export class MeetingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.meetingService
-      .getCurrentUserMeetings(this.projectKey, this.page, this.offset)
-      .subscribe({
-        next: (meetings: MeetingResponse[]) => {
-          this.currentUserMeetings = meetings;
-        },
-      });
+    // this.meetingService
+    //   .getCurrentUserMeetings(this.projectKey, this.page, this.offset)
+    //   .subscribe({
+    //     next: (meetings: MeetingResponse[]) => {
+    //       this.currentUserMeetings = meetings;
+    //     },
+    //   });
     this.sizeService.getCurrentUserMeetingsSize(this.projectKey).subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
@@ -62,7 +62,7 @@ export class MeetingComponent implements OnInit {
     this.page = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.meetingService
@@ -70,6 +70,13 @@ export class MeetingComponent implements OnInit {
         .subscribe({
           next: (meetings: MeetingResponse[]) => {
             this.currentUserMeetings = meetings;
+          },
+          error: (error: HttpErrorResponse) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: error.error.message,
+              detail: 'via admin',
+            });
           },
         });
       this.sizeService.getCurrentUserMeetingsSize(this.projectKey).subscribe({
@@ -79,5 +86,6 @@ export class MeetingComponent implements OnInit {
       });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
   }
 }

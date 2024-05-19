@@ -20,6 +20,7 @@
   <div class="task-create"></div>
 </div>
 <form (submit)="onSubmit()">
+  <label for="username">Username</label>
   <input
     type="text"
     pInputText
@@ -29,6 +30,7 @@
     [(ngModel)]="userCredentials.username"
     placeholder="Username"
   />
+  <label for="password">Password</label>
   <input
     type="password"
     pInputText
@@ -38,12 +40,13 @@
     name="password"
     [(ngModel)]="userCredentials.password"
   />
+  <label for="full-name">Full name</label>
   <input
     type="text"
     pInputText
     class="p-inputtext-lg"
     id="sidebar-input"
-    placeholder="FullName"
+    placeholder="Full name"
     name="fullName"
     [(ngModel)]="userCredentials.fullName"
   />

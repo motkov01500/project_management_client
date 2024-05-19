@@ -8,5 +8,5 @@ export const UserGuard: CanActivateFn = (route, state) => {
 
   return authService.isLogged() && authService.getRole() === 'user'
     ? true
-    : router.createUrlTree(['welcome/login']);
+    : router.createUrlTree(['login']);
 };

@@ -2,18 +2,19 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
+  MeetingResponse,
   ProjectEdit,
   ProjectResponse,
   UserResponse,
-} from '../../../../../models';
-import { MeetingResponse } from '../../../../../models/meeting/meeting-response';
-import { MeetingsService } from '../../../../../services/meetings.service';
-import { ProjectsService } from '../../../../../services/projects.service';
-import { WebSocketService } from '../../../../../services/web-socket.service';
+} from 'app/models';
 import { Router } from '@angular/router';
-import { UsersService } from '../../../../../services/users.service';
 import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../../services/size.service';
+import {
+  ProjectsService,
+  SizeService,
+  UsersService,
+  WebSocketService,
+} from 'app/services';
 
 @Component({
   selector: 'app-project-list',
@@ -34,7 +35,7 @@ export class ProjectListComponent implements OnInit {
   selectedUserToAssign: UserResponse | undefined;
   currentProjectUserAssign: ProjectResponse | undefined;
   offset: number = 5;
-  totalRecords: number = 0;
+  totalRecords: number = 1;
   loading: boolean = false;
   page: number = 1;
 
@@ -50,16 +51,12 @@ export class ProjectListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.projectService.getAllProjects(this.page, this.offset).subscribe({
-      next: (data: ProjectResponse[]) => {
-        this.items = [...data];
-      },
-    });
     this.sizeService.getAllProjectsSize().subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
       },
     });
+    this.cdr.detectChanges();
   }
 
   onEdit(projectId: number) {
@@ -73,8 +70,8 @@ export class ProjectListComponent implements OnInit {
 
   onSubmit(projectId: any) {
     let editedProject: ProjectEdit = {
-      key: this.key,
-      title: this.title,
+      key: this.key ? this.key : '',
+      title: this.title ? this.title : '',
     };
     let itemIndex: number = this.items.findIndex(
       (item) => item.key == this.projectDetails?.key
@@ -92,7 +89,7 @@ export class ProjectListComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
-          severity: 'success',
+          severity: 'error',
           summary: error.error.message,
           detail: 'via admin',
         });
@@ -122,6 +119,7 @@ export class ProjectListComponent implements OnInit {
           detail: 'via admin',
         });
         this.websocketService.sendMessage(`Project is deleted`);
+        this.onLazyLoad();
       },
       reject: () => {
         this.confirmationService.close();
@@ -157,17 +155,24 @@ export class ProjectListComponent implements OnInit {
   }
 
   onAssignUserToProject(projectKey: string, projectTitle: string) {
-    this.userService.getUsersThatCanAddToProject(projectKey).subscribe({
-      next: (users: UserResponse[]) => {
-        this.usersToAssign = users;
-      },
-    });
     this.projectService.getProjectByKey(projectKey).subscribe({
       next: (project: ProjectResponse) => {
         this.currentProjectUserAssign = project;
       },
     });
-    this.visibleSidebarAssignToProject = true;
+    this.userService.getUsersThatCanAddToProject(projectKey).subscribe({
+      next: (users: UserResponse[]) => {
+        this.usersToAssign = users;
+        this.visibleSidebarAssignToProject = true;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: error.error.message,
+          detail: 'via admin',
+        });
+      },
+    });
   }
 
   onAssignUserToProjectSubmit() {
@@ -192,7 +197,7 @@ export class ProjectListComponent implements OnInit {
     this.page = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.projectService.getAllProjects(this.page, this.offset).subscribe({
@@ -207,5 +212,6 @@ export class ProjectListComponent implements OnInit {
       });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
   }
 }

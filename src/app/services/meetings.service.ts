@@ -29,7 +29,7 @@ export class MeetingsService {
     );
   }
 
-  getById(meetingId: number): Observable<MeetingResponse> {
+  getById(meetingId: any): Observable<MeetingResponse> {
     return this.http.get<MeetingResponse>(
       `${apiUrl}v1/meeting/administrator/get-by-id/${meetingId}`
     );
@@ -70,19 +70,16 @@ export class MeetingsService {
       `${apiUrl}v1/meeting/administrator/update/${meetingId}`,
       {
         date: editedMeeting.date,
-        status: editedMeeting.status,
+        title: editedMeeting.title,
       }
     );
   }
 
-  assignUserToMeeting(
-    userId: any,
-    meetingId: any
-  ): Observable<MeetingResponse> {
+  assignUserToMeeting(users: any, meetingId: any): Observable<MeetingResponse> {
     return this.http.patch<MeetingResponse>(
       `${apiUrl}v1/meeting/administrator/assign-user-to-meeting`,
       {
-        userId: userId,
+        users: users,
         meetingId: meetingId,
       }
     );

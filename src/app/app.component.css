@@ -26,3 +26,17 @@
   background-color: #2fc5ce;
   color: #fff;
 }
+
+::ng-deep .p-sidebar > input {
+  width: 100%;
+}
+
+::ng-deep .p-sidebar > input {
+  width: 100%;
+  font-size: 1rem !important;
+}
+
+::ng-deep .p-multiselect,
+::ng-deep input {
+  width: 100%;
+}

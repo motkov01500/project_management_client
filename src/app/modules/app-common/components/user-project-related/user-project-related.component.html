@@ -1,15 +1,6 @@
 <div class="card">
   <div class="head-actions">
     <div class="actions">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-backward"
-        title="Back to meetings."
-        iconPos="left"
-        (onClick)="onHomeButton()"
-      ></p-button> -->
       <div class="page-name">
         <h1>Users</h1>
       </div>
@@ -19,19 +10,31 @@
       </div>
     </div>
     <div class="page-name-project-title"></div>
-    <div class="task-create"></div>
+    <div class="task-create">
+      <p-button
+        *ngIf="userRole == 'administrator'"
+        severity="success"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-plus"
+        title="Assign user."
+        iconPos="left"
+        (onClick)="onAssignUserToProject()"
+      ></p-button>
+    </div>
   </div>
   <p-table
     class="table"
     [value]="items"
     [paginator]="true"
-    [rows]="1"
+    [(rows)]="offset"
+    [rowsPerPageOptions]="[5, 10, 15]"
     [lazy]="true"
     [totalRecords]="totalRecords"
     (onPage)="onChangePage($event)"
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
-    (onLazyLoad)="onLazyLoad($event)"
+    (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
@@ -68,8 +71,57 @@
         </td>
       </tr>
     </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <app-not-found-resource
+            [totalRecords]="totalRecords"
+          ></app-not-found-resource>
+        </td>
+      </tr>
+    </ng-template>
     <ng-template pTemplate="paginatorleft"> </ng-template>
     <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
+
+  <p-sidebar
+    [(visible)]="visibleSidebarAssignToProject"
+    position="left"
+    [baseZIndex]="10000"
+  >
+    <ng-template pTemplate="header"><h3>Assign User</h3></ng-template>
+    <ng-template pTemplate="content">
+      <form>
+        <input
+          type="text"
+          pInputText
+          id="sidebar-input"
+          class="p-inputtext-lg"
+          value="{{ projectTitle }}"
+          name="title"
+          disabled="true"
+        />
+        <p-multiSelect
+          name="users"
+          [options]="usersToAssign"
+          placeholder="Assign users"
+          [filter]="false"
+          [(ngModel)]="selectedUsers"
+          optionLabel="username"
+          optionValue="id"
+        ></p-multiSelect>
+      </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        type="submit"
+        label="Assign user"
+        class="p-button-lg"
+        (click)="onAssignUserToProjectSubmit()"
+        [style]="{ width: '100%' }"
+      ></button>
+    </ng-template>
+  </p-sidebar>
 </div>
 <p-toast></p-toast>

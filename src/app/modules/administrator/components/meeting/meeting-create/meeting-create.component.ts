@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ProjectsService } from '../../../../../services/projects.service';
-import { MeetingsService } from '../../../../../services/meetings.service';
-import { ProjectResponse } from '../../../../../models';
-import { MeetingCreate } from '../../../../../models/meeting/meeting-create';
+import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { WebSocketService } from '../../../../../services/web-socket.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { MeetingResponse } from '../../../../../models/meeting/meeting-response';
+import { MeetingCreate, ProjectResponse } from 'app/models';
+import {
+  MeetingsService,
+  ProjectsService,
+  WebSocketService,
+} from 'app/services';
 
 @Component({
   selector: 'app-meeting-create',
@@ -57,6 +57,7 @@ export class MeetingCreateComponent implements OnInit {
           summary: 'Meeting created',
           detail: 'via admin',
         });
+        this.router.navigate(['administrator', 'projects', 'meetings']);
         this.websocketService.sendMessage(`New meeting is created`);
       },
       error: (error: HttpErrorResponse) => {

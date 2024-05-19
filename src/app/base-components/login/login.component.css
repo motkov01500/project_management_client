@@ -1,16 +1,36 @@
 :host {
   display: flex;
-  height: 100vh;
+  height: 100%;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
-form {
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
   padding: 20px;
   margin-top: 20px;
   display: flex;
   width: 30%;
-  height: 70vh;
+  height: 20vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* margin: auto; */
+}
+
+form {
+  margin-top: 20px;
+  display: flex;
+  width: 50%;
+  height: 20rem;
   flex-direction: column;
   justify-items: center;
   margin: auto;
@@ -18,4 +38,40 @@ form {
 
 input {
   margin: 0% 0% 5% 0%;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  height: 15rem !important;
+  width: 40%;
+  margin: 0;
+}
+
+.signUp {
+  display: flex;
+  justify-content: center;
+  height: 3rem;
+  width: 20rem;
+  background-color: #f9fafb;
+  border-radius: 25px;
+  box-shadow: 1px 1px #e8e9eb;
+}
+
+div p,
+div a {
+  font-size: 13px;
+}
+
+label {
+  color: blue;
+}
+
+label:hover {
+  cursor: pointer;
+}
+
+.form-container {
+  height: 65vh;
 }

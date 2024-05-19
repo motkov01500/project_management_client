@@ -1,13 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { UserResponse } from '../../../../models';
-import { MeetingsService } from '../../../../services/meetings.service';
-import { UsersService } from '../../../../services/users.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../services/auth.service';
 import { MessageService } from 'primeng/api';
-import { MeetingResponse } from '../../../../models/meeting/meeting-response';
-import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../services/size.service';
+import { TablePageEvent } from 'primeng/table';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MeetingResponse, UserResponse } from 'app/models';
+import {
+  AuthService,
+  MeetingsService,
+  SizeService,
+  UsersService,
+} from 'app/services';
 
 @Component({
   selector: 'app-user-meeting-related',
@@ -15,7 +17,10 @@ import { SizeService } from '../../../../services/size.service';
   styleUrl: './user-meeting-related.component.css',
 })
 export class UserMeetingRelatedComponent implements OnInit {
-  totalRecords: number = 0;
+  assignUserToMeetingSidebar: boolean = false;
+  users: UserResponse[] = [];
+  selectedUser: number | undefined;
+  totalRecords: number = 1;
   items: UserResponse[] = [];
   currentMeetingId: string | null = localStorage.getItem('current-meeting-id');
   userRole: string | null = this.authService.getRole();
@@ -23,6 +28,7 @@ export class UserMeetingRelatedComponent implements OnInit {
   loading: boolean = false;
   offset: number = 5;
   currentPage: number = 1;
+  selectedUsers: number[] = [];
 
   constructor(
     private meetingService: MeetingsService,
@@ -80,13 +86,14 @@ export class UserMeetingRelatedComponent implements OnInit {
           });
         },
       });
+    this.onLazyLoad();
   }
 
   onChangePage(event: TablePageEvent) {
     this.currentPage = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.userService
@@ -110,5 +117,47 @@ export class UserMeetingRelatedComponent implements OnInit {
         });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
+  }
+
+  onAssignUserToMeeting() {
+    this.userService
+      .getUsersThatCanAddToMeeting(this.currentMeeting?.id)
+      .subscribe({
+        next: (users: UserResponse[]) => {
+          this.users = users;
+          this.assignUserToMeetingSidebar = true;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: error.error.message,
+            detail: 'via admin',
+          });
+        },
+      });
+  }
+
+  onAssignUserToMeetingSubmit() {
+    this.meetingService
+      .assignUserToMeeting(this.selectedUsers, this.currentMeetingId)
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'User is successfully added to meeting',
+            detail: 'via admin',
+          });
+          this.assignUserToMeetingSidebar = false;
+          this.onLazyLoad();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: error.error.message,
+            detail: 'via admin',
+          });
+        },
+      });
   }
 }

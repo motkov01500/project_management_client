@@ -7,6 +7,7 @@ import { MyProfileComponent } from '../app-common/components/my-profile/my-profi
 import { TaskComponent } from './components/task/task.component';
 import { UserMeetingRelatedComponent } from '../app-common/components/user-meeting-related/user-meeting-related.component';
 import { UserProjectRelatedComponent } from '../app-common/components/user-project-related/user-project-related.component';
+import { UserTaskRelatedComponent } from '../app-common/components/user-task-related/user-task-related.component';
 
 const routes: Route[] = [
   {
@@ -18,6 +19,7 @@ const routes: Route[] = [
         component: ProjectComponent,
       },
       { path: 'projects/tasks', component: TaskComponent },
+      { path: 'projects/tasks/users', component: UserTaskRelatedComponent },
       { path: 'projects/meetings', component: MeetingComponent },
       {
         path: 'projects/meetings/meeting-users',

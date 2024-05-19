@@ -1,15 +1,6 @@
 <div class="card">
   <div class="head-actions">
     <div class="actions">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-backward"
-        title="Back to home."
-        iconPos="left"
-        (onClick)="onHomeButton()"
-      ></p-button> -->
       <div class="page-name">
         <h1>Projects</h1>
       </div>
@@ -30,7 +21,8 @@
   <p-table
     [value]="items"
     [paginator]="true"
-    [rows]="offset"
+    [(rows)]="offset"
+    [rowsPerPageOptions]="[5, 10, 15]"
     styleClass="p-datatable-gridlines"
     [reorderableColumns]="true"
     (onPage)="onChangePage($event)"
@@ -38,7 +30,7 @@
     [lazy]="true"
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
-    (onLazyLoad)="onLazyLoad($event)"
+    (onLazyLoad)="onLazyLoad()"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -104,17 +96,16 @@
               icon="pi pi-user"
               (onClick)="onViewUsers(item.key, item.title)"
             ></p-button>
-            <p-button
-              type="button"
-              [rounded]="true"
-              severity="success"
-              [outlined]="true"
-              title="Users"
-              icon="pi pi-user-plus"
-              [disabled]="!item.isUsersAvailable"
-              (onClick)="onAssignUserToProject(item.key, item.title)"
-            ></p-button>
           </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <app-not-found-resource
+            [totalRecords]="totalRecords"
+          ></app-not-found-resource>
         </td>
       </tr>
     </ng-template>
@@ -131,9 +122,10 @@
     position="right"
     [baseZIndex]="10000"
   >
-    <div class="container">
-      <h1>Edit User</h1>
-      <form (submit)="onSubmit(projectDetails?.id)">
+    <ng-template pTemplate="header"><h3>Edit project</h3></ng-template>
+    <ng-template pTemplate="content">
+      <form>
+        <label for="key">Key</label>
         <input
           type="text"
           pInputText
@@ -143,6 +135,7 @@
           value="{{ projectDetails?.key }}"
           [(ngModel)]="key"
         />
+        <label for="title">Title</label>
         <input
           type="text"
           pInputText
@@ -152,94 +145,18 @@
           name="title"
           [(ngModel)]="title"
         />
-        <button
-          pButton
-          type="submit"
-          label="Edit User"
-          class="p-button-lg"
-        ></button>
       </form>
-    </div>
-  </p-sidebar>
-  <p-sidebar
-    [fullScreen]="true"
-    [(visible)]="projectMeetingSidebar"
-    [baseZIndex]="10000"
-  >
-    <h1>Meetings</h1>
-    <div class="card">
-      <p-table
-        [value]="currentProjectUnfinishedMeetings"
-        [paginator]="true"
-        [rows]="10"
-        [reorderableColumns]="true"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Date</th>
-            <th>Status</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-item>
-          <tr>
-            <td>{{ item.date }}</td>
-            <td>{{ item.status }}</td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="paginatorleft">
-          <p-button
-            type="button"
-            icon="pi pi-plus"
-            cl
-            styleClass="p-button-text"
-          ></p-button>
-        </ng-template>
-        <ng-template pTemplate="paginatorright">
-          <p-button
-            type="button"
-            icon="pi pi-cloud"
-            styleClass="p-button-text"
-          ></p-button>
-        </ng-template>
-      </p-table>
-    </div>
-  </p-sidebar>
-  <p-sidebar
-    [(visible)]="visibleSidebarAssignToProject"
-    position="left"
-    [baseZIndex]="10000"
-  >
-    <div class="container">
-      <h1>Edit User</h1>
-      <form (submit)="onAssignUserToProjectSubmit()">
-        <input
-          type="text"
-          pInputText
-          id="sidebar-input"
-          class="p-inputtext-lg"
-          value="{{ currentProjectUserAssign?.title }}"
-          name="title"
-          disabled="true"
-          [(ngModel)]="title"
-        />
-        <p-dropdown
-          [options]="usersToAssign"
-          [(ngModel)]="selectedUserToAssign"
-          [style]="{ width: '100%' }"
-          class="test"
-          name="optional"
-          id="sidebar-input"
-          placeholder="Select user"
-          optionLabel="username"
-        ></p-dropdown>
-        <button
-          pButton
-          type="submit"
-          label="Edit User"
-          class="p-button-lg"
-        ></button>
-      </form>
-    </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        type="submit"
+        label="Edit project"
+        class="p-button-lg"
+        (click)="onSubmit(projectDetails?.id)"
+        [style]="{ width: '100%' }"
+      ></button>
+    </ng-template>
   </p-sidebar>
 </div>
 <p-toast></p-toast>

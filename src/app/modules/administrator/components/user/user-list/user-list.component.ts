@@ -6,21 +6,17 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import {
-  ProjectResponse,
-  UserDetails,
-  UserEdit,
-  UserResponse,
-  UserRole,
-} from '../../../../../models';
-import { UsersService } from '../../../../../services/users.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { WebSocketService } from '../../../../../services/web-socket.service';
-import { ProjectsService } from '../../../../../services/projects.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../../services/size.service';
+import { TablePageEvent } from 'primeng/table';
+import { ProjectResponse, UserEdit, UserResponse } from 'app/models';
+import {
+  ProjectsService,
+  SizeService,
+  UsersService,
+  WebSocketService,
+} from 'app/services';
 
 @Component({
   selector: 'app-users',
@@ -28,7 +24,7 @@ import { SizeService } from '../../../../../services/size.service';
   styleUrl: './users.component.css',
 })
 export class UserListComponent implements OnInit {
-  totalRecords: number = 0;
+  totalRecords: number = 1;
   loading: boolean = false;
   page: number = 1;
   offset: number = 5;
@@ -58,11 +54,11 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.service.getAllUsers(this.page, this.offset).subscribe({
-      next: (data: UserResponse[]) => {
-        this.items = data;
-      },
-    });
+    // this.service.getAllUsers(this.page, this.offset).subscribe({
+    //   next: (data: UserResponse[]) => {
+    //     this.items = data;
+    //   },
+    // });
     this.sizeService.getAllUsersSize().subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
@@ -80,18 +76,18 @@ export class UserListComponent implements OnInit {
         this.service.deleteUser(event).subscribe({
           error: (error: HttpErrorResponse) => {
             this.messageService.add({
-              severity: 'success',
+              severity: 'error',
               summary: error.error.message,
               detail: 'via admin',
             });
           },
         });
-        this.items = this.items.filter((item) => item.id != event);
         this.messageService.add({
           severity: 'success',
           summary: 'User deleted',
           detail: 'via admin',
         });
+        this.onLazyLoad();
         this.webSocketService.sendMessage(`The user is deleted`);
       },
       reject: () => {
@@ -112,10 +108,10 @@ export class UserListComponent implements OnInit {
 
   onSubmit() {
     let updatedUser: UserEdit = {
-      username: this.username,
-      password: this.password,
-      fullName: this.fullName,
-      role: this.selectedRole,
+      username: this.username ? this.username : '',
+      password: this.password ? this.password : '',
+      fullName: this.fullName ? this.fullName : '',
+      role: this.selectedRole ? this.selectedRole : '',
     };
     let itemIndex: number = this.items.findIndex(
       (item) => item.username == this.userDetails.username
@@ -155,35 +151,6 @@ export class UserListComponent implements OnInit {
     this.visibleSidebarAssignToProject = true;
   }
 
-  // onAssignUserToProject() {
-  //   this.projectService
-  //     .assignUserToProject({
-  //       userId: this.userDetails.id,
-  //       projectId: this.selectedProject,
-  //     })
-  //     .subscribe({
-  //       next: () => {
-  //         this.webSocketService.sendMessage(
-  //           'Admin assign new user to project.'
-  //         );
-  //         this.messageService.add({
-  //           severity: 'success',
-  //           summary: 'User is added to project',
-  //           detail: 'via admin',
-  //           life: 2000,
-  //         });
-  //       },
-  //       error: (error: HttpErrorResponse) => {
-  //         this.messageService.add({
-  //           severity: 'error',
-  //           summary: error.error.message,
-  //           detail: 'via admin',
-  //           life: 2000,
-  //         });
-  //       },
-  //     });
-  // }
-
   onCreateUser() {
     this.router.navigate(['administrator', 'user', 'create']);
   }
@@ -200,7 +167,7 @@ export class UserListComponent implements OnInit {
     this.page = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.service.getAllUsers(this.page, this.offset).subscribe({
@@ -215,5 +182,6 @@ export class UserListComponent implements OnInit {
       });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
   }
 }

@@ -87,11 +87,11 @@ export class ProjectsService {
     );
   }
 
-  assignUserToProject(userId: any, projectId: any): Observable<string> {
+  assignUserToProject(users: any, projectId: any): Observable<string> {
     return this.http.patch<string>(
       `${apiUrl}v1/project/administrator/assign-user-to-project`,
       {
-        userId: userId,
+        users: users,
         projectId: projectId,
       }
     );

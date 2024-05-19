@@ -2,19 +2,16 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { AdministatorGuard, UserGuard } from './auth';
 import { LoginComponent } from './base-components/login/login.component';
-import { WelcomeComponent } from './base-components/welcome/welcome.component';
-import { RegisterComponent } from './base-components/register/register.component';
+import { RegisterComponent } from 'app/base-components';
+import { NotFoundComponent } from 'app/base-components';
 
 const routes: Route[] = [
   {
-    path: 'welcome',
-    component: WelcomeComponent,
-    children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-    ],
+    path: 'login',
+    component: LoginComponent,
   },
-  { path: '', redirectTo: '/welcome', pathMatch: 'full' },
+  { path: 'register', component: RegisterComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: 'user',
     loadChildren: () =>
@@ -29,6 +26,7 @@ const routes: Route[] = [
       ),
     canActivate: [AdministatorGuard],
   },
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({

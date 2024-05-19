@@ -49,6 +49,7 @@ export class TasksService {
       {
         initialEstimation: newTask.initialEstimation,
         projectId: newTask.projectId,
+        title: newTask.title,
       }
     );
   }
@@ -59,6 +60,7 @@ export class TasksService {
       {
         progress: editedTask.progress,
         hoursSpent: editedTask.hoursSpent,
+        title: editedTask.title,
       }
     );
   }
@@ -71,15 +73,16 @@ export class TasksService {
       `${apiUrl}v1/task/update-progress/${taskId}`,
       {
         progress: newProgress.progress,
+        hoursSpent: newProgress.hoursSpent,
       }
     );
   }
 
-  assignUserToTask(username: string, taskId: number): Observable<void> {
+  assignUserToTask(users: any, taskId: any): Observable<void> {
     return this.http.patch<void>(
       `${apiUrl}v1/task/administrator/assign-user-to-task`,
       {
-        username: username,
+        users: users,
         taskId: taskId,
       }
     );

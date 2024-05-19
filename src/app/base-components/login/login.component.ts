@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { UserResponse } from '../../models/user/user-response';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { WebSocketService } from '../../services/web-socket.service';
+import { jwtDecode } from 'jwt-decode';
+import { AuthService, WebSocketService } from 'app/services';
+import { AuthResponse, TokenClaims } from 'app/models';
 
 @Component({
   selector: 'app-login',
@@ -24,17 +24,17 @@ export class LoginComponent {
 
   login(): void {
     this.service.login(this.username, this.password).subscribe({
-      next: (response: HttpResponse<UserResponse>) => {
-        const token = response.headers.get('Authorization')?.split(' ')[1];
-        const role = response.body?.role.name;
-        localStorage.setItem('token', token ? token : '');
-        localStorage.setItem('role', role ? role : '');
+      next: (response: AuthResponse) => {
+        let decoded = jwtDecode(response.token) as TokenClaims;
+        let role: string = decoded.auth;
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('role', decoded.auth);
         // this.webSocketService.connect().subscribe({});
         if (role === 'user') {
           this.router.navigate(['user', 'projects']);
         }
         if (role === 'administrator') {
-          this.router.navigate(['administrator']);
+          this.router.navigate(['administrator', 'user', 'get-all']);
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -44,5 +44,9 @@ export class LoginComponent {
         });
       },
     });
+  }
+
+  redirectToRegister() {
+    this.router.navigate(['register']);
   }
 }

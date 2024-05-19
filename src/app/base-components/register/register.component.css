@@ -1,17 +1,92 @@
-form {
+:host {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* form {
   padding: 20px;
   margin-top: 20px;
   display: flex;
   width: 30%;
   flex-direction: column;
   margin: auto;
+} */
+
+form {
+  display: flex;
+  width: 50%;
+  height: 20rem;
+  flex-direction: column;
+  justify-items: center;
+  margin: auto;
 }
 
-:host {
+.form {
   display: flex;
-  height: 70vh;
+  flex-direction: row;
+  justify-content: start;
+  height: 25rem !important;
+  width: 40%;
+  margin: 0;
+}
+/* 
+.logo {
+  display: flex;
+  width: 30%;
+  flex-direction: column;
+  align-items: center;
+} */
+
+.logo {
+  padding: 20px;
+  margin-top: 20px;
+  display: flex;
+  width: 30%;
+  height: 25vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* margin: auto; */
 }
 
 input {
   margin: 0% 0% 5% 0%;
+}
+
+.signIn {
+  display: flex;
+  justify-content: center;
+  height: 3rem;
+  width: 20rem;
+  background-color: #f9fafb;
+  border-radius: 25px;
+  box-shadow: 1px 1px #e8e9eb;
+}
+
+div p,
+div a {
+  font-size: 13px;
+}
+
+label {
+  color: blue;
+}
+
+label:hover {
+  cursor: pointer;
+}
+
+.form-container {
+  height: 65vh;
 }

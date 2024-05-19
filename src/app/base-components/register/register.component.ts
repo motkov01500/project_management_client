@@ -1,8 +1,9 @@
 import { Component, DoCheck, OnChanges, OnInit } from '@angular/core';
-import { UserRegister } from '../../models/user/user-register';
-import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { UserRegister } from 'app/models';
+import { AuthService } from 'app/services';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +20,8 @@ export class RegisterComponent implements DoCheck {
 
   constructor(
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngDoCheck(): void {
@@ -32,6 +34,12 @@ export class RegisterComponent implements DoCheck {
 
   onSubmit() {
     this.authService.register(this.newUser).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'You registered successfully.',
+        });
+      },
       error: (err: HttpErrorResponse) => {
         this.messageService.add({
           severity: 'error',
@@ -39,5 +47,9 @@ export class RegisterComponent implements DoCheck {
         });
       },
     });
+  }
+
+  redirectToLogin() {
+    this.router.navigate(['login']);
   }
 }

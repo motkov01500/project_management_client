@@ -1,34 +1,59 @@
-<form (submit)="onSubmit()">
-  <input
-    type="text"
-    pInputText
-    class="p-inputtext-lg"
-    name="username"
-    [(ngModel)]="newUser.username"
-    placeholder="Username"
-    required
-  />
-  <input
-    type="password"
-    pInputText
-    class="p-inputtext-lg"
-    placeholder="Password"
-    name="password"
-    [(ngModel)]="newUser.password"
-    required
-  />
-  <small id="username2-help" class="p-error block" [hidden]="passwordCheck"
-    >Password must contains minimum 8 symbols, one uppercase letter, one
-    lowercase letter and one number</small
-  >
-  <input
-    type="text"
-    pInputText
-    class="p-inputtext-lg"
-    placeholder="FullName"
-    name="fullName"
-    [(ngModel)]="newUser.fullName"
-  />
-  <button pButton type="submit" label="Register" class="p-button-lg"></button>
-</form>
+<div class="container">
+  <div class="logo">
+    <img src="../../../assets/logo.png" height="100" width="172" />
+    <h3>Register</h3>
+  </div>
+  <div class="container-form container">
+    <div class="form">
+      <form (submit)="onSubmit()">
+        <input
+          type="text"
+          pInputText
+          class="p-inputtext-lg"
+          name="username"
+          [(ngModel)]="newUser.username"
+          placeholder="Username"
+          required
+        />
+        <input
+          type="password"
+          pInputText
+          class="p-inputtext-lg"
+          placeholder="Password"
+          name="password"
+          [(ngModel)]="newUser.password"
+          required
+        />
+        <small
+          id="username2-help"
+          class="p-error block"
+          [hidden]="passwordCheck"
+          [style]="{ 'margin-bottom': '7px' }"
+          >Password must contains minimum 8 symbols, one uppercase letter, one
+          lowercase letter and one number</small
+        >
+        <input
+          type="text"
+          pInputText
+          class="p-inputtext-lg"
+          placeholder="Full name"
+          name="fullName"
+          [(ngModel)]="newUser.fullName"
+        />
+        <button
+          pButton
+          type="submit"
+          label="Register"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+    <div class="signIn">
+      <p>
+        Already have account?&nbsp;
+        <label (click)="redirectToLogin()">Login</label>
+      </p>
+    </div>
+  </div>
+</div>
 <p-toast></p-toast>

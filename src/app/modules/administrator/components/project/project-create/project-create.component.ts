@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { ProjectsService } from '../../../../../services/projects.service';
-import { ProjecRequest } from '../../../../../models/project/project-request';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { WebSocketService } from '../../../../../services/web-socket.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ProjecRequest } from 'app/models';
+import { ProjectsService, WebSocketService } from 'app/services';
 
 @Component({
   selector: 'app-project-create',
@@ -33,10 +32,11 @@ export class ProjectCreateComponent {
           detail: 'via admin',
         });
         this.websocketService.sendMessage(`New project is created`);
+        this.router.navigate(['administrator', 'project', 'get-all']);
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
-          severity: 'success',
+          severity: 'error',
           summary: error.error.message,
           detail: 'via admin',
         });

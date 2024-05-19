@@ -1,12 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { UserResponse } from '../../../../models';
-import { UsersService } from '../../../../services/users.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../../services/auth.service';
-import { ProjectsService } from '../../../../services/projects.service';
 import { MessageService } from 'primeng/api';
-import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../services/size.service';
+import { TablePageEvent } from 'primeng/table';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ProjectResponse, UserResponse } from 'app/models';
+import {
+  AuthService,
+  ProjectsService,
+  SizeService,
+  UsersService,
+} from 'app/services';
 
 @Component({
   selector: 'app-user-project-related',
@@ -14,14 +17,19 @@ import { SizeService } from '../../../../services/size.service';
   styleUrl: './user-project-related.component.css',
 })
 export class UserProjectRelatedComponent implements OnInit {
+  visibleSidebarAssignToProject: boolean = false;
+  usersToAssign: UserResponse[] = [];
+  selectedUserToAssign: UserResponse | undefined;
   items: UserResponse[] = [];
   projectKey: string | null = localStorage.getItem('current-project-key');
   projectTitle: string | null = localStorage.getItem('current-project-title');
   userRole: string | null = this.authService.getRole();
   loading: boolean | undefined;
-  totalRecords: number = 0;
+  totalRecords: number = 1;
   page: number = 1;
+  currentProject: ProjectResponse | undefined;
   offset: number = 5; //default
+  selectedUsers: number[] = [];
 
   constructor(
     private userService: UsersService,
@@ -34,13 +42,6 @@ export class UserProjectRelatedComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService
-      .getRelatedToProject(this.projectKey, this.page, this.offset)
-      .subscribe({
-        next: (users: UserResponse[]) => {
-          this.items = users;
-        },
-      });
     this.sizeService.getRelatedToProjectSize(this.projectKey).subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
@@ -62,17 +63,18 @@ export class UserProjectRelatedComponent implements OnInit {
           });
         },
       });
+    this.onLazyLoad();
   }
 
   onChangePage(event: TablePageEvent) {
     this.page = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.userService
-        .getRelatedToProject(this.projectKey, this.page, 1)
+        .getRelatedToProject(this.projectKey, this.page, this.offset)
         .subscribe({
           next: (users: UserResponse[]) => {
             this.items = users;
@@ -85,5 +87,43 @@ export class UserProjectRelatedComponent implements OnInit {
       });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
+  }
+
+  onAssignUserToProject() {
+    this.projectService.getProjectByKey(this.projectKey).subscribe({
+      next: (project: ProjectResponse) => {
+        this.currentProject = project;
+      },
+    });
+    this.userService.getUsersThatCanAddToProject(this.projectKey).subscribe({
+      next: (users: UserResponse[]) => {
+        this.usersToAssign = users;
+        this.visibleSidebarAssignToProject = true;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: error.error.message,
+          detail: 'via admin',
+        });
+      },
+    });
+  }
+
+  onAssignUserToProjectSubmit() {
+    this.projectService
+      .assignUserToProject(this.selectedUsers, this.currentProject?.id)
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'User successfully added to project.',
+            detail: 'via admin',
+          });
+          this.visibleSidebarAssignToProject = false;
+          this.onLazyLoad();
+        },
+      });
   }
 }

@@ -1,37 +1,19 @@
 <div class="card">
   <div class="head-actions">
     <div class="actions">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-backward"
-        title="Back to projects."
-        iconPos="left"
-        (onClick)="onHomeButton()"
-      ></p-button> -->
       <div class="page-name">
         <h1>Projects</h1>
       </div>
     </div>
     <div class="page-name-project-title"></div>
-    <div class="task-create">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-plus"
-        title="Back to projects."
-        iconPos="left"
-        (onClick)="onBackToProjects()"
-      ></p-button> -->
-    </div>
+    <div class="task-create"></div>
   </div>
   <p-table
     [value]="projects"
     [paginator]="true"
     columnResizeMode="fit"
-    [rows]="5"
+    [(rows)]="offset"
+    [rowsPerPageOptions]="[5, 10, 15]"
     (onPage)="onChangePage($event)"
     [totalRecords]="totalRecords"
     [lazy]="true"
@@ -84,6 +66,15 @@
               (onClick)="addCurrentProjectToLocalStorage(item.key, item.title)"
             ></p-button>
           </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <app-not-found-resource
+            [totalRecords]="totalRecords"
+          ></app-not-found-resource>
         </td>
       </tr>
     </ng-template>

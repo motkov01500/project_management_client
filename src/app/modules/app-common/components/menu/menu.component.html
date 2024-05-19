@@ -12,10 +12,10 @@
       <ng-template pTemplate>
         <div class="image-menu">
           <div class="image-element" (click)="op.hide()">
-            <p (click)="logout()">Logout</p>
+            <p routerLink="my-profile">My profile</p>
           </div>
           <div class="image-element" (click)="op.hide()">
-            <p routerLink="my-profile">My profile</p>
+            <p (click)="logout()">Logout</p>
           </div>
         </div>
       </ng-template>

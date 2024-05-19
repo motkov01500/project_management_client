@@ -1,17 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserResponse } from 'app/models';
+import { AuthService, UsersService, WebSocketService } from 'app/services';
 import { MenuItem } from 'primeng/api';
-import { AuthService } from '../../../../services/auth.service';
-import { UsersService } from '../../../../services/users.service';
-import { UserResponse } from '../../../../models';
-import { WebSocketService } from '../../../../services/web-socket.service';
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrl: './main.component.css',
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
   items: MenuItem[] = [];
   currentLoggedUsername: string = '';
 
@@ -23,7 +21,7 @@ export class MainComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.websocketService.connect();
+    // this.websocketService.connect();
     this.items = [
       {
         label: 'Users',
@@ -39,5 +37,9 @@ export class MainComponent implements OnInit {
         this.currentLoggedUsername = user.username;
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    localStorage.clear();
   }
 }

@@ -1,10 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ProjectResponse, UserResponse } from '../../../../models';
-import { ProjectsService } from '../../../../services/projects.service';
-import { UsersService } from '../../../../services/users.service';
 import { Router } from '@angular/router';
+import { ProjectResponse, UserResponse } from 'app/models';
+import { ProjectsService, SizeService, UsersService } from 'app/services';
 import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../services/size.service';
 
 @Component({
   selector: 'app-project',
@@ -15,7 +13,7 @@ export class ProjectComponent implements OnInit {
   projects: ProjectResponse[] = [];
   projectUsersSidebar: boolean = false;
   projectRelatedUsers: UserResponse[] = [];
-  totalRecords: number = 0;
+  totalRecords: number = 1;
   currentPage: number = 1;
   offset: number = 5;
   loading: boolean = false;
@@ -79,5 +77,6 @@ export class ProjectComponent implements OnInit {
       });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
   }
 }

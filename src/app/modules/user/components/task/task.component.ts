@@ -1,12 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { TasksService } from '../../../../services/tasks.service';
-import { TaskResponse } from '../../../../models/task/task-response';
-import { TaskProgress } from '../../../../models/task/task-update-progress';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../services/size.service';
+import { SizeService, TasksService } from 'app/services';
+import { TaskProgress, TaskResponse } from 'app/models';
 
 @Component({
   selector: 'app-task',
@@ -14,13 +12,14 @@ import { SizeService } from '../../../../services/size.service';
   styleUrl: './task.component.css',
 })
 export class TaskComponent implements OnInit {
-  totalRecords: number = 0;
+  totalRecords: number = 1;
   loading: boolean = false;
   page: number = 1;
   offset: number = 5;
   items: TaskResponse[] = [];
   newProgress: TaskProgress = {
     progress: 0,
+    hoursSpent: 0,
   };
   isDisabled: boolean = false;
   taskDetails: TaskResponse = {
@@ -72,11 +71,17 @@ export class TaskComponent implements OnInit {
     let findIndex: number = this.items.findIndex(
       (item) => item.id == this.taskDetails?.id
     );
+    console.log(typeof this.newProgress.hoursSpent);
     this.taskService
       .updateProgress(this.taskDetails.id, this.newProgress)
       .subscribe({
         next: (updateTask: TaskResponse) => {
           this.items[findIndex] = updateTask;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Successfully updated task.',
+            life: 1000,
+          });
         },
         error: (error: HttpErrorResponse) => {
           this.messageService.add({
@@ -118,5 +123,18 @@ export class TaskComponent implements OnInit {
         });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
+  }
+
+  OnDefaultValue(event: any) {
+    if (event.target.value.toString().length == 0) {
+      event.target.value = Number(0);
+      this.newProgress.hoursSpent = 0;
+      this.newProgress.progress = 0;
+    }
+  }
+  onViewUsers(taskId: string) {
+    localStorage.setItem('current-task-id', taskId.toString());
+    this.router.navigate(['user', 'projects', 'tasks', 'users']);
   }
 }

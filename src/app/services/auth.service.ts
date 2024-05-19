@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UserRegister } from '../models/user/user-register';
 import { UserResponse } from '../models/user/user-response';
 import { apiUrl } from '../shared/constants';
+import { AuthResponse } from '../models/AuthResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -11,19 +12,12 @@ import { apiUrl } from '../shared/constants';
 export class AuthService {
   constructor(private http: HttpClient) {}
 
-  login(
-    username: string,
-    password: string
-  ): Observable<HttpResponse<UserResponse>> {
-    let url = `${apiUrl}v1/auth/login?username=${username}&password=${password}`;
-    return this.http.post<UserResponse>(
-      url,
-      {
-        username: username,
-        password: password,
-      },
-      { observe: 'response' }
-    );
+  login(username: string, password: string): Observable<AuthResponse> {
+    let url = `${apiUrl}v1/auth/login`;
+    return this.http.post<AuthResponse>(url, {
+      username: username,
+      password: password,
+    });
   }
 
   register(newUser: UserRegister): Observable<UserResponse> {

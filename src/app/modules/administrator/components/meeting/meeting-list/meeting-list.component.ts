@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MeetingResponse } from '../../../../../models/meeting/meeting-response';
-import { MeetingsService } from '../../../../../services/meetings.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MeetingEdit } from '../../../../../models/meeting/meeting-edit';
-import { WebSocketService } from '../../../../../services/web-socket.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { UsersService } from '../../../../../services/users.service';
-import { UserResponse } from '../../../../../models';
-import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../../services/size.service';
+import { TablePageEvent } from 'primeng/table';
+import { MeetingEdit, MeetingResponse, UserResponse } from 'app/models';
+import {
+  MeetingsService,
+  SizeService,
+  UsersService,
+  WebSocketService,
+} from 'app/services';
 
 @Component({
   selector: 'app-meeting-list',
@@ -30,7 +30,7 @@ export class MeetingListComponent implements OnInit {
   meetingAsign: MeetingResponse | undefined;
   users: UserResponse[] = [];
   selectedUser: MeetingResponse | undefined;
-  totalRecords: number = 0;
+  totalRecords: number = 1;
   loading: boolean = false;
   page: number = 1;
   offset: number = 5;
@@ -47,13 +47,6 @@ export class MeetingListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.service
-      .getCurrentProjectMeetings(this.projectKey, this.page, this.offset)
-      .subscribe({
-        next: (meetings: MeetingResponse[]) => {
-          this.items = meetings;
-        },
-      });
     this.sizeService.getCurrentProjectMeetingsSize(this.projectKey).subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
@@ -92,6 +85,7 @@ export class MeetingListComponent implements OnInit {
           detail: 'via admin',
         });
         this.websocketService.sendMessage(`Meeting is deleted`);
+        this.onLazyLoad();
       },
       reject: () => {
         this.confirmationService.close();
@@ -102,8 +96,8 @@ export class MeetingListComponent implements OnInit {
 
   onSubmit() {
     let updatedMeeting: MeetingEdit = {
-      date: this.date,
-      status: this.selectedStatus,
+      date: new Date(this.date).toISOString(),
+      title: this.title,
     };
     let itemIndex: number = this.items.findIndex(
       (item) => item.id == this.meetingDetails.id
@@ -152,9 +146,16 @@ export class MeetingListComponent implements OnInit {
     this.userService.getUsersThatCanAddToMeeting(meetingId).subscribe({
       next: (users: UserResponse[]) => {
         this.users = users;
+        this.assignUserToMeetingSidebar = true;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: error.error.message,
+          detail: 'via admin',
+        });
       },
     });
-    this.assignUserToMeetingSidebar = true;
   }
 
   onAssignUserToMeetingSubmit() {
@@ -188,7 +189,7 @@ export class MeetingListComponent implements OnInit {
     this.page = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.service
@@ -207,5 +208,6 @@ export class MeetingListComponent implements OnInit {
         });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
   }
 }

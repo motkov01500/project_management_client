@@ -1,15 +1,6 @@
 <div class="card">
   <div class="head-actions">
     <div class="actions">
-      <!-- <p-button
-          severity="info"
-          [rounded]="true"
-          [outlined]="true"
-          icon="pi pi-backward"
-          title="Back to meetings."
-          iconPos="left"
-          (onClick)="onHomeButton()"
-        ></p-button> -->
       <div class="page-name">
         <label style="font-weight: bold; font-size: 1.5rem; display: block"
           >Users</label
@@ -21,19 +12,31 @@
       </div>
     </div>
     <div class="page-name-project-title"></div>
-    <div class="task-create"></div>
+    <div class="task-create">
+      <p-button
+        *ngIf="userRole == 'administrator'"
+        type="button"
+        title="Assign user to task"
+        [rounded]="true"
+        [outlined]="true"
+        icon="pi pi-user-plus"
+        severity="success"
+        (onClick)="onAssignToTask()"
+      ></p-button>
+    </div>
   </div>
   <p-table
     class="table"
     [value]="items"
     [paginator]="true"
-    [rows]="offset"
+    [(rows)]="offset"
+    [rowsPerPageOptions]="[5, 10, 15]"
     (onPage)="onChangePage($event)"
     [totalRecords]="totalRecords"
     [lazy]="true"
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
-    (onLazyLoad)="onLazyLoad($event)"
+    (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
@@ -70,8 +73,57 @@
         </td>
       </tr>
     </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <app-not-found-resource
+            [totalRecords]="totalRecords"
+          ></app-not-found-resource>
+        </td>
+      </tr>
+    </ng-template>
     <ng-template pTemplate="paginatorleft"> </ng-template>
     <ng-template pTemplate="paginatorright"> </ng-template>
   </p-table>
+  <p-sidebar
+    [(visible)]="assignToTaskSidebar"
+    position="right"
+    [baseZIndex]="10000"
+  >
+    <ng-template pTemplate="header"><h3>Assign to task</h3></ng-template>
+    <ng-template pTemplate="content">
+      <form>
+        <input
+          type="text"
+          pInputText
+          class="p-inputtext-lg"
+          name="title"
+          id="sidebar-input"
+          value="{{ currentTask?.title }}"
+          [disabled]="true"
+          placeholder="Task title"
+        />
+        <p-multiSelect
+          name="users"
+          [options]="usersToAssign"
+          placeholder="Assign users"
+          [filter]="false"
+          [(ngModel)]="selectedUsers"
+          optionLabel="username"
+          optionValue="id"
+        ></p-multiSelect>
+      </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        type="submit"
+        label="Assign to task"
+        class="p-button-lg"
+        (click)="onSubmitAssignToTask()"
+        [style]="{ width: '100%' }"
+      ></button>
+    </ng-template>
+  </p-sidebar>
 </div>
 <p-toast></p-toast>

@@ -9,10 +9,6 @@
       iconPos="left"
       (onClick)="onHomeButton()"
     ></p-button> -->
-    <div class="project-name">
-      <label>Project:&nbsp;&nbsp;</label>
-      <p style="font-weight: bold">{{ projectTitle }}</p>
-    </div>
   </div>
   <div class="page-name-project-title">
     <div class="page-name">
@@ -22,6 +18,7 @@
   <div class="task-create"></div>
 </div>
 <form (submit)="onSubmit()">
+  <label for="date">Date</label>
   <input
     type="datetime-local"
     pInputText
@@ -31,15 +28,17 @@
     [(ngModel)]="date"
     placeholder="Date"
   />
+  <label for="title">Title</label>
   <input
     type="text"
     pInputText
     class="p-inputtext-lg"
     id="sidebar-input"
-    name="Password"
+    name="title"
     [(ngModel)]="title"
     placeholder="Meeting title"
   />
+  <label for="project">Project</label>
   <p-dropdown
     [options]="projects"
     [(ngModel)]="selectedProject"

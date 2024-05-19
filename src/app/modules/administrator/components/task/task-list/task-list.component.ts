@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { TaskResponse } from '../../../../../models/task/task-response';
-import { TasksService } from '../../../../../services/tasks.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { TaskEdit } from '../../../../../models/task/task-edit';
-import { WebSocketService } from '../../../../../services/web-socket.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { UserResponse } from '../../../../../models';
-import { UsersService } from '../../../../../services/users.service';
-import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
-import { SizeService } from '../../../../../services/size.service';
+import { TablePageEvent } from 'primeng/table';
+import { TaskEdit, TaskResponse, UserResponse } from 'app/models';
+import {
+  SizeService,
+  TasksService,
+  UsersService,
+  WebSocketService,
+} from 'app/services';
 
 @Component({
   selector: 'app-task-list',
@@ -19,10 +19,14 @@ import { SizeService } from '../../../../../services/size.service';
 export class TaskListComponent implements OnInit {
   items: TaskResponse[] = [];
   visibleSidebar: boolean = false;
-  taskDetails: TaskResponse | any;
+  taskDetails: TaskResponse = {
+    id: 0,
+    title: 'test',
+  };
   editedTask: TaskEdit = {
     hoursSpent: 0,
     progress: 0,
+    title: '',
   };
   projectKey: string | null = localStorage.getItem('current-project-key');
   projectTitle: string | null = localStorage.getItem('current-project-title');
@@ -30,7 +34,7 @@ export class TaskListComponent implements OnInit {
   users: UserResponse[] = [];
   selectedUser: string = '';
   haveUsers: boolean = true;
-  totalRecords: number = 0;
+  totalRecords: number = 1;
   loading: boolean = false;
   page: number = 1;
   offset: number = 5;
@@ -47,13 +51,6 @@ export class TaskListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.service
-      .getCurrentProjectTasks(this.projectKey, this.page, this.offset)
-      .subscribe({
-        next: (tasks: TaskResponse[]) => {
-          this.items = tasks;
-        },
-      });
     this.sizeService.getCurrentProjectTasksSize(this.projectKey).subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
@@ -78,7 +75,7 @@ export class TaskListComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
-          severity: 'success',
+          severity: 'error',
           summary: error.error.message,
           detail: 'via admin',
         });
@@ -117,6 +114,7 @@ export class TaskListComponent implements OnInit {
           detail: 'via admin',
         });
         this.websocketService.sendMessage(`Task is deleted.`);
+        this.onLazyLoad();
       },
       reject: () => {
         this.confirmationService.close();
@@ -139,13 +137,13 @@ export class TaskListComponent implements OnInit {
     this.service.getById(taskId).subscribe({
       next: (task: TaskResponse) => {
         this.taskDetails = task;
-        this.assignToTaskSidebar = true;
       },
     });
     this.userService.getUsersThatCanAddToTask(taskId).subscribe({
       next: (users: UserResponse[]) => {
         this.users = users;
         this.haveUsers = true;
+        this.assignToTaskSidebar = true;
       },
       error: (error: HttpErrorResponse) => {
         this.haveUsers = false;
@@ -197,7 +195,7 @@ export class TaskListComponent implements OnInit {
     this.page = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.service
@@ -214,5 +212,6 @@ export class TaskListComponent implements OnInit {
       });
       this.loading = false;
     }, 600);
+    this.cdr.detectChanges();
   }
 }

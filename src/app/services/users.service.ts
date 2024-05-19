@@ -19,7 +19,7 @@ export class UsersService {
     );
   }
 
-  getUsersThatCanAddToTask(taskId: number): Observable<UserResponse[]> {
+  getUsersThatCanAddToTask(taskId: any): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(
       `${apiUrl}v1/user/administrator/get-users-can-add-to-task/${taskId}`
     );
@@ -31,7 +31,7 @@ export class UsersService {
     );
   }
 
-  getUsersThatCanAddToMeeting(meetingId: number): Observable<UserResponse[]> {
+  getUsersThatCanAddToMeeting(meetingId: any): Observable<UserResponse[]> {
     return this.http.get<UserResponse[]>(
       `${apiUrl}v1/user/administrator/find-not-assigned-to-meeting-users/${meetingId}`
     );

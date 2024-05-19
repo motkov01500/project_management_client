@@ -8,5 +8,5 @@ export const AdministatorGuard: CanActivateFn = (route, state) => {
 
   return authService.isLogged() && authService.getRole() === 'administrator'
     ? true
-    : router.createUrlTree(['welcome/login']);
+    : router.createUrlTree(['login']);
 };

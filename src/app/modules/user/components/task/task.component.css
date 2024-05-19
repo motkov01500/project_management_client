@@ -3,7 +3,7 @@
   justify-content: center;
 }
 
-.project-actions {
+.head-actions {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   display: flex;
@@ -11,6 +11,18 @@
   flex-direction: row;
   /* background-color: #f9fafb; */
   justify-content: space-between;
+}
+
+.project-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 15px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
 }
 
 .page-name-project-title {

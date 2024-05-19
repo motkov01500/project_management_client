@@ -9,10 +9,10 @@
       iconPos="left"
       (onClick)="onBackToProjects()"
     ></p-button> -->
-    <div class="project-name">
+    <!-- <div class="project-name">
       <label>Project:&nbsp;&nbsp;</label>
       <p style="font-weight: bold">{{ projectTitle }}</p>
-    </div>
+    </div> -->
   </div>
   <div class="page-name-project-title">
     <div class="page-name"><h1>Create task</h1></div>
@@ -30,15 +30,27 @@
   </div>
 </div>
 <form (submit)="onSubmit()">
+  <label>Initial estimation</label>
   <input
     type="number"
     pInputText
     class="p-inputtext-lg"
-    name="initialEstimation"
+    name="Initial estimation"
     id="sidebar-input"
     [(ngModel)]="newTask.initialEstimation"
     placeholder="initialEstimation"
   />
+  <label>Title</label>
+  <input
+    type="text"
+    pInputText
+    class="p-inputtext-lg"
+    name="Title"
+    id="sidebar-input"
+    [(ngModel)]="newTask.title"
+    placeholder="Title"
+  />
+  <label>Project</label>
   <input
     type="text"
     pInputText

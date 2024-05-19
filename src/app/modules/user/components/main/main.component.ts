@@ -1,10 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MenuItem, MessageService } from 'primeng/api';
-import { AuthService } from '../../../../services/auth.service';
 import { Router, RouterEvent } from '@angular/router';
-import { UsersService } from '../../../../services/users.service';
-import { UserResponse } from '../../../../models';
-import { WebSocketService } from '../../../../services/web-socket.service';
+import { AuthService, UsersService, WebSocketService } from 'app/services';
+import { UserResponse } from 'app/models';
 
 @Component({
   selector: 'app-main',
@@ -12,7 +10,7 @@ import { WebSocketService } from '../../../../services/web-socket.service';
   styleUrl: './main.component.css',
   encapsulation: ViewEncapsulation.None,
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
   username: string = '';
   messages: string[] = [];
 
@@ -29,6 +27,7 @@ export class MainComponent implements OnInit {
       id: 'projects-nav-button',
       label: 'Projects',
       routerLink: 'projects',
+      styleClass: 'grayed',
     },
   ];
 
@@ -37,10 +36,12 @@ export class MainComponent implements OnInit {
     this.router.events.subscribe((event) => {
       const navigationEvent = event as RouterEvent;
       const element = document.getElementById('projects-nav-button');
-      if (navigationEvent.url && navigationEvent.url.endsWith('projects')) {
-        element?.classList.remove('grayed');
-      } else {
-        element?.classList.add('grayed');
+      if (navigationEvent.url) {
+        if (navigationEvent.url.endsWith('projects')) {
+          element?.classList.add('grayed');
+        } else {
+          element?.classList.remove('grayed');
+        }
       }
     });
     this.userService.getCurrentLoggedUser().subscribe({
@@ -58,5 +59,9 @@ export class MainComponent implements OnInit {
         });
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    localStorage.clear();
   }
 }

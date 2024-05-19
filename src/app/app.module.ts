@@ -16,19 +16,19 @@ import { HomeComponent } from './base-components/home/home.component';
 import { LoginComponent } from './base-components/login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { authInterceptor } from './auth/auth.interceptor';
-import { WelcomeComponent } from './base-components/welcome/welcome.component';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterComponent } from './base-components/register/register.component';
 import { ToastModule } from 'primeng/toast';
+import { NotFoundComponent } from './base-components/not-found-page/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HomeComponent,
-    WelcomeComponent,
     RegisterComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,22 +1,44 @@
-<form (submit)="login()">
-  <input
-    type="text"
-    pInputText
-    class="p-inputtext-lg"
-    name="username"
-    [(ngModel)]="username"
-    placeholder="Username"
-    required
-  />
-  <input
-    type="password"
-    pInputText
-    class="p-inputtext-lg"
-    placeholder="Password"
-    name="password"
-    [(ngModel)]="password"
-    required
-  />
-  <button pButton type="submit" label="Login" class="p-button-lg"></button>
-</form>
+<div class="container">
+  <div class="logo">
+    <img src="../../../assets/logo.png" height="100" width="172" />
+    <h3>Login</h3>
+  </div>
+  <div class="form-container container">
+    <div class="form">
+      <form (submit)="login()">
+        <input
+          type="text"
+          pInputText
+          class="p-inputtext-lg"
+          name="username"
+          [(ngModel)]="username"
+          placeholder="Username"
+          required
+        />
+        <input
+          type="password"
+          pInputText
+          class="p-inputtext-lg"
+          placeholder="Password"
+          name="password"
+          [(ngModel)]="password"
+          required
+        />
+        <button
+          pButton
+          type="submit"
+          label="Login"
+          class="p-button-lg"
+        ></button>
+      </form>
+    </div>
+    <div class="signUp">
+      <p>
+        New to PM system?&nbsp;<label (click)="redirectToRegister()"
+          >Create an account</label
+        >
+      </p>
+    </div>
+  </div>
+</div>
 <p-toast></p-toast>

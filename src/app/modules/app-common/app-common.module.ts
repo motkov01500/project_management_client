@@ -1,16 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuComponent } from './components/menu/menu.component';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { UserTaskRelatedComponent } from './components/user-task-related/user-task-related.component';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { SidebarModule } from 'primeng/sidebar';
+import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import {
+  MenuComponent,
+  NotFoundResourceComponent,
+  UserTaskRelatedComponent,
+} from './components';
 
 @NgModule({
-  declarations: [MenuComponent, UserTaskRelatedComponent],
-  exports: [MenuComponent],
+  declarations: [
+    MenuComponent,
+    UserTaskRelatedComponent,
+    NotFoundResourceComponent,
+  ],
+  exports: [MenuComponent, NotFoundResourceComponent],
   imports: [
     CommonModule,
     MenubarModule,
@@ -18,6 +30,11 @@ import { TableModule } from 'primeng/table';
     OverlayPanelModule,
     ToastModule,
     TableModule,
+    DropdownModule,
+    SidebarModule,
+    FormsModule,
+    InputTextModule,
+    MultiSelectModule,
   ],
 })
 export class AppCommonModule {}

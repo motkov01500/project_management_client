@@ -1,15 +1,6 @@
 <div class="card">
   <div class="head-actions">
     <div class="actions">
-      <!-- <p-button
-        severity="info"
-        [rounded]="true"
-        [outlined]="true"
-        icon="pi pi-backward"
-        title="Back to projects."
-        iconPos="left"
-        (onClick)="onBackToProjects()"
-      ></p-button> -->
       <div class="page-name"><h1>Meetings</h1></div>
       <div class="project-name">
         <label>Project:&nbsp;&nbsp;</label>
@@ -32,14 +23,15 @@
   <p-table
     [value]="items"
     [paginator]="true"
-    [rows]="10"
+    [(rows)]="offset"
+    [rowsPerPageOptions]="[5, 10, 15]"
     [reorderableColumns]="true"
     (onPage)="onChangePage($event)"
     [totalRecords]="totalRecords"
     [lazy]="true"
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
-    (onLazyLoad)="onLazyLoad($event)"
+    (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
   >
     <ng-template pTemplate="header">
@@ -75,16 +67,6 @@
             ></p-button>
             <p-button
               type="button"
-              title="Assign user"
-              [rounded]="true"
-              [outlined]="true"
-              icon="pi pi-user-plus"
-              severity="success"
-              [disabled]="!item.isUsersAvailable"
-              (onClick)="onAssignUserToMeeting(item.id)"
-            ></p-button>
-            <p-button
-              type="button"
               title="Users"
               [rounded]="true"
               [outlined]="true"
@@ -93,6 +75,15 @@
               (onClick)="onViewRelatedUsers(item.id)"
             ></p-button>
           </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">
+          <app-not-found-resource
+            [totalRecords]="totalRecords"
+          ></app-not-found-resource>
         </td>
       </tr>
     </ng-template>
@@ -105,9 +96,10 @@
     [baseZIndex]="10000"
   ></p-confirmDialog>
   <p-sidebar [(visible)]="visibleSidebar" position="right" [baseZIndex]="10000">
-    <div class="container">
-      <h1>Edit Meeting</h1>
-      <form (submit)="onSubmit()">
+    <ng-template pTemplate="header"><h1>Edit Meeting</h1></ng-template>
+    <ng-template pTemplate="content">
+      <form>
+        <label for="date">Date</label>
         <input
           type="datetime-local"
           pInputText
@@ -117,60 +109,29 @@
           value="{{ meetingDetails?.date }}"
           [(ngModel)]="date"
         />
+        <label for="title">Title</label>
         <input
           type="text"
           pInputText
           id="sidebar-input"
           class="p-inputtext-lg"
           name="Title"
+          placeholder="Title"
           value="{{ meetingDetails?.title }}"
           [(ngModel)]="title"
         />
-        <button
-          pButton
-          type="submit"
-          label="Edit Meeting"
-          class="p-button-lg"
-        ></button>
       </form>
-    </div>
-  </p-sidebar>
-  <p-sidebar
-    [(visible)]="assignUserToMeetingSidebar"
-    position="right"
-    [baseZIndex]="10000"
-  >
-    <div class="container">
-      <h2>Assign user to meeting</h2>
-      <form (submit)="onAssignUserToMeetingSubmit()">
-        <input
-          type="text"
-          pInputText
-          id="sidebar-input"
-          class="p-inputtext-lg"
-          name="Date"
-          disabled="true"
-          value="{{ meetingAsign?.title }}"
-          [(ngModel)]="date"
-        />
-        <p-dropdown
-          [options]="users"
-          [(ngModel)]="selectedUser"
-          [style]="{ width: '100%' }"
-          id="sidebar-input"
-          class="test"
-          optionLabel="username"
-          name="optional"
-          placeholder="Select user"
-        ></p-dropdown>
-        <button
-          pButton
-          type="submit"
-          label="Assign User"
-          class="p-button-lg"
-        ></button>
-      </form>
-    </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        type="submit"
+        label="Edit Meeting"
+        class="p-button-lg"
+        (click)="onSubmit()"
+        [style]="{ width: '100%' }"
+      ></button>
+    </ng-template>
   </p-sidebar>
 </div>
 <p-toast></p-toast>

@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskCreate } from '../../../../../models/task/task-create';
-import { ProjectResponse } from '../../../../../models';
-import { ProjectsService } from '../../../../../services/projects.service';
-import { TasksService } from '../../../../../services/tasks.service';
 import { MessageService } from 'primeng/api';
-import { WebSocketService } from '../../../../../services/web-socket.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ProjectResponse, TaskCreate } from 'app/models';
+import { ProjectsService, TasksService, WebSocketService } from 'app/services';
 
 @Component({
   selector: 'app-task-create',
@@ -16,6 +14,7 @@ export class TaskCreateComponent implements OnInit {
   newTask: TaskCreate = {
     projectId: 0,
     initialEstimation: 0,
+    title: '',
   };
   selectedProject: ProjectResponse = {
     key: '',
@@ -31,7 +30,8 @@ export class TaskCreateComponent implements OnInit {
     private projectService: ProjectsService,
     private tasksService: TasksService,
     private messageService: MessageService,
-    private websocketService: WebSocketService
+    private websocketService: WebSocketService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +57,7 @@ export class TaskCreateComponent implements OnInit {
           summary: 'Task created',
           detail: 'via admin',
         });
-        console.log();
+        this.router.navigate(['administrator', 'projects', 'tasks']);
         this.websocketService.sendMessage(`New task is created`);
       },
       error: (error: HttpErrorResponse) => {

@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { UserResponse } from '../../../../models';
-import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
-import { UsersService } from '../../../../services/users.service';
+import { UserResponse } from 'app/models';
+import { AuthService, UsersService } from 'app/services';
 
 @Component({
   selector: 'app-menu',
@@ -45,6 +44,6 @@ export class MenuComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.routerService.navigate(['welcome']);
+    this.routerService.navigate(['login']);
   }
 }

@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UserResponse, UserRole } from '../../../../models';
-import { UsersService } from '../../../../services/users.service';
-import { UserPasswordUpdate } from '../../../../models/user/user-update-password';
+import { UsersService } from 'app/services';
 import base64 from 'base64-encode-file';
-import {
-  FileBeforeUploadEvent,
-  FileUploadEvent,
-  FileUploadHandlerEvent,
-} from 'primeng/fileupload';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { UserPasswordUpdate, UserResponse, UserRole } from 'app/models';
 
 @Component({
   selector: 'app-my-profile',
@@ -17,6 +11,9 @@ import { MessageService } from 'primeng/api';
   styleUrl: './my-profile.component.css',
 })
 export class MyProfileComponent implements OnInit {
+  onChoose(event: any, callback: any) {
+    callback();
+  }
   imageSideBar: boolean = false;
 
   role: UserRole = {
@@ -51,6 +48,9 @@ export class MyProfileComponent implements OnInit {
         }
       },
     });
+
+    const element = document.getElementsByClassName('p-fileupload-choose');
+    element.item(0)?.classList.add('test');
   }
 
   onChangePassword(userId: number) {
@@ -63,7 +63,7 @@ export class MyProfileComponent implements OnInit {
       .subscribe({
         next: () => {
           this.messageService.add({
-            severity: 'error',
+            severity: 'success',
             summary: 'Successfully changed password.',
             life: 1000,
           });
@@ -78,21 +78,33 @@ export class MyProfileComponent implements OnInit {
       });
   }
 
-  onSelect(event: FileUploadHandlerEvent): void {
-    // const file = event.target.files[0];
-    // base64(file).then((data) => {
-    //   if (data) {
-    //     this.userService.uploadImage(data).subscribe({});
-    //   }
-    //   this.hasImage = true;
-    // });
-    base64(event.files[0]).then((data) => {
+  onSelect(event: any): void {
+    base64(event.currentFiles[0]).then((data) => {
       if (data) {
         this.userService
-          .uploadImage(data, event.files[0].size, event.files[0].type)
-          .subscribe({});
+          .uploadImage(
+            data,
+            event.currentFiles[0].size,
+            event.currentFiles[0].type
+          )
+          .subscribe({
+            next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Photo upload completed.',
+                detail: 'via admin',
+              });
+            },
+          });
       }
     });
+    if (event.currentFiles.length == 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Photo upload failed',
+        detail: 'via admin',
+      });
+    }
   }
 
   onSucessfulUploadImage() {
