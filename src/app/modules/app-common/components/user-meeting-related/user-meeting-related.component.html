@@ -73,7 +73,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="4">
+        <td colspan="5">
           <app-not-found-resource
             [totalRecords]="totalRecords"
           ></app-not-found-resource>
@@ -91,6 +91,7 @@
     <ng-template pTemplate="header"><h3>Assign user</h3></ng-template>
     <ng-template pTemplate="content">
       <form>
+        <label>Meeting title</label>
         <input
           type="text"
           pInputText
@@ -99,6 +100,7 @@
           disabled="true"
           value="{{ currentMeeting?.title }}"
         />
+        <label>Users</label>
         <p-multiSelect
           #multiselect
           [ariaFilterLabel]="'test'"

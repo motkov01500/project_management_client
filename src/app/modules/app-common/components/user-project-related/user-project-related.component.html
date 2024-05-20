@@ -73,7 +73,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="4">
+        <td colspan="5">
           <app-not-found-resource
             [totalRecords]="totalRecords"
           ></app-not-found-resource>
@@ -92,6 +92,7 @@
     <ng-template pTemplate="header"><h3>Assign User</h3></ng-template>
     <ng-template pTemplate="content">
       <form>
+        <label>Project title</label>
         <input
           type="text"
           pInputText
@@ -101,6 +102,7 @@
           name="title"
           disabled="true"
         />
+        <label>Users</label>
         <p-multiSelect
           #multiselect
           name="users"

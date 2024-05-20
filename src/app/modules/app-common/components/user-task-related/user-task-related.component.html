@@ -75,7 +75,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="4">
+        <td colspan="5">
           <app-not-found-resource
             [totalRecords]="totalRecords"
           ></app-not-found-resource>
@@ -93,6 +93,7 @@
     <ng-template pTemplate="header"><h3>Assign to task</h3></ng-template>
     <ng-template pTemplate="content">
       <form>
+        <label>Task title</label>
         <input
           type="text"
           pInputText
@@ -103,6 +104,7 @@
           [disabled]="true"
           placeholder="Task title"
         />
+        <label>Users</label>
         <p-multiSelect
           #multiselect
           name="users"
