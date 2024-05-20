@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DoCheck,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -54,11 +47,6 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.service.getAllUsers(this.page, this.offset).subscribe({
-    //   next: (data: UserResponse[]) => {
-    //     this.items = data;
-    //   },
-    // });
     this.sizeService.getAllUsersSize().subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
@@ -74,6 +62,9 @@ export class UserListComponent implements OnInit {
       header: 'Confirmation',
       accept: () => {
         this.service.deleteUser(event).subscribe({
+          next: () => {
+            this.onLazyLoad();
+          },
           error: (error: HttpErrorResponse) => {
             this.messageService.add({
               severity: 'error',
@@ -87,7 +78,6 @@ export class UserListComponent implements OnInit {
           summary: 'User deleted',
           detail: 'via admin',
         });
-        this.onLazyLoad();
         this.webSocketService.sendMessage(`The user is deleted`);
       },
       reject: () => {
@@ -113,17 +103,14 @@ export class UserListComponent implements OnInit {
       fullName: this.fullName ? this.fullName : '',
       role: this.selectedRole ? this.selectedRole : '',
     };
-    let itemIndex: number = this.items.findIndex(
-      (item) => item.username == this.userDetails.username
-    );
     this.service.editUser(updatedUser, this.userDetails.id).subscribe({
       next: (user: UserResponse) => {
-        this.items[itemIndex] = user;
         this.messageService.add({
           severity: 'success',
           summary: 'User Edited',
           detail: 'via admin',
         });
+        this.onLazyLoad();
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({

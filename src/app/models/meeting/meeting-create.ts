@@ -1,5 +1,5 @@
 export interface MeetingCreate {
-  date: Date;
+  date: string;
   title: string;
   projectId: number | undefined;
 }

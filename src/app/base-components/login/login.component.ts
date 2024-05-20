@@ -29,7 +29,6 @@ export class LoginComponent {
         let role: string = decoded.auth;
         localStorage.setItem('token', response.token);
         localStorage.setItem('role', decoded.auth);
-        // this.webSocketService.connect().subscribe({});
         if (role === 'user') {
           this.router.navigate(['user', 'projects']);
         }

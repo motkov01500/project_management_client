@@ -14,15 +14,6 @@
   justify-content: center;
 }
 
-/* form {
-  padding: 20px;
-  margin-top: 20px;
-  display: flex;
-  width: 30%;
-  flex-direction: column;
-  margin: auto;
-} */
-
 form {
   display: flex;
   width: 50%;
@@ -30,6 +21,7 @@ form {
   flex-direction: column;
   justify-items: center;
   margin: auto;
+  margin-top: 10px;
 }
 
 .form {
@@ -38,30 +30,18 @@ form {
   justify-content: start;
   height: 25rem !important;
   width: 40%;
-  margin: 0;
+  margin: 0 0 10px 0;
 }
-/* 
-.logo {
-  display: flex;
-  width: 30%;
-  flex-direction: column;
-  align-items: center;
-} */
 
 .logo {
-  padding: 20px;
-  margin-top: 20px;
+  padding: 10px;
+  margin-top: 10px;
   display: flex;
   width: 30%;
   height: 25vh;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* margin: auto; */
-}
-
-input {
-  margin: 0% 0% 5% 0%;
 }
 
 .signIn {
@@ -79,14 +59,18 @@ div a {
   font-size: 13px;
 }
 
-label {
-  color: blue;
-}
-
 label:hover {
   cursor: pointer;
 }
 
 .form-container {
   height: 65vh;
+}
+
+.register-input {
+  margin: 0 0 10px 0;
+}
+
+label {
+  color: #000 !important;
 }

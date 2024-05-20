@@ -20,6 +20,7 @@ import { TaskListComponent } from './components/task/task-list/task-list.compone
 import { TaskCreateComponent } from './components/task/task-create/task-create.component';
 import { MeetingListComponent } from './components/meeting/meeting-list/meeting-list.component';
 import { MeetingCreateComponent } from './components/meeting/meeting-create/meeting-create.component';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { MeetingCreateComponent } from './components/meeting/meeting-create/meet
     DropdownModule,
     SidebarModule,
     ToastModule,
+    CalendarModule,
   ],
   providers: [ConfirmationService, MessageService],
 })

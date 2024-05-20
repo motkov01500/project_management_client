@@ -23,6 +23,7 @@ export class MeetingCreateComponent implements OnInit {
   selectedProject: ProjectResponse | undefined;
   projects: ProjectResponse[] = [];
   title: string = '';
+  calendarVal: any;
 
   constructor(
     private projectService: ProjectsService,
@@ -44,10 +45,11 @@ export class MeetingCreateComponent implements OnInit {
       },
     });
   }
+
   onSubmit() {
     let newMeeting: MeetingCreate = {
       title: this.title,
-      date: this.date,
+      date: this.date.toISOString(),
       projectId: this.selectedProject?.id,
     };
     this.meetingService.create(newMeeting).subscribe({

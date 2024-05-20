@@ -1,15 +1,5 @@
 <div class="head-actions">
-  <div class="actions">
-    <!-- <p-button
-      severity="info"
-      [rounded]="true"
-      [outlined]="true"
-      icon="pi pi-backward"
-      title="Back to home."
-      iconPos="left"
-      (onClick)="onHomeButton()"
-    ></p-button> -->
-  </div>
+  <div class="actions"></div>
   <div class="page-name-project-title">
     <div class="page-name">
       <h1>Create meeting</h1>
@@ -19,20 +9,19 @@
 </div>
 <form (submit)="onSubmit()">
   <label for="date">Date</label>
-  <input
-    type="datetime-local"
-    pInputText
-    class="p-inputtext-lg"
-    name="Date"
-    id="sidebar-input"
-    [(ngModel)]="date"
+  <p-calendar
+    [showTime]="true"
+    hourFormat="12"
+    [(ngModel)]="calendarVal"
+    [style]="{ width: '100%' }"
+    [showIcon]="true"
+    inputId="meeting_date"
     placeholder="Date"
   />
   <label for="title">Title</label>
   <input
     type="text"
     pInputText
-    class="p-inputtext-lg"
     id="sidebar-input"
     name="title"
     [(ngModel)]="title"
