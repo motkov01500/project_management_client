@@ -10,6 +10,7 @@ import {
   SizeService,
   UsersService,
 } from 'app/services';
+import { CheckboxChangeEvent } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-user-meeting-related',

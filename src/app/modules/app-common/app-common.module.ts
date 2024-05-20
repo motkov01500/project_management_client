@@ -10,6 +10,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { CheckboxModule } from 'primeng/checkbox';
 import {
   MenuComponent,
   NotFoundResourceComponent,
@@ -35,6 +36,7 @@ import {
     FormsModule,
     InputTextModule,
     MultiSelectModule,
+    CheckboxModule,
   ],
 })
 export class AppCommonModule {}

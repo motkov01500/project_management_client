@@ -40,7 +40,7 @@
     <ng-template pTemplate="header">
       <tr>
         <th>Picture</th>
-        <th>Name</th>
+        <th>Username</th>
         <th>Full name</th>
         <th>Role</th>
         <th *ngIf="userRole == 'administrator'">Actions</th>
@@ -73,7 +73,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5">
+        <td colspan="4">
           <app-not-found-resource
             [totalRecords]="totalRecords"
           ></app-not-found-resource>
@@ -100,14 +100,25 @@
           value="{{ currentMeeting?.title }}"
         />
         <p-multiSelect
+          #multiselect
+          [ariaFilterLabel]="'test'"
           name="users"
           [options]="users"
           placeholder="Assign users"
           [filter]="false"
           [(ngModel)]="selectedUsers"
+          [showToggleAll]="false"
           optionLabel="username"
           optionValue="id"
-        ></p-multiSelect>
+        >
+          <ng-template pTemplate="header">
+            <p-checkbox
+              (click)="multiselect.onToggleAll($event)"
+              [value]="false"
+            ></p-checkbox>
+            Select all
+          </ng-template>
+        </p-multiSelect>
       </form>
     </ng-template>
     <ng-template pTemplate="footer">

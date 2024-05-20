@@ -67,6 +67,7 @@ export class MyProfileComponent implements OnInit {
             summary: 'Successfully changed password.',
             life: 1000,
           });
+          this.visibleSidebar = false;
         },
         error: (error: HttpErrorResponse) => {
           this.messageService.add({

@@ -71,7 +71,6 @@ export class TaskComponent implements OnInit {
     let findIndex: number = this.items.findIndex(
       (item) => item.id == this.taskDetails?.id
     );
-    console.log(typeof this.newProgress.hoursSpent);
     this.taskService
       .updateProgress(this.taskDetails.id, this.newProgress)
       .subscribe({

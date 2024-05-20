@@ -21,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterComponent } from './base-components/register/register.component';
 import { ToastModule } from 'primeng/toast';
 import { NotFoundComponent } from './base-components/not-found-page/not-found.component';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { NotFoundComponent } from './base-components/not-found-page/not-found.co
     FormsModule,
     BrowserAnimationsModule,
     ToastModule,
+    CheckboxModule,
   ],
   providers: [
     HttpClient,

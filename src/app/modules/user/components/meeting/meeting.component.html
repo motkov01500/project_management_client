@@ -16,7 +16,6 @@
     <app-not-found-resource></app-not-found-resource>
   </div>
   <p-table
-    *ngIf="totalRecords > 0"
     [value]="currentUserMeetings"
     [paginator]="true"
     [(rows)]="offset"
@@ -56,7 +55,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5">
+        <td colspan="3">
           <app-not-found-resource
             [totalRecords]="totalRecords"
           ></app-not-found-resource>

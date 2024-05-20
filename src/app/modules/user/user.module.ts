@@ -25,6 +25,7 @@ import {
 } from 'app/modules/app-common';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { UserRoutingModule } from './user-routing.module';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { UserRoutingModule } from './user-routing.module';
     TooltipModule,
     DropdownModule,
     MultiSelectModule,
+    CheckboxModule,
   ],
 })
 export class UserModule {}
