@@ -33,23 +33,45 @@
     loadingIcon="pi pi-spin pi-spinner-dotted"
     (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
+    [customSort]="true"
+    (onSort)="customSort($event)"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Title</th>
-        <th>Progress</th>
-        <th>Initial estimation</th>
-        <th>Status</th>
-        <th>Hours spent</th>
+        <th pSortableColumn="title">
+          Title <p-sortIcon field="title"></p-sortIcon>
+        </th>
+        <th pSortableColumn="progress">
+          Progress <p-sortIcon field="progress"></p-sortIcon>
+        </th>
+        <th pSortableColumn="initialEstimation">
+          Initial estimation <p-sortIcon field="initialEstimation"></p-sortIcon>
+        </th>
+        <th pSortableColumn="taskStatus">
+          Status <p-sortIcon field="taskStatus"></p-sortIcon>
+        </th>
+        <th pSortableColumn="hoursSpent">
+          Hours spent <p-sortIcon field="hoursSpent"></p-sortIcon>
+        </th>
         <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
-      <tr>
+      <tr
+        [style.backgroundColor]="
+          item.hoursSpent > item.initialEstimation
+            ? 'rgba(247, 158, 151,0.4) '
+            : item.hoursSpent <= item.initialEstimation && item.progress == 100
+            ? 'rgba(38, 252, 134,0.2)'
+            : ''
+        "
+      >
         <td>{{ item.title }}</td>
         <td>{{ item.progress }}%</td>
         <td>{{ item.initialEstimation }}h</td>
-        <td>{{ item.taskStatus }}</td>
+        <td [style.color]="item.taskStatus === 'DONE' ? 'green' : 'blue'">
+          {{ item.taskStatus.replace("_", " ") }}
+        </td>
         <td>{{ item.hoursSpent }}h</td>
         <td>
           <div class="task-actions">
@@ -69,6 +91,7 @@
               [outlined]="true"
               icon="pi pi-pencil"
               severity="warning"
+              [disabled]="item.progress == 100"
               (onClick)="onEdit(item.id)"
             ></p-button>
             <p-button
@@ -105,41 +128,46 @@
     <ng-template pTemplate="header"> <h3>Edit Task</h3></ng-template>
     <ng-template pTemplate="content">
       <form>
-        <label for="progress">Progress</label>
-        <input
-          type="number"
-          pInputText
-          class="p-inputtext-lg"
-          [disabled]="taskDetails.progress === 100 ? true : false"
-          name="progress"
-          id="sidebar-input"
-          value="{{ taskDetails.progress }}"
-          [(ngModel)]="editedTask.progress"
-          placeholder="progress"
-        />
-        <label for="title">Title</label>
-        <input
-          type="text"
-          pInputText
-          class="p-inputtext-lg"
-          [disabled]="taskDetails.progress === 100 ? true : false"
-          name="Title"
-          id="sidebar-input"
-          value="{{ taskDetails.title }}"
-          [(ngModel)]="editedTask.title"
-          placeholder="Title"
-        />
-        <label for="hours-spent">Hours spent</label>
-        <input
-          type="number"
-          pInputText
-          class="p-inputtext-lg"
-          name="hoursSpent"
-          id="sidebar-input"
-          value="{{ taskDetails.hoursSpent }}"
-          [(ngModel)]="editedTask.hoursSpent"
-          placeholder="hoursSpent"
-        />
+        <div class="flex flex-column gap-2 register-input">
+          <label for="progress">Progress</label>
+          <input
+            type="number"
+            pInputText
+            class="p-inputtext-md"
+            [disabled]="taskDetails.progress === 100 ? true : false"
+            name="progress"
+            id="sidebar-input"
+            value="{{ taskDetails.progress }}"
+            [(ngModel)]="editedTask.progress"
+            placeholder="Progress"
+          />
+        </div>
+        <div class="flex flex-column gap-2 register-input">
+          <label for="title">Title</label>
+          <input
+            type="text"
+            pInputText
+            class="p-inputtext-md"
+            name="Title"
+            id="sidebar-input"
+            value="{{ taskDetails.title }}"
+            [(ngModel)]="editedTask.title"
+            placeholder="Title"
+          />
+        </div>
+        <div class="flex flex-column gap-2 register-input">
+          <label for="hours-spent">Hours spent</label>
+          <input
+            type="number"
+            pInputText
+            class="p-inputtext-md"
+            name="hoursSpent"
+            id="sidebar-input"
+            value="{{ taskDetails.hoursSpent }}"
+            [(ngModel)]="editedTask.hoursSpent"
+            placeholder="Hours spent"
+          />
+        </div>
       </form>
     </ng-template>
     <ng-template pTemplate="footer">

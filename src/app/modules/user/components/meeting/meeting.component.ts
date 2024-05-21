@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TablePageEvent } from 'primeng/table';
-import { MessageService } from 'primeng/api';
+import { MessageService, SortEvent } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MeetingResponse, UserResponse } from 'app/models';
 import { MeetingsService, SizeService, UsersService } from 'app/services';
@@ -21,6 +21,8 @@ export class MeetingComponent implements OnInit {
   projectTitle: string | null = localStorage.getItem('current-project-title');
   offset: number = 5;
   page: number = 1;
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private meetingService: MeetingsService,
@@ -32,13 +34,6 @@ export class MeetingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.meetingService
-    //   .getCurrentUserMeetings(this.projectKey, this.page, this.offset)
-    //   .subscribe({
-    //     next: (meetings: MeetingResponse[]) => {
-    //       this.currentUserMeetings = meetings;
-    //     },
-    //   });
     this.sizeService.getCurrentUserMeetingsSize(this.projectKey).subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
@@ -66,7 +61,13 @@ export class MeetingComponent implements OnInit {
     this.loading = true;
     setTimeout(() => {
       this.meetingService
-        .getCurrentUserMeetings(this.projectKey, this.page, this.offset)
+        .getCurrentUserMeetings(
+          this.projectKey,
+          this.page,
+          this.offset,
+          this.sortColumn,
+          this.sortOrder
+        )
         .subscribe({
           next: (meetings: MeetingResponse[]) => {
             this.currentUserMeetings = meetings;
@@ -87,5 +88,11 @@ export class MeetingComponent implements OnInit {
       this.loading = false;
     }, 600);
     this.cdr.detectChanges();
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

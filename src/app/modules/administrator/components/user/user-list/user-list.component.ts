@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TablePageEvent } from 'primeng/table';
@@ -30,10 +30,14 @@ export class UserListComponent implements OnInit {
   selectedRole: string = '';
   username: string = '';
   password: string = '';
-  fullName: string = '';
+  confirmPassword: string = '';
+  firstName: string = '';
+  lastName: string = '';
   visibleSidebarAssignToProject: boolean = false;
   assignToMeetingSidebar: boolean = false;
   meetings: any[] | undefined;
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private service: UsersService,
@@ -100,7 +104,9 @@ export class UserListComponent implements OnInit {
     let updatedUser: UserEdit = {
       username: this.username ? this.username : '',
       password: this.password ? this.password : '',
-      fullName: this.fullName ? this.fullName : '',
+      confirmPassword: this.confirmPassword ? this.confirmPassword : '',
+      firstName: this.firstName ? this.firstName : '',
+      lastName: this.lastName ? this.lastName : '',
       role: this.selectedRole ? this.selectedRole : '',
     };
     this.service.editUser(updatedUser, this.userDetails.id).subscribe({
@@ -157,11 +163,13 @@ export class UserListComponent implements OnInit {
   onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
-      this.service.getAllUsers(this.page, this.offset).subscribe({
-        next: (data: UserResponse[]) => {
-          this.items = data;
-        },
-      });
+      this.service
+        .getAllUsers(this.page, this.offset, this.sortColumn, this.sortOrder)
+        .subscribe({
+          next: (data: UserResponse[]) => {
+            this.items = data;
+          },
+        });
       this.sizeService.getAllUsersSize().subscribe({
         next: (totalRecords: number) => {
           this.totalRecords = totalRecords;
@@ -170,5 +178,11 @@ export class UserListComponent implements OnInit {
       this.loading = false;
     }, 600);
     this.cdr.detectChanges();
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

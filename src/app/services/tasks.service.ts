@@ -26,20 +26,36 @@ export class TasksService {
   getCurrentUserRelatedTasks(
     projectKey: string | null,
     page: number,
-    offset: number
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
   ): Observable<TaskResponse[]> {
-    return this.http.get<TaskResponse[]>(
-      `${apiUrl}v1/task/current-user-project-related/${projectKey}/${page}/${offset}`
+    return this.http.post<TaskResponse[]>(
+      `${apiUrl}v1/task/current-user-project-related/${projectKey}`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 
   getCurrentProjectTasks(
     projectKey: string | null,
     page: number,
-    offset: number
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
   ): Observable<TaskResponse[]> {
-    return this.http.get<TaskResponse[]>(
-      `${apiUrl}v1/task/administrator/get-all-related-to-project/${projectKey}/${page}/${offset}`
+    return this.http.post<TaskResponse[]>(
+      `${apiUrl}v1/task/administrator/get-all-related-to-project/${projectKey}`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 

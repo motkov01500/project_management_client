@@ -23,7 +23,8 @@ export class MyProfileComponent implements OnInit {
     id: 0,
     username: '',
     role: this.role,
-    fullName: '',
+    firstName: '',
+    lastName: '',
     imageUrl: '',
   };
   hasImage: boolean = false;

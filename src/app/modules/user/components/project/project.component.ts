@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProjectResponse, UserResponse } from 'app/models';
 import { ProjectsService, SizeService, UsersService } from 'app/services';
+import { SortEvent } from 'primeng/api';
 import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
 
 @Component({
@@ -17,6 +18,8 @@ export class ProjectComponent implements OnInit {
   currentPage: number = 1;
   offset: number = 5;
   loading: boolean = false;
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private projectService: ProjectsService,
@@ -60,11 +63,16 @@ export class ProjectComponent implements OnInit {
     this.currentPage = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.projectService
-        .getProjectsRelatedToCurrentUser(this.currentPage, this.offset)
+        .getProjectsRelatedToCurrentUser(
+          this.currentPage,
+          this.offset,
+          this.sortColumn,
+          this.sortOrder
+        )
         .subscribe({
           next: (projects: ProjectResponse[]) => {
             this.projects = projects;
@@ -78,5 +86,11 @@ export class ProjectComponent implements OnInit {
       this.loading = false;
     }, 600);
     this.cdr.detectChanges();
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TablePageEvent } from 'primeng/table';
@@ -38,6 +38,8 @@ export class TaskListComponent implements OnInit {
   loading: boolean = false;
   page: number = 1;
   offset: number = 5;
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private service: TasksService,
@@ -199,7 +201,13 @@ export class TaskListComponent implements OnInit {
     this.loading = true;
     setTimeout(() => {
       this.service
-        .getCurrentProjectTasks(this.projectKey, this.page, this.offset)
+        .getCurrentProjectTasks(
+          this.projectKey,
+          this.page,
+          this.offset,
+          this.sortColumn,
+          this.sortOrder
+        )
         .subscribe({
           next: (tasks: TaskResponse[]) => {
             this.items = tasks;
@@ -213,5 +221,11 @@ export class TaskListComponent implements OnInit {
       this.loading = false;
     }, 600);
     this.cdr.detectChanges();
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

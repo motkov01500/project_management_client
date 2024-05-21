@@ -23,26 +23,7 @@ export class LoginComponent {
   ) {}
 
   login(): void {
-    this.service.login(this.username, this.password).subscribe({
-      next: (response: AuthResponse) => {
-        let decoded = jwtDecode(response.token) as TokenClaims;
-        let role: string = decoded.auth;
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('role', decoded.auth);
-        if (role === 'user') {
-          this.router.navigate(['user', 'projects']);
-        }
-        if (role === 'administrator') {
-          this.router.navigate(['administrator', 'user', 'get-all']);
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: error.error.message,
-        });
-      },
-    });
+    this.service.loginIn(this.username, this.password);
   }
 
   redirectToRegister() {

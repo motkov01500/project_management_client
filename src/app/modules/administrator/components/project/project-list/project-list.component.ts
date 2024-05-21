@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import {
   MeetingResponse,
   ProjectEdit,
@@ -38,6 +38,8 @@ export class ProjectListComponent implements OnInit {
   totalRecords: number = 1;
   loading: boolean = false;
   page: number = 1;
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private projectService: ProjectsService,
@@ -86,6 +88,7 @@ export class ProjectListComponent implements OnInit {
           detail: 'via admin',
         });
         this.websocketService.sendMessage(`The project is edited`);
+        this.onLazyLoad();
       },
       error: (error: HttpErrorResponse) => {
         this.messageService.add({
@@ -112,7 +115,6 @@ export class ProjectListComponent implements OnInit {
             });
           },
         });
-        this.items = this.items.filter((item) => item.id != projectId);
         this.messageService.add({
           severity: 'success',
           summary: 'Project Delete',
@@ -200,11 +202,13 @@ export class ProjectListComponent implements OnInit {
   onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
-      this.projectService.getAllProjects(this.page, this.offset).subscribe({
-        next: (data: ProjectResponse[]) => {
-          this.items = [...data];
-        },
-      });
+      this.projectService
+        .getAllProjects(this.page, this.offset, this.sortColumn, this.sortOrder)
+        .subscribe({
+          next: (data: ProjectResponse[]) => {
+            this.items = [...data];
+          },
+        });
       this.sizeService.getAllProjectsSize().subscribe({
         next: (totalRecords: number) => {
           this.totalRecords = totalRecords;
@@ -213,5 +217,11 @@ export class ProjectListComponent implements OnInit {
       this.loading = false;
     }, 600);
     this.cdr.detectChanges();
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

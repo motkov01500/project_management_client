@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
+import { MessageService, SortEvent } from 'primeng/api';
 import { Router } from '@angular/router';
 import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
 import { SizeService, TasksService } from 'app/services';
@@ -30,6 +30,8 @@ export class TaskComponent implements OnInit {
   colorTaskStatusName: string = '';
   projectKey: string | null = localStorage.getItem('current-project-key');
   projectTitle: string | null = localStorage.getItem('current-project-title');
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private taskService: TasksService,
@@ -103,11 +105,17 @@ export class TaskComponent implements OnInit {
     this.page = event.first / event.rows + 1;
   }
 
-  onLazyLoad($event: TableLazyLoadEvent) {
+  onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
       this.taskService
-        .getCurrentUserRelatedTasks(this.projectKey, this.page, this.offset)
+        .getCurrentUserRelatedTasks(
+          this.projectKey,
+          this.page,
+          this.offset,
+          this.sortColumn,
+          this.sortOrder
+        )
         .subscribe({
           next: (tasks: TaskResponse[]) => {
             this.items = tasks;
@@ -132,8 +140,15 @@ export class TaskComponent implements OnInit {
       this.newProgress.progress = 0;
     }
   }
+
   onViewUsers(taskId: string) {
     localStorage.setItem('current-task-id', taskId.toString());
     this.router.navigate(['user', 'projects', 'tasks', 'users']);
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

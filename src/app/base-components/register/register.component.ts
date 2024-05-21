@@ -14,7 +14,9 @@ export class RegisterComponent implements DoCheck {
   newUser: UserRegister = {
     username: '',
     password: '',
-    fullName: '',
+    firstName: '',
+    lastName: '',
+    confirmPassword: '',
   };
   passwordCheck: boolean = false;
 
@@ -39,6 +41,7 @@ export class RegisterComponent implements DoCheck {
           severity: 'success',
           summary: 'You registered successfully.',
         });
+        this.authService.loginIn(this.newUser.username, this.newUser.password);
       },
       error: (err: HttpErrorResponse) => {
         this.messageService.add({

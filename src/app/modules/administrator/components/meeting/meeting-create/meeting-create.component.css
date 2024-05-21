@@ -7,10 +7,10 @@ form {
   flex-direction: column;
   margin: auto;
 }
-
+/* 
 input {
   margin: 5%;
-}
+} */
 
 .test {
   margin: 20px;
@@ -39,8 +39,14 @@ input {
   align-items: center;
   justify-content: center;
 }
+
 .project-name {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.meeting-create-input {
+  margin-bottom: 1rem;
+  height: 4rem;
 }

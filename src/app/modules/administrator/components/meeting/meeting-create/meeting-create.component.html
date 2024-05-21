@@ -8,37 +8,41 @@
   <div class="task-create"></div>
 </div>
 <form (submit)="onSubmit()">
-  <label for="date">Date</label>
-  <p-calendar
-    [showTime]="true"
-    hourFormat="12"
-    [(ngModel)]="calendarVal"
-    [style]="{ width: '100%' }"
-    [showIcon]="true"
-    inputId="meeting_date"
-    placeholder="Date"
-  />
-  <label for="title">Title</label>
-  <input
-    type="text"
-    pInputText
-    id="sidebar-input"
-    name="title"
-    [(ngModel)]="title"
-    placeholder="Meeting title"
-  />
-  <label for="project">Project</label>
-  <p-dropdown
-    [options]="projects"
-    [(ngModel)]="selectedProject"
-    [disabled]="true"
-    [style]="{ width: '100%' }"
-    id="sidebar-input"
-    class="test"
-    name="optional"
-    placeholder="Select Project"
-    optionLabel="key"
-  ></p-dropdown>
+  <div class="flex flex-column gap-2 meeting-create-input">
+    <label for="date">Date</label>
+    <p-calendar
+      [showTime]="true"
+      hourFormat="12"
+      [style]="{ width: '100%' }"
+      [showIcon]="true"
+      inputId="meeting_date"
+      placeholder="Date"
+      (onSelect)="onSelectDate($event)"
+    />
+  </div>
+  <div class="flex flex-column gap-2 meeting-create-input">
+    <label for="title">Title</label>
+    <input
+      type="text"
+      pInputText
+      id="sidebar-input"
+      name="title"
+      [(ngModel)]="title"
+      placeholder="Meeting title"
+    />
+  </div>
+  <div class="flex flex-column gap-2 meeting-create-input">
+    <label for="project">Project</label>
+    <input
+      type="text"
+      pInputText
+      id="sidebar-input"
+      name="title"
+      [value]="selectedProject?.key"
+      [disabled]="true"
+      placeholder="Meeting title"
+    />
+  </div>
   <button pButton type="submit" label="Create" class="p-button-lg"></button>
 </form>
 <p-toast></p-toast>

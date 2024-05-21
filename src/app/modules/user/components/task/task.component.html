@@ -31,31 +31,51 @@
       [totalRecords]="totalRecords"
       [lazy]="true"
       [loading]="loading"
-      (onLazyLoad)="onLazyLoad($event)"
+      (onLazyLoad)="onLazyLoad()"
       loadingIcon="pi pi-spin pi-spinner-dotted"
       styleClass="p-datatable-gridlines"
+      [customSort]="true"
+      (onSort)="customSort($event)"
     >
       <ng-template pTemplate="header">
         <tr>
-          <th>Title</th>
-          <th>Progress</th>
-          <th>Initial estimation</th>
-          <th>Status</th>
-          <th>Hours spent</th>
-          <th>Project related</th>
+          <th pSortableColumn="title">
+            Title <p-sortIcon field="title"></p-sortIcon>
+          </th>
+          <th pSortableColumn="progress">
+            Progress <p-sortIcon field="progress"></p-sortIcon>
+          </th>
+          <th pSortableColumn="initialEstimation">
+            Initial estimation
+            <p-sortIcon field="initialEstimation"></p-sortIcon>
+          </th>
+          <th pSortableColumn="taskStatus">
+            Status <p-sortIcon field="taskStatus"></p-sortIcon>
+          </th>
+          <th pSortableColumn="hoursSpent">
+            Hours spent <p-sortIcon field="hoursSpent"></p-sortIcon>
+          </th>
           <th>Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-item>
-        <tr>
+        <tr
+          [style.backgroundColor]="
+            item.hoursSpent > item.initialEstimation
+              ? 'rgba(247, 158, 151,0.4) '
+              : item.hoursSpent <= item.initialEstimation &&
+                item.progress == 100
+              ? 'rgba(38, 252, 134,0.2)'
+              : ''
+          "
+        >
           <td>{{ item.title }}</td>
           <td>{{ item.progress }}%</td>
           <td>{{ item.initialEstimation }}h</td>
           <td [style.color]="item.taskStatus === 'DONE' ? 'green' : 'blue'">
-            {{ item.taskStatus }}
+            {{ item.taskStatus.replace("_", " ") }}
           </td>
           <td>{{ item.hoursSpent }}h</td>
-          <td>{{ item.project.title }}</td>
           <td>
             <div class="project-actions">
               <p-button
@@ -119,7 +139,7 @@
           name="HoursSpent"
           value="{{ taskDetails.hoursSpent }}"
           [(ngModel)]="newProgress.hoursSpent"
-          placeholder="hours spent"
+          placeholder="Hours spent"
           (change)="OnDefaultValue($event)"
         />
       </form>

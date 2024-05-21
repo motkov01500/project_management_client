@@ -80,3 +80,7 @@ td {
 h1 {
   margin: 0;
 }
+
+.meeting-edit-input {
+  margin-bottom: 1rem;
+}

@@ -20,37 +20,44 @@
   <div class="task-create"></div>
 </div>
 <form (submit)="onSubmit()">
-  <label>Initial estimation</label>
-  <input
-    type="number"
-    pInputText
-    class="p-inputtext-lg"
-    name="Initial estimation"
-    id="sidebar-input"
-    [(ngModel)]="newTask.initialEstimation"
-    placeholder="initialEstimation"
-  />
-  <label>Title</label>
-  <input
-    type="text"
-    pInputText
-    class="p-inputtext-lg"
-    name="Title"
-    id="sidebar-input"
-    [(ngModel)]="newTask.title"
-    placeholder="Title"
-  />
-  <label>Project</label>
-  <input
-    type="text"
-    pInputText
-    [disabled]="true"
-    class="p-inputtext-lg"
-    name="projectKey"
-    id="sidebar-input"
-    [(ngModel)]="projectKey"
-    placeholder="initialEstimation"
-  />
+  <div class="flex flex-column gap-2 register-input">
+    <label>Initial estimation</label>
+    <input
+      type="number"
+      pInputText
+      class="p-inputtext-md"
+      name="Initial estimation"
+      id="sidebar-input"
+      [(ngModel)]="newTask.initialEstimation"
+      placeholder="Initial estimation"
+    />
+  </div>
+  <div class="flex flex-column gap-2 register-input">
+    <label>Title</label>
+    <input
+      type="text"
+      pInputText
+      class="p-inputtext-md"
+      name="Title"
+      id="sidebar-input"
+      [(ngModel)]="newTask.title"
+      placeholder="Title"
+    />
+  </div>
+  <div class="flex flex-column gap-2 register-input">
+    <label>Project</label>
+    <input
+      type="text"
+      pInputText
+      [disabled]="true"
+      class="p-inputtext-md"
+      name="projectKey"
+      id="sidebar-input"
+      [(ngModel)]="projectKey"
+      placeholder="Initial estimation"
+    />
+  </div>
+
   <button pButton type="submit" label="Create" class="p-button-lg"></button>
 </form>
 <p-toast></p-toast>

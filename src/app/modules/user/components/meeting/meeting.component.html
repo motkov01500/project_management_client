@@ -28,18 +28,24 @@
     loadingIcon="pi pi-spin pi-spinner-dotted"
     (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
+    (onSort)="customSort($event)"
+    [customSort]="true"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Title</th>
-        <th>Date</th>
+        <th pSortableColumn="title">
+          Title <p-sortIcon field="title"></p-sortIcon>
+        </th>
+        <th pSortableColumn="date">
+          Date <p-sortIcon field="date"></p-sortIcon>
+        </th>
         <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
       <tr>
         <td>{{ item.title }}</td>
-        <td>{{ item.date | date : "fullDate" }}</td>
+        <td>{{ item.date | date : "'MMM d, y, h:mm a" }}</td>
         <td>
           <p-button
             type="button"

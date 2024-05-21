@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TablePageEvent } from 'primeng/table';
@@ -20,7 +20,7 @@ export class MeetingListComponent implements OnInit {
   items: MeetingResponse[] = [];
   visibleSidebar: boolean = false;
   meetingDetails: MeetingResponse | any;
-  date: Date = new Date();
+  date: string | undefined;
   statuses: string[] = ['UPCOMING', 'STARTED', 'END'];
   selectedStatus: string = '';
   projectKey: string | null = localStorage.getItem('current-project-key');
@@ -34,6 +34,8 @@ export class MeetingListComponent implements OnInit {
   loading: boolean = false;
   page: number = 1;
   offset: number = 5;
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private service: MeetingsService,
@@ -96,20 +98,17 @@ export class MeetingListComponent implements OnInit {
 
   onSubmit() {
     let updatedMeeting: MeetingEdit = {
-      date: new Date(this.date).toISOString(),
-      title: this.title,
+      date: this.date ? this.date : '',
+      title: this.title ? this.title : '',
     };
-    let itemIndex: number = this.items.findIndex(
-      (item) => item.id == this.meetingDetails.id
-    );
     this.service.editById(this.meetingDetails?.id, updatedMeeting).subscribe({
       next: (meeting: MeetingResponse) => {
-        this.items[itemIndex] = meeting;
         this.messageService.add({
           severity: 'success',
           summary: 'Meeting Edit',
           detail: 'via admin',
         });
+        this.onLazyLoad();
         this.websocketService.sendMessage(`Meeting is edited.`);
       },
       error: (error: HttpErrorResponse) => {
@@ -121,6 +120,7 @@ export class MeetingListComponent implements OnInit {
       },
     });
     this.visibleSidebar = false;
+    console.log(this.date);
   }
 
   addMeeting() {
@@ -193,7 +193,13 @@ export class MeetingListComponent implements OnInit {
     this.loading = true;
     setTimeout(() => {
       this.service
-        .getCurrentProjectMeetings(this.projectKey, this.page, this.offset)
+        .getCurrentProjectMeetings(
+          this.projectKey,
+          this.page,
+          this.offset,
+          this.sortColumn,
+          this.sortOrder
+        )
         .subscribe({
           next: (meetings: MeetingResponse[]) => {
             this.items = meetings;
@@ -209,5 +215,15 @@ export class MeetingListComponent implements OnInit {
       this.loading = false;
     }, 600);
     this.cdr.detectChanges();
+  }
+
+  onSelectDate(event: any) {
+    this.date = event.toISOString();
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

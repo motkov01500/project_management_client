@@ -19,15 +19,21 @@
     [lazy]="true"
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
-    (onLazyLoad)="onLazyLoad($event)"
+    (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
     [style]="{ 'text-align': 'center' }"
+    (onSort)="customSort($event)"
+    [customSort]="true"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Key</th>
-        <th>Title</th>
+        <th pSortableColumn="key">Key <p-sortIcon field="key"></p-sortIcon></th>
+        <th pSortableColumn="title">
+          Title <p-sortIcon field="title"></p-sortIcon>
+        </th>
         <th>Actions</th>
+        <th>Upcoming meeting</th>
+        <th>Remaining tasks</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
@@ -67,6 +73,14 @@
             ></p-button>
           </div>
         </td>
+        <td>
+          {{
+            item.mostRecentMeeting
+              ? item.mostRecentMeeting.title
+              : "No upcoming meetings"
+          }}
+        </td>
+        <td>{{ item.remainingTasks }}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

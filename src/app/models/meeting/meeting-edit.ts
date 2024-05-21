@@ -1,4 +1,4 @@
 export interface MeetingEdit {
-  date: string;
+  date: string | undefined;
   title: string;
 }

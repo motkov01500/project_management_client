@@ -29,7 +29,11 @@
             [(ngModel)]="newUser.password"
             class="p-inputtext-sm"
           />
-          <small id="username-help" *ngIf="passwordCheck == false">
+          <small
+            id="username-help"
+            *ngIf="passwordCheck == false"
+            [style]="{ color: 'red' }"
+          >
             Password must contains minimum 8 symbols, one uppercase letter, one
             lowercase letter and one number
           </small>
@@ -42,19 +46,35 @@
             id="confirm-password"
             name="confirm-password"
             class="p-inputtext-sm"
+            [(ngModel)]="newUser.confirmPassword"
             aria-describedby="username-help"
           />
         </div>
-        <div class="flex flex-column gap-2 register-input">
-          <label for="full-name">Full name</label>
-          <input
-            pInputText
-            type="text"
-            name="full-name"
-            id="full-name"
-            [(ngModel)]="newUser.fullName"
-            class="p-inputtext-sm"
-          />
+        <div class="register-name">
+          <div class="flex flex-column gap-2 register-name-input">
+            <label for="firstName">First name</label>
+            <input
+              pInputText
+              type="text"
+              name="first-name"
+              id="first-name"
+              [(ngModel)]="newUser.firstName"
+              class="p-inputtext-sm register-name-input-name"
+            />
+          </div>
+          <div
+            class="flex flex-column gap-2 register-name-input register-name-input"
+          >
+            <label for="full-name">Last name</label>
+            <input
+              pInputText
+              type="text"
+              name="last-name"
+              id="last-name"
+              [(ngModel)]="newUser.lastName"
+              class="p-inputtext-sm register-name-input-name register-name-input-name-last"
+            />
+          </div>
         </div>
         <div class="flex flex-column gap-2 register-input">
           <button

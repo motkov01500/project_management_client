@@ -13,9 +13,20 @@ import { UserPasswordUpdate } from '../models/user/user-update-password';
 export class UsersService {
   constructor(private http: HttpClient) {}
 
-  getAllUsers(page: number, offset: number): Observable<UserResponse[]> {
-    return this.http.get<UserResponse[]>(
-      `${apiUrl}v1/user/administrator/get-all/${page}/${offset}`
+  getAllUsers(
+    page: number,
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
+  ): Observable<UserResponse[]> {
+    return this.http.post<UserResponse[]>(
+      `${apiUrl}v1/user/administrator/get-all`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 
@@ -46,20 +57,36 @@ export class UsersService {
   getRelatedToTask(
     taskId: any,
     page: number,
-    offset: number
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
   ): Observable<UserResponse[]> {
-    return this.http.get<UserResponse[]>(
-      `${apiUrl}v1/user/get-all-related-to-task/${taskId}/${page}/${offset}`
+    return this.http.post<UserResponse[]>(
+      `${apiUrl}v1/user/get-all-related-to-task/${taskId}`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 
   getRelatedToProject(
     projectKey: string | null,
     page: number,
-    offset: number
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
   ): Observable<UserResponse[]> {
-    return this.http.get<UserResponse[]>(
-      `${apiUrl}v1/user/get-all-related-to-project/${projectKey}/${page}/${offset}`
+    return this.http.post<UserResponse[]>(
+      `${apiUrl}v1/user/get-all-related-to-project/${projectKey}`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 
@@ -70,10 +97,18 @@ export class UsersService {
   getRelatedToMeeting(
     meetingId: number | null,
     page: number,
-    offset: number
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
   ): Observable<UserResponse[]> {
-    return this.http.get<UserResponse[]>(
-      `${apiUrl}v1/user/get-all-related-to-meeting/${meetingId}/${page}/${offset}`
+    return this.http.post<UserResponse[]>(
+      `${apiUrl}v1/user/get-all-related-to-meeting/${meetingId}`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 
@@ -100,8 +135,10 @@ export class UsersService {
       {
         username: userCredentials.username,
         password: userCredentials.password,
-        fullName: userCredentials.fullName,
+        firstName: userCredentials.firstName,
+        lastName: userCredentials.lastName,
         roleName: userCredentials.role,
+        confirmPassword: userCredentials.confirmPassword,
       }
     );
   }

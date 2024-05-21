@@ -16,7 +16,7 @@
       <p-button
         *ngIf="userRole == 'administrator'"
         type="button"
-        title="Assign user to task"
+        title="Assign user"
         [rounded]="true"
         [outlined]="true"
         icon="pi pi-user-plus"
@@ -38,12 +38,21 @@
     loadingIcon="pi pi-spin pi-spinner-dotted"
     (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
+    (onSort)="customSort($event)"
+    [customSort]="true"
   >
     <ng-template pTemplate="header">
       <tr>
         <th>Picture</th>
-        <th>Username</th>
-        <th>Full name</th>
+        <th pSortableColumn="username">
+          Username <p-sortIcon field="username"></p-sortIcon>
+        </th>
+        <th pSortableColumn="firstName">
+          First name <p-sortIcon field="firstName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="lastName">
+          Last name <p-sortIcon field="lastName"></p-sortIcon>
+        </th>
         <th>Role</th>
         <th *ngIf="userRole == 'administrator'">Actions</th>
       </tr>
@@ -57,8 +66,8 @@
           />
         </td>
         <td>{{ item.username }}</td>
-        <td *ngIf="item.fullName; else elseBlock">{{ item.fullName }}</td>
-        <ng-template #elseBlock><td>No Name</td></ng-template>
+        <td>{{ item.firstName }}</td>
+        <td>{{ item.lastName }}</td>
         <td>{{ item.role.name }}</td>
         <td *ngIf="userRole == 'administrator'">
           <p-button
@@ -75,7 +84,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5">
+        <td colspan="6">
           <app-not-found-resource
             [totalRecords]="totalRecords"
           ></app-not-found-resource>
@@ -90,20 +99,22 @@
     position="right"
     [baseZIndex]="10000"
   >
-    <ng-template pTemplate="header"><h3>Assign to task</h3></ng-template>
+    <ng-template pTemplate="header"><h3>Assign User</h3></ng-template>
     <ng-template pTemplate="content">
       <form>
-        <label>Task title</label>
-        <input
-          type="text"
-          pInputText
-          class="p-inputtext-lg"
-          name="title"
-          id="sidebar-input"
-          value="{{ currentTask?.title }}"
-          [disabled]="true"
-          placeholder="Task title"
-        />
+        <div class="flex flex-column gap-2 register-input">
+          <label>Task title</label>
+          <input
+            type="text"
+            pInputText
+            class="p-inputtext-md"
+            name="title"
+            id="sidebar-input"
+            value="{{ currentTask?.title }}"
+            [disabled]="true"
+            placeholder="Task title"
+          />
+        </div>
         <label>Users</label>
         <p-multiSelect
           #multiselect
@@ -130,7 +141,7 @@
       <button
         pButton
         type="submit"
-        label="Assign to task"
+        label="Assign user"
         class="p-button-lg"
         (click)="onSubmitAssignToTask()"
         [style]="{ width: '100%' }"

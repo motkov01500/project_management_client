@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MessageService, SortEvent } from 'primeng/api';
 import { TablePageEvent } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MeetingResponse, UserResponse } from 'app/models';
@@ -10,7 +10,6 @@ import {
   SizeService,
   UsersService,
 } from 'app/services';
-import { CheckboxChangeEvent } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-user-meeting-related',
@@ -30,6 +29,9 @@ export class UserMeetingRelatedComponent implements OnInit {
   offset: number = 5;
   currentPage: number = 1;
   selectedUsers: number[] = [];
+  isDisabled: boolean = false; //TODO domashno
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private meetingService: MeetingsService,
@@ -101,7 +103,9 @@ export class UserMeetingRelatedComponent implements OnInit {
         .getRelatedToMeeting(
           Number(this.currentMeetingId),
           this.currentPage,
-          this.offset
+          this.offset,
+          this.sortColumn,
+          this.sortOrder
         )
         .subscribe({
           next: (users: UserResponse[]) => {
@@ -160,5 +164,11 @@ export class UserMeetingRelatedComponent implements OnInit {
           });
         },
       });
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

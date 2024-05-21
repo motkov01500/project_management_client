@@ -12,9 +12,20 @@ import { ProjectUserAssign } from '../models/project/project-user-assign';
 export class ProjectsService {
   constructor(private http: HttpClient) {}
 
-  getAllProjects(page: number, offset: number): Observable<ProjectResponse[]> {
-    return this.http.get<ProjectResponse[]>(
-      `${apiUrl}v1/project/administrator/get-all/${page}/${offset}`
+  getAllProjects(
+    page: number,
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
+  ): Observable<ProjectResponse[]> {
+    return this.http.post<ProjectResponse[]>(
+      `${apiUrl}v1/project/administrator/get-all`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 
@@ -44,10 +55,18 @@ export class ProjectsService {
 
   getProjectsRelatedToCurrentUser(
     page: number,
-    offset: number
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
   ): Observable<ProjectResponse[]> {
-    return this.http.get<ProjectResponse[]>(
-      `${apiUrl}v1/project/get-projects-current-user/${page}/${offset}`
+    return this.http.post<ProjectResponse[]>(
+      `${apiUrl}v1/project/get-projects-current-user`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 

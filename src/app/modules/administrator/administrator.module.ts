@@ -48,6 +48,10 @@ import { CalendarModule } from 'primeng/calendar';
     ToastModule,
     CalendarModule,
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [
+    ConfirmationService,
+    MessageService,
+    { provide: 'LOCALE_ID', useValue: 'bg_BG' },
+  ],
 })
 export class AdministratorModule {}

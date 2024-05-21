@@ -72,5 +72,33 @@ label:hover {
 }
 
 label {
-  color: #000 !important;
+  color: #000;
+}
+
+.signIn > p > label {
+  color: blue;
+}
+
+.register-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.register-name-input-name {
+  width: 95%;
+}
+
+.register-name-input {
+  width: 50%;
+}
+
+.register-name-input-last {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-name-input-name-last {
+  align-self: flex-end;
 }

@@ -36,12 +36,21 @@
     loadingIcon="pi pi-spin pi-spinner-dotted"
     (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
+    (onSort)="customSort($event)"
+    [customSort]="true"
   >
     <ng-template pTemplate="header">
       <tr>
         <th>Picture</th>
-        <th>Username</th>
-        <th>Full name</th>
+        <th pSortableColumn="username">
+          Username <p-sortIcon field="username"></p-sortIcon>
+        </th>
+        <th pSortableColumn="firstName">
+          First name <p-sortIcon field="firstName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="lastName">
+          Last name <p-sortIcon field="lastName"></p-sortIcon>
+        </th>
         <th>Role</th>
         <th *ngIf="userRole == 'administrator'">Actions</th>
       </tr>
@@ -55,8 +64,8 @@
           />
         </td>
         <td>{{ item.username }}</td>
-        <td *ngIf="item.fullName; else elseBlock">{{ item.fullName }}</td>
-        <ng-template #elseBlock><td>No Name</td></ng-template>
+        <td>{{ item.firstName }}</td>
+        <td>{{ item.lastName }}</td>
         <td>{{ item.role.name }}</td>
         <td *ngIf="userRole == 'administrator'">
           <p-button
@@ -73,7 +82,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5">
+        <td colspan="6">
           <app-not-found-resource
             [totalRecords]="totalRecords"
           ></app-not-found-resource>
@@ -92,16 +101,18 @@
     <ng-template pTemplate="header"><h3>Assign User</h3></ng-template>
     <ng-template pTemplate="content">
       <form>
-        <label>Project title</label>
-        <input
-          type="text"
-          pInputText
-          id="sidebar-input"
-          class="p-inputtext-lg"
-          value="{{ projectTitle }}"
-          name="title"
-          disabled="true"
-        />
+        <div class="flex flex-column gap-2 register-input">
+          <label>Project title</label>
+          <input
+            type="text"
+            pInputText
+            id="sidebar-input"
+            class="p-inputtext-md"
+            value="{{ projectTitle }}"
+            name="title"
+            disabled="true"
+          />
+        </div>
         <label>Users</label>
         <p-multiSelect
           #multiselect

@@ -31,11 +31,15 @@
     [loading]="loading"
     loadingIcon="pi pi-spin pi-spinner-dotted"
     (onLazyLoad)="onLazyLoad()"
+    (onSort)="customSort($event)"
+    [customSort]="true"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Key</th>
-        <th>Title</th>
+        <th pSortableColumn="key">Key <p-sortIcon field="key"></p-sortIcon></th>
+        <th pSortableColumn="title">
+          Title <p-sortIcon field="title"></p-sortIcon>
+        </th>
         <th>Actions</th>
       </tr>
     </ng-template>
@@ -125,26 +129,30 @@
     <ng-template pTemplate="header"><h3>Edit project</h3></ng-template>
     <ng-template pTemplate="content">
       <form>
-        <label for="key">Key</label>
-        <input
-          type="text"
-          pInputText
-          id="sidebar-input"
-          class="p-inputtext-lg"
-          name="key"
-          value="{{ projectDetails?.key }}"
-          [(ngModel)]="key"
-        />
-        <label for="title">Title</label>
-        <input
-          type="text"
-          pInputText
-          id="sidebar-input"
-          class="p-inputtext-lg"
-          value="{{ projectDetails?.title }}"
-          name="title"
-          [(ngModel)]="title"
-        />
+        <div class="flex flex-column gap-2 register-input">
+          <label for="key">Key</label>
+          <input
+            type="text"
+            pInputText
+            id="sidebar-input"
+            class="p-inputtext-md"
+            name="key"
+            value="{{ projectDetails?.key }}"
+            [(ngModel)]="key"
+          />
+        </div>
+        <div class="flex flex-column gap-2 register-input">
+          <label for="title">Title</label>
+          <input
+            type="text"
+            pInputText
+            id="sidebar-input"
+            class="p-inputtext-md"
+            value="{{ projectDetails?.title }}"
+            name="title"
+            [(ngModel)]="title"
+          />
+        </div>
       </form>
     </ng-template>
     <ng-template pTemplate="footer">

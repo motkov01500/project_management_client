@@ -27,7 +27,6 @@ export class MainComponent implements OnInit, OnDestroy {
       id: 'projects-nav-button',
       label: 'Projects',
       routerLink: 'projects',
-      styleClass: 'grayed',
     },
   ];
 
@@ -41,6 +40,10 @@ export class MainComponent implements OnInit, OnDestroy {
           element?.classList.add('grayed');
         } else {
           element?.classList.remove('grayed');
+        }
+      } else {
+        if (location.href.endsWith('projects')) {
+          element?.classList.add('grayed');
         }
       }
     });

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MessageService, SortEvent } from 'primeng/api';
 import { TablePageEvent } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TaskResponse, UserResponse } from 'app/models';
@@ -30,6 +30,8 @@ export class UserTaskRelatedComponent implements OnInit {
   taskId: any = localStorage.getItem('current-task-id');
   currentTask: TaskResponse | undefined;
   selectedUsers: any;
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private userService: UsersService,
@@ -84,7 +86,13 @@ export class UserTaskRelatedComponent implements OnInit {
     this.loading = true;
     setTimeout(() => {
       this.userService
-        .getRelatedToTask(this.taskId, this.page, this.offset)
+        .getRelatedToTask(
+          this.taskId,
+          this.page,
+          this.offset,
+          this.sortColumn,
+          this.sortOrder
+        )
         .subscribe({
           next: (users: UserResponse[]) => {
             this.items = users;
@@ -142,5 +150,11 @@ export class UserTaskRelatedComponent implements OnInit {
           });
         },
       });
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

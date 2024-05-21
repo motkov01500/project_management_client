@@ -22,10 +22,18 @@ export class MeetingsService {
   getCurrentProjectMeetings(
     projectKey: string | null,
     page: number,
-    offset: number
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
   ): Observable<MeetingResponse[]> {
-    return this.http.get<MeetingResponse[]>(
-      `${apiUrl}v1/meeting/get-all-related-to-project/${projectKey}/${page}/${offset}`
+    return this.http.post<MeetingResponse[]>(
+      `${apiUrl}v1/meeting/get-all-related-to-project/${projectKey}`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 
@@ -44,10 +52,18 @@ export class MeetingsService {
   getCurrentUserMeetings(
     projectKey: string | null,
     page: number,
-    offset: number
+    offset: number,
+    sortColumn?: string,
+    sortOrder?: string
   ): Observable<MeetingResponse[]> {
-    return this.http.get<MeetingResponse[]>(
-      `${apiUrl}v1/meeting/get-current-user-meetings/${projectKey}/${page}/${offset}`
+    return this.http.post<MeetingResponse[]>(
+      `${apiUrl}v1/meeting/get-current-user-meetings/${projectKey}`,
+      {
+        page: page,
+        offset: offset,
+        sortColumn: sortColumn ? sortColumn : '',
+        sortOrder: sortOrder ? sortOrder : 'default',
+      }
     );
   }
 

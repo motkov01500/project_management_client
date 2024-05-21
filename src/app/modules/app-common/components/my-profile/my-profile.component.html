@@ -21,13 +21,15 @@
             <p>{{ currentLoggedUser.role.name }}</p>
           </div>
           <div class="user-info-components">
-            <p>Full name:</p>
+            <p>First name:</p>
             <p>
-              {{
-                currentLoggedUser.fullName
-                  ? currentLoggedUser.fullName
-                  : "No name"
-              }}
+              {{ currentLoggedUser.firstName }}
+            </p>
+          </div>
+          <div class="user-info-components">
+            <p>Last name:</p>
+            <p>
+              {{ currentLoggedUser.lastName }}
             </p>
           </div>
         </div>

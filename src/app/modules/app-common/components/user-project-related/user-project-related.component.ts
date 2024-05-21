@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MessageService, SortEvent } from 'primeng/api';
 import { TablePageEvent } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProjectResponse, UserResponse } from 'app/models';
@@ -30,6 +30,8 @@ export class UserProjectRelatedComponent implements OnInit {
   currentProject: ProjectResponse | undefined;
   offset: number = 5; //default
   selectedUsers: number[] = [];
+  sortColumn?: string = '';
+  sortOrder?: string = '';
 
   constructor(
     private userService: UsersService,
@@ -74,7 +76,13 @@ export class UserProjectRelatedComponent implements OnInit {
     this.loading = true;
     setTimeout(() => {
       this.userService
-        .getRelatedToProject(this.projectKey, this.page, this.offset)
+        .getRelatedToProject(
+          this.projectKey,
+          this.page,
+          this.offset,
+          this.sortColumn,
+          this.sortOrder
+        )
         .subscribe({
           next: (users: UserResponse[]) => {
             this.items = users;
@@ -125,5 +133,11 @@ export class UserProjectRelatedComponent implements OnInit {
           this.onLazyLoad();
         },
       });
+  }
+
+  customSort(event: SortEvent) {
+    this.sortColumn = event.field;
+    this.sortOrder = event.order == 1 ? 'ascending' : 'descending';
+    this.onLazyLoad();
   }
 }

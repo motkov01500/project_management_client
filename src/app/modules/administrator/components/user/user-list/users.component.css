@@ -79,3 +79,13 @@ td {
 h1 {
   margin: 0;
 }
+
+.edit-user-names {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.user-edit-input {
+  width: 47%;
+}

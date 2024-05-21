@@ -20,28 +20,32 @@
   <div class="task-create"></div>
 </div>
 <form (submit)="onSubmit()">
-  <label for="key">Key</label>
-  <input
-    type="text"
-    pInputText
-    class="p-inputtext-lg"
-    name="key"
-    id="sidebar-input"
-    [(ngModel)]="newProject.key"
-    placeholder="Key"
-    required
-  />
-  <label for="title">Title</label>
-  <input
-    type="text"
-    pInputText
-    class="p-inputtext-lg"
-    placeholder="Title"
-    id="sidebar-input"
-    name="title"
-    [(ngModel)]="newProject.title"
-    required
-  />
+  <div class="flex flex-column gap-2 register-input">
+    <label for="key">Key</label>
+    <input
+      type="text"
+      pInputText
+      class="p-inputtext-md"
+      name="key"
+      id="sidebar-input"
+      [(ngModel)]="newProject.key"
+      placeholder="Key"
+      required
+    />
+  </div>
+  <div class="flex flex-column gap-2 register-input">
+    <label for="title">Title</label>
+    <input
+      type="text"
+      pInputText
+      class="p-inputtext-md"
+      placeholder="Title"
+      id="sidebar-input"
+      name="title"
+      [(ngModel)]="newProject.title"
+      required
+    />
+  </div>
   <button pButton type="submit" label="Create" class="p-button-lg"></button>
 </form>
 <p-toast></p-toast>

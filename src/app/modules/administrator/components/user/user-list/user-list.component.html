@@ -31,12 +31,21 @@
     loadingIcon="pi pi-spin pi-spinner-dotted"
     (onLazyLoad)="onLazyLoad()"
     styleClass="p-datatable-gridlines"
+    (onSort)="customSort($event)"
+    [customSort]="true"
   >
     <ng-template pTemplate="header">
       <tr>
         <th>Picture</th>
-        <th>Username</th>
-        <th>Full name</th>
+        <th pSortableColumn="username">
+          Username <p-sortIcon field="username"></p-sortIcon>
+        </th>
+        <th pSortableColumn="firstName">
+          First name <p-sortIcon field="firstName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="lastName">
+          Last name <p-sortIcon field="lastName"></p-sortIcon>
+        </th>
         <th>Role</th>
         <th>Actions</th>
       </tr>
@@ -49,9 +58,11 @@
             style="height: 50px; width: 50px; border-radius: 50%"
           />
         </td>
-        <td>{{ item.username }}</td>
-        <td *ngIf="item.fullName; else elseBlock">{{ item.fullName }}</td>
-        <ng-template #elseBlock><td>No Name</td></ng-template>
+        <td>
+          {{ item.username }}
+        </td>
+        <td>{{ item.firstName }}</td>
+        <td>{{ item.lastName }}</td>
         <td>{{ item.role.name }}</td>
         <td>
           <div class="user-actions">
@@ -81,7 +92,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="5">
+        <td colspan="6">
           <app-not-found-resource
             [totalRecords]="totalRecords"
           ></app-not-found-resource>
@@ -100,37 +111,70 @@
     <ng-template pTemplate="header"><h3>Edit User</h3></ng-template>
     <ng-template pTemplate="content">
       <form>
-        <label for="username">Username</label>
-        <input
-          type="text"
-          pInputText
-          class="p-inputtext-lg"
-          name="username"
-          id="sidebar-input"
-          value="{{ userDetails?.username }}"
-          [(ngModel)]="username"
-        />
-        <label for="password">Password</label>
-        <input
-          type="password"
-          pInputText
-          class="p-inputtext-lg"
-          name="password"
-          id="sidebar-input"
-          [(ngModel)]="password"
-          placeholder="Password"
-        />
-        <label for="full-name">Full name</label>
-        <input
-          type="text"
-          pInputText
-          class="p-inputtext-lg"
-          id="sidebar-input"
-          value="{{ userDetails?.fullName }}"
-          name="fullName"
-          placeholder="Full Name"
-          [(ngModel)]="fullName"
-        />
+        <div class="flex flex-column gap-2 register-input">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            pInputText
+            class="p-inputtext-md"
+            name="username"
+            id="sidebar-input"
+            value="{{ userDetails?.username }}"
+            [(ngModel)]="username"
+          />
+        </div>
+        <div class="flex flex-column gap-2 register-input">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            pInputText
+            class="p-inputtext-md"
+            name="password"
+            id="sidebar-input"
+            [(ngModel)]="password"
+            placeholder="Password"
+          />
+        </div>
+        <div class="flex flex-column gap-2 register-input">
+          <label for="confirm-password">Confirm password</label>
+          <input
+            type="password"
+            pInputText
+            class="p-inputtext-md"
+            name="confirm-password"
+            id="sidebar-input"
+            [(ngModel)]="confirmPassword"
+            placeholder="Confirm password"
+          />
+        </div>
+        <div class="edit-user-names">
+          <div class="flex flex-column gap-2 user-edit-input">
+            <label for="first-name">First name</label>
+            <input
+              type="text"
+              pInputText
+              class="p-inputtext-md"
+              id="sidebar-input"
+              value="{{ userDetails?.firstName }}"
+              name="firstName"
+              placeholder="First Name"
+              [(ngModel)]="firstName"
+            />
+          </div>
+          <div class="flex flex-column gap-2 user-edit-input">
+            <label for="first-name">Last name</label>
+            <input
+              type="text"
+              pInputText
+              class="p-inputtext-md"
+              id="sidebar-input"
+              value="{{ userDetails?.lastName }}"
+              name="lastName"
+              placeholder="Last Name"
+              [(ngModel)]="lastName"
+            />
+          </div>
+        </div>
         <label for="role">Role</label>
         <p-dropdown
           [options]="roles"
