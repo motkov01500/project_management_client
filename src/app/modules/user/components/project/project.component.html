@@ -36,7 +36,7 @@
         <th>Remaining tasks</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-item>
+    <ng-template pTemplate="body" ngFor let-item [ngForOf]="projects">
       <tr>
         <td>{{ item.key }}</td>
         <td>{{ item.title }}</td>
@@ -73,12 +73,16 @@
             ></p-button>
           </div>
         </td>
-        <td>
-          {{
-            item.mostRecentMeeting
-              ? item.mostRecentMeeting.title
-              : "No upcoming meetings"
-          }}
+        <td class="upcoming-meeting">
+          <div class="upcoming-meeting-info" *ngIf="item.mostRecentMeeting">
+            <div class="meeting-name">
+              <label>{{ item.mostRecentMeeting?.title }}</label>
+            </div>
+            <div class="meeting-date">
+              <label>{{ item.mostRecentMeeting?.date }}</label>
+            </div>
+          </div>
+          <label *ngIf="!item.mostRecentMeeting">No Upcoming Meeting</label>
         </td>
         <td>{{ item.remainingTasks }}</td>
       </tr>
