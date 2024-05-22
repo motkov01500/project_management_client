@@ -7,4 +7,5 @@ export interface UserResponse {
   username: string;
   role: UserRole;
   imageUrl: any;
+  isDeleted?: boolean;
 }

@@ -13,6 +13,7 @@ import { UserResponse } from 'app/models';
 export class MainComponent implements OnInit, OnDestroy {
   username: string = '';
   messages: string[] = [];
+  currentUser?: UserResponse;
 
   constructor(
     private authService: AuthService,
@@ -46,10 +47,19 @@ export class MainComponent implements OnInit, OnDestroy {
           element?.classList.add('grayed');
         }
       }
+      if (this.currentUser?.isDeleted) {
+        localStorage.clear();
+        this.router.navigate(['login']);
+      }
     });
     this.userService.getCurrentLoggedUser().subscribe({
       next: (currentLoggedUser: UserResponse) => {
         this.username = currentLoggedUser.username;
+        this.currentUser = currentLoggedUser;
+      },
+      error: () => {
+        localStorage.clear();
+        this.router.navigate(['login']);
       },
     });
     this.webSocketService.connect().subscribe({
