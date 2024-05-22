@@ -29,7 +29,7 @@ export class UserMeetingRelatedComponent implements OnInit {
   offset: number = 5;
   currentPage: number = 1;
   selectedUsers: number[] = [];
-  isDisabled: boolean = false; //TODO domashno
+  isDisabled: boolean = false;
   sortColumn?: string = '';
   sortOrder?: string = '';
 
@@ -44,26 +44,6 @@ export class UserMeetingRelatedComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService
-      .getRelatedToMeeting(
-        Number(this.currentMeetingId),
-        this.currentPage,
-        this.offset
-      )
-      .subscribe({
-        next: (users: UserResponse[]) => {
-          this.items = users;
-        },
-      });
-
-    this.sizeService
-      .getUsersRelatedToMeeting(Number(this.currentMeetingId))
-      .subscribe({
-        next: (totalRecords: number) => {
-          this.totalRecords = totalRecords;
-        },
-      });
-
     this.meetingService.getById(Number(this.currentMeetingId)).subscribe({
       next: (meeting: MeetingResponse) => {
         this.currentMeeting = meeting;
@@ -99,6 +79,15 @@ export class UserMeetingRelatedComponent implements OnInit {
   onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
+      this.meetingService.getById(Number(this.currentMeetingId)).subscribe({
+        next: (meeting: MeetingResponse) => {
+          this.currentMeeting = meeting;
+          this.isDisabled =
+            this.currentMeeting?.usersAvailable == 0 ||
+            new Date(this.currentMeeting.date) < new Date();
+        },
+      });
+      this.cdr.detectChanges();
       this.userService
         .getRelatedToMeeting(
           Number(this.currentMeetingId),

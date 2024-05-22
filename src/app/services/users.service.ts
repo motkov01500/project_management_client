@@ -124,7 +124,9 @@ export class UsersService {
       {
         username: userCredentials.username,
         password: userCredentials.password,
-        fullName: userCredentials.fullName,
+        confirmPassword: userCredentials.confirmPassword,
+        firstName: userCredentials.firstName,
+        lastName: userCredentials.lastName,
       }
     );
   }

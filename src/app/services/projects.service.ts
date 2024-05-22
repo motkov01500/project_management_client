@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProjectEdit, ProjectResponse } from '../models';
+import { ProjectDetails, ProjectEdit, ProjectResponse } from '../models';
 import { apiUrl } from '../shared/constants';
 import { Observable } from 'rxjs';
 import { ProjecRequest } from '../models/project/project-request';
@@ -41,8 +41,8 @@ export class ProjectsService {
     );
   }
 
-  getById(projectId: number): Observable<ProjectResponse> {
-    return this.http.get<ProjectResponse>(
+  getById(projectId?: number): Observable<ProjectDetails> {
+    return this.http.get<ProjectDetails>(
       `${apiUrl}v1/project/administrator/get-by-id/${projectId}`
     );
   }

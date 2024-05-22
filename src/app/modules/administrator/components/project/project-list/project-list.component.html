@@ -71,7 +71,7 @@
               [outlined]="true"
               icon="pi pi-pencil"
               severity="warning"
-              (onClick)="onEdit(item.id)"
+              (onClick)="onEdit(item.key)"
             ></p-button>
             <p-button
               type="button"
@@ -98,7 +98,7 @@
               [outlined]="true"
               title="Users"
               icon="pi pi-user"
-              (onClick)="onViewUsers(item.key, item.title)"
+              (onClick)="onViewUsers(item.id, item.key, item.title)"
             ></p-button>
           </div>
         </td>

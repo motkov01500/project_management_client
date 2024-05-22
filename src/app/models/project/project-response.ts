@@ -4,7 +4,6 @@ export interface ProjectResponse {
   id: number;
   key: string;
   title: string;
-  isUsersAvailable: boolean;
-  remainingTasks?: number;
-  mostRecentMeeting?: RecentMeeting;
+  usersAvailable?: number;
+  isDeleted?: boolean;
 }

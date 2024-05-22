@@ -35,3 +35,13 @@ input {
   align-items: center;
   justify-content: center;
 }
+
+.first-last-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.create-user-input {
+  width: 49%;
+}

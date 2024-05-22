@@ -22,6 +22,7 @@
         icon="pi pi-user-plus"
         severity="success"
         (onClick)="onAssignToTask()"
+        [disabled]="currentTask?.usersAvailable == 0"
       ></p-button>
     </div>
   </div>

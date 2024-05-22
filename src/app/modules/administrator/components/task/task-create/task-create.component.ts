@@ -20,7 +20,6 @@ export class TaskCreateComponent implements OnInit {
     key: '',
     title: '',
     id: 0,
-    isUsersAvailable: true,
   };
   projects: ProjectResponse[] = [];
   projectKey: string | null = localStorage.getItem('current-project-key');

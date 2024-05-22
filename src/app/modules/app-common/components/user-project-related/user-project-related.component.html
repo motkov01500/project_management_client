@@ -20,6 +20,7 @@
         title="Assign user."
         iconPos="left"
         (onClick)="onAssignUserToProject()"
+        [disabled]="currentProject?.usersAvailable == 0"
       ></p-button>
     </div>
   </div>

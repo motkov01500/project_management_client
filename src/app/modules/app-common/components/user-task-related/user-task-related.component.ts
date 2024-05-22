@@ -44,23 +44,6 @@ export class UserTaskRelatedComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService
-      .getRelatedToTask(this.taskId, this.page, this.offset)
-      .subscribe({
-        next: (users: UserResponse[]) => {
-          this.items = users;
-        },
-      });
-    this.taskService.getById(this.taskId).subscribe({
-      next: (currentTask: TaskResponse) => {
-        this.currentTask = currentTask;
-      },
-    });
-    this.sizeService.getUsersRelatedToTaskSize(this.taskId).subscribe({
-      next: (totalRecords: number) => {
-        this.totalRecords = totalRecords;
-      },
-    });
     this.cdr.detectChanges();
   }
 
@@ -85,6 +68,11 @@ export class UserTaskRelatedComponent implements OnInit {
   onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
+      this.taskService.getById(this.taskId).subscribe({
+        next: (currentTask: TaskResponse) => {
+          this.currentTask = currentTask;
+        },
+      });
       this.userService
         .getRelatedToTask(
           this.taskId,

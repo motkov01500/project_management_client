@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MessageService, SortEvent } from 'primeng/api';
 import { TablePageEvent } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ProjectResponse, UserResponse } from 'app/models';
+import { ProjectDetails, ProjectResponse, UserResponse } from 'app/models';
 import {
   AuthService,
   ProjectsService,
@@ -23,12 +23,13 @@ export class UserProjectRelatedComponent implements OnInit {
   items: UserResponse[] = [];
   projectKey: string | null = localStorage.getItem('current-project-key');
   projectTitle: string | null = localStorage.getItem('current-project-title');
+  projectId?: number = Number(localStorage.getItem('current-project-id'));
   userRole: string | null = this.authService.getRole();
   loading: boolean | undefined;
   totalRecords: number = 1;
   page: number = 1;
   currentProject: ProjectResponse | undefined;
-  offset: number = 5; //default
+  offset: number = 5;
   selectedUsers: number[] = [];
   sortColumn?: string = '';
   sortOrder?: string = '';
@@ -63,9 +64,9 @@ export class UserProjectRelatedComponent implements OnInit {
             summary: 'User was removed from project.',
             detail: 'via admin',
           });
+          this.onLazyLoad();
         },
       });
-    this.onLazyLoad();
   }
 
   onChangePage(event: TablePageEvent) {
@@ -75,6 +76,11 @@ export class UserProjectRelatedComponent implements OnInit {
   onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
+      this.projectService.getProjectByKey(this.projectKey).subscribe({
+        next: (project: ProjectResponse) => {
+          this.currentProject = project;
+        },
+      });
       this.userService
         .getRelatedToProject(
           this.projectKey,

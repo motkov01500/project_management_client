@@ -61,8 +61,8 @@ export class ProjectListComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  onEdit(projectId: number) {
-    this.projectService.getById(projectId).subscribe({
+  onEdit(projectKey: string) {
+    this.projectService.getProjectByKey(projectKey).subscribe({
       next: (project: ProjectResponse) => {
         this.projectDetails = project;
       },
@@ -150,9 +150,10 @@ export class ProjectListComponent implements OnInit {
     this.router.navigate(['administrator', 'project', 'create']);
   }
 
-  onViewUsers(projectKey: string, projectTitle: string) {
+  onViewUsers(projectId: string, projectKey: string, projectTitle: string) {
     localStorage.setItem('current-project-key', projectKey);
     localStorage.setItem('current-project-title', projectTitle);
+    localStorage.setItem('current-project-id', projectId);
     this.router.navigate(['administrator', 'projects', 'users']);
   }
 

@@ -1,15 +1,5 @@
 <div class="head-actions">
-  <div class="actions">
-    <!-- <p-button
-      severity="info"
-      [rounded]="true"
-      [outlined]="true"
-      icon="pi pi-backward"
-      title="Back to projects."
-      iconPos="left"
-      (onClick)="onHomeButton()"
-    ></p-button> -->
-  </div>
+  <div class="actions"></div>
   <div class="page-name-project-title">
     <div class="page-name">
       <label style="font-weight: bold; font-size: 1.5rem; display: block"
@@ -19,7 +9,6 @@
   </div>
   <div class="task-create"></div>
 </div>
-//TODO add first name and last name instead full name
 <form (submit)="onSubmit()">
   <div class="flex flex-column gap-2 register-input">
     <label for="username">Username</label>
@@ -46,16 +35,42 @@
     />
   </div>
   <div class="flex flex-column gap-2 register-input">
-    <label for="full-name">Full name</label>
+    <label for="confirmPassword">Confirm password</label>
     <input
-      type="text"
+      type="password"
       pInputText
       class="p-inputtext-md"
+      placeholder="Confirm password"
       id="sidebar-input"
-      placeholder="Full name"
-      name="fullName"
-      [(ngModel)]="userCredentials.fullName"
+      name="confirmPassword"
+      [(ngModel)]="userCredentials.confirmPassword"
     />
+  </div>
+  <div class="first-last-name">
+    <div class="flex flex-column gap-2 create-user-input">
+      <label for="full-name">First name</label>
+      <input
+        type="text"
+        pInputText
+        class="p-inputtext-md"
+        id="sidebar-input"
+        placeholder="First name"
+        name="firstName"
+        [(ngModel)]="userCredentials.firstName"
+      />
+    </div>
+    <div class="flex flex-column gap-2 create-user-input">
+      <label for="full-name">Last name</label>
+      <input
+        type="text"
+        pInputText
+        class="p-inputtext-md"
+        id="sidebar-input"
+        placeholder="Last name"
+        name="lastName"
+        [(ngModel)]="userCredentials.lastName"
+      />
+    </div>
   </div>
   <button pButton type="submit" label="Create" class="p-button-lg"></button>
 </form>

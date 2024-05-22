@@ -14,7 +14,9 @@ export class UserCreateComponent {
   userCredentials: UserRequest = {
     username: '',
     password: '',
-    fullName: '',
+    firstName: '',
+    lastName: '',
+    confirmPassword: '',
   };
 
   constructor(

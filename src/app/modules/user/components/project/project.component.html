@@ -27,19 +27,37 @@
   >
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="key">Key <p-sortIcon field="key"></p-sortIcon></th>
-        <th pSortableColumn="title">
-          Title <p-sortIcon field="title"></p-sortIcon>
+        <th pSortableColumn="projectKey">
+          Key <p-sortIcon field="projectKey"></p-sortIcon>
+        </th>
+        <th pSortableColumn="projectTitle">
+          Title <p-sortIcon field="projectTitle"></p-sortIcon>
+        </th>
+        <th pSortableColumn="meetingDate">
+          Upcoming meeting <p-sortIcon field="meetingDate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="remainingTasks">
+          Remaining tasks<p-sortIcon field="remainingTasks"></p-sortIcon>
         </th>
         <th>Actions</th>
-        <th>Upcoming meeting</th>
-        <th>Remaining tasks</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" ngFor let-item [ngForOf]="projects">
       <tr>
-        <td>{{ item.key }}</td>
-        <td>{{ item.title }}</td>
+        <td>{{ item.projectKey }}</td>
+        <td>{{ item.projectTitle }}</td>
+        <td class="upcoming-meeting">
+          <div class="upcoming-meeting-info" *ngIf="item.meetingTitle">
+            <div class="meeting-name">
+              <label>{{ item.meetingTitle }}</label>
+            </div>
+            <div class="meeting-date">
+              <label>{{ item.meetingDate }}</label>
+            </div>
+          </div>
+          <label *ngIf="!item.meetingTitle">No Upcoming Meeting</label>
+        </td>
+        <td>{{ item.remainingTasks }}</td>
         <td>
           <div class="project-actions">
             <p-button
@@ -49,7 +67,7 @@
               [rounded]="true"
               severity="info"
               [outlined]="true"
-              (onClick)="onViewUsers(item.key, item.title)"
+              (onClick)="onViewUsers(item.projectKey, item.projectTitle)"
             ></p-button>
             <p-button
               icon="pi pi-check-square"
@@ -59,7 +77,12 @@
               severity="info"
               [outlined]="true"
               [routerLink]="['tasks']"
-              (onClick)="addCurrentProjectToLocalStorage(item.key, item.title)"
+              (onClick)="
+                addCurrentProjectToLocalStorage(
+                  item.projectKey,
+                  item.projectTitle
+                )
+              "
             ></p-button>
             <p-button
               icon="pi pi-phone"
@@ -69,22 +92,15 @@
               severity="info"
               [outlined]="true"
               [routerLink]="['meetings']"
-              (onClick)="addCurrentProjectToLocalStorage(item.key, item.title)"
+              (onClick)="
+                addCurrentProjectToLocalStorage(
+                  item.projectKey,
+                  item.projectTitle
+                )
+              "
             ></p-button>
           </div>
         </td>
-        <td class="upcoming-meeting">
-          <div class="upcoming-meeting-info" *ngIf="item.mostRecentMeeting">
-            <div class="meeting-name">
-              <label>{{ item.mostRecentMeeting?.title }}</label>
-            </div>
-            <div class="meeting-date">
-              <label>{{ item.mostRecentMeeting?.date }}</label>
-            </div>
-          </div>
-          <label *ngIf="!item.mostRecentMeeting">No Upcoming Meeting</label>
-        </td>
-        <td>{{ item.remainingTasks }}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

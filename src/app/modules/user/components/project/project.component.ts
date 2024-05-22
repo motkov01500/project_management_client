@@ -1,9 +1,14 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProjectResponse, UserResponse } from 'app/models';
-import { ProjectsService, SizeService, UsersService } from 'app/services';
+import { ProjectDetails, ProjectResponse, UserResponse } from 'app/models';
+import {
+  ProjectsService,
+  SizeService,
+  UsersService,
+  UserProjectDetailsService,
+} from 'app/services';
 import { SortEvent } from 'primeng/api';
-import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
+import { TablePageEvent } from 'primeng/table';
 
 @Component({
   selector: 'app-project',
@@ -11,7 +16,7 @@ import { TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
   styleUrl: './project.component.css',
 })
 export class ProjectComponent implements OnInit {
-  projects: ProjectResponse[] = [];
+  projects: ProjectDetails[] = [];
   projectUsersSidebar: boolean = false;
   projectRelatedUsers: UserResponse[] = [];
   totalRecords: number = 1;
@@ -26,17 +31,11 @@ export class ProjectComponent implements OnInit {
     private sizeService: SizeService,
     private userService: UsersService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private userProjectDetailsService: UserProjectDetailsService
   ) {}
 
   ngOnInit(): void {
-    this.projectService
-      .getProjectsRelatedToCurrentUser(this.currentPage, this.offset)
-      .subscribe({
-        next: (projects: ProjectResponse[]) => {
-          this.projects = projects;
-        },
-      });
     this.sizeService.getProjectsRelatedToCurrentUserSize().subscribe({
       next: (totalRecords: number) => {
         this.totalRecords = totalRecords;
@@ -66,15 +65,10 @@ export class ProjectComponent implements OnInit {
   onLazyLoad() {
     this.loading = true;
     setTimeout(() => {
-      this.projectService
-        .getProjectsRelatedToCurrentUser(
-          this.currentPage,
-          this.offset,
-          this.sortColumn,
-          this.sortOrder
-        )
+      this.userProjectDetailsService
+        .getAll(this.currentPage, this.offset, this.sortColumn, this.sortOrder)
         .subscribe({
-          next: (projects: ProjectResponse[]) => {
+          next: (projects: ProjectDetails[]) => {
             this.projects = projects;
           },
         });
