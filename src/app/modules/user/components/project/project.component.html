@@ -52,7 +52,7 @@
               <label>{{ item.meetingTitle }}</label>
             </div>
             <div class="meeting-date">
-              <label>{{ item.meetingDate }}</label>
+              <label>{{ item.meetingDate | date : "'MMM d, y, h:mm a" }}</label>
             </div>
           </div>
           <label *ngIf="!item.meetingTitle">No Upcoming Meeting</label>
