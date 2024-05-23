@@ -96,10 +96,26 @@ export class MyProfileComponent implements OnInit {
                 summary: 'Photo upload completed.',
                 detail: 'via admin',
               });
+              this.userService.getCurrentLoggedUser().subscribe({
+                next: (currentUser: UserResponse) => {
+                  this.currentLoggedUser = currentUser;
+                  if (!!currentUser.imageUrl) {
+                    this.hasImage = true;
+                  }
+                },
+              });
+            },
+            error: () => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Photo upload failed',
+                detail: 'via admin',
+              });
             },
           });
       }
     });
+
     if (event.currentFiles.length == 0) {
       this.messageService.add({
         severity: 'error',

@@ -26,8 +26,6 @@ export class UserListComponent implements OnInit {
   userDetails: UserResponse | any;
   projects: ProjectResponse[] = [];
   selectedProject: number = 0;
-  roles: string[] = ['user', 'administrator'];
-  selectedRole: string = '';
   username: string = '';
   password: string = '';
   confirmPassword: string = '';
@@ -107,7 +105,6 @@ export class UserListComponent implements OnInit {
       confirmPassword: this.confirmPassword ? this.confirmPassword : '',
       firstName: this.firstName ? this.firstName : '',
       lastName: this.lastName ? this.lastName : '',
-      role: this.selectedRole ? this.selectedRole : '',
     };
     this.service.editUser(updatedUser, this.userDetails.id).subscribe({
       next: (user: UserResponse) => {

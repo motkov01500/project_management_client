@@ -204,6 +204,7 @@ export class MeetingListComponent implements OnInit {
           next: (meetings: MeetingResponse[]) => {
             this.items = meetings;
           },
+          error: () => {},
         });
       this.sizeService
         .getCurrentProjectMeetingsSize(this.projectKey)

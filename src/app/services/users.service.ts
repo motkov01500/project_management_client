@@ -139,7 +139,6 @@ export class UsersService {
         password: userCredentials.password,
         firstName: userCredentials.firstName,
         lastName: userCredentials.lastName,
-        roleName: userCredentials.role,
         confirmPassword: userCredentials.confirmPassword,
       }
     );
